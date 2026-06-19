@@ -34,7 +34,7 @@ export function Navbar({
     >
       <header
         className={cn(
-          "flex h-16 items-center justify-between px-6 rounded-full border-b border-accent/30 bg-white/80 backdrop-blur-lg transition-all duration-300",
+          "flex h-16 items-center justify-between px-6 rounded-full border-b border-accent/30 bg-surface/50 backdrop-blur-sm transition-all duration-300",
           maxWidth !== "full" && maxWidthClasses[maxWidth],
           "mx-auto",
         )}
