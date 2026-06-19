@@ -11,18 +11,25 @@ import {
   TextField,
 } from "@heroui/react";
 import Image from "next/image";
+import UserRole from "@/app/components/ui/UserRole";
+import { signIn } from "@/lib/auth-client";
 
 export default function LoginPage() {
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const data = {};
+    const email = formData.get("email");
+    const password = formData.get("password");
+    const role = formData.get("role");
+    const userData = { email, password, role };
 
-    formData.forEach((value, key) => {
-      data[key] = value.toString();
+    const { data, error } = await signIn.email({
+      email,
+      password,
+      role,
+      rememberMe: true,
+      callbackURL: "/",
     });
-
-    alert(`Form submitted with: ${JSON.stringify(data, null, 2)}`);
   };
 
   return (
@@ -167,6 +174,8 @@ export default function LoginPage() {
                 </Description>
                 <FieldError className="text-xs font-semibold text-rose-500 mt-1" />
               </TextField>
+
+              <UserRole />
 
               {/* Action Buttons */}
               <div className="flex flex-col gap-3 mt-4">

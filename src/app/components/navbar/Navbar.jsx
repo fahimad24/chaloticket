@@ -3,6 +3,10 @@ import { useState } from "react";
 import { cn } from "@heroui/react"; // or your cn utility
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { Skeleton } from "@heroui/react";
+import { useUserInfo } from "@/lib/user-action";
+
+import { Profile } from "../ui/profile";
 const maxWidthClasses = {
   sm: "max-w-[640px]",
   md: "max-w-[768px]",
@@ -22,6 +26,7 @@ export function Navbar({
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { session, isPending } = useUserInfo();
 
   return (
     <nav
@@ -34,13 +39,13 @@ export function Navbar({
     >
       <header
         className={cn(
-          "flex h-16 items-center justify-between px-6 rounded-full border-b border-accent/30 bg-surface/50 backdrop-blur-sm transition-all duration-300",
+          "flex h-16 items-center justify-center px-6 rounded-full border-b border-accent/30 bg-surface/50 backdrop-blur-sm transition-all duration-300",
           maxWidth !== "full" && maxWidthClasses[maxWidth],
           "mx-auto",
         )}
       >
         {/* Left Side: Brand Logo */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 flex-1">
           <button
             className="text-slate-600 hover:text-primary transition-colors md:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -75,7 +80,7 @@ export function Navbar({
         </div>
 
         {/* Center Side: Navigation Items */}
-        <ul className="hidden items-center gap-2 md:flex">
+        <ul className="hidden items-center gap-2 flex-1 md:flex justify-center">
           {items.map((item) => (
             <li key={item.href}>
               <Link
@@ -95,8 +100,16 @@ export function Navbar({
 
         {/* Right Side: Action Buttons / Avatar */}
         {rightContent && (
-          <div className="hidden items-center gap-4 md:flex">
-            {rightContent}
+          <div className="hidden items-center justify-end gap-4 md:flex flex-1">
+            {isPending ? (
+              <div className="flex items-center gap-3">
+                <Skeleton className="h-10 w-10 shrink-0 rounded-full bg-gray-400" />
+              </div>
+            ) : session ? (
+              <Profile session={session} />
+            ) : (
+              rightContent
+            )}
           </div>
         )}
       </header>

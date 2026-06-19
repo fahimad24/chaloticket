@@ -16,10 +16,13 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { signOut, signUp } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import UserRole from "@/app/components/ui/UserRole";
 
 export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [authError, setAuthError] = useState("");
+  const router = useRouter();
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -31,14 +34,11 @@ export default function SignupPage() {
     const email = formData.get("email");
     const password = formData.get("password");
     const role = formData.get("role");
-    const userRules = [role]; // Default role
+    const userData = { name, email, password, role };
 
     const { data } = await signUp.email(
       {
-        name,
-        email,
-        password,
-        userRules,
+        ...userData,
         image: "",
         callbackURL: "http://localhost:3000/auth/login",
       },
@@ -46,7 +46,13 @@ export default function SignupPage() {
         onRequest: () => setLoading(true),
         onSuccess: () => {
           setLoading(false);
-          signOut();
+          signOut({
+            fetchOptions: {
+              onSuccess: () => {
+                router.push("/auth/login");
+              },
+            },
+          });
         },
         onError: (ctx) => {
           setLoading(false);
@@ -205,46 +211,7 @@ export default function SignupPage() {
                 <FieldError className="text-xs font-semibold text-rose-500 mt-1" />
               </TextField>
 
-              <RadioGroup
-                name="role"
-                Required
-                defaultValue="traveler"
-                className="flex flex-col gap-2"
-              >
-                <Label className="text-slate-700 font-semibold text-sm">
-                  Join as a
-                </Label>
-
-                <div className="flex gap-6 items-center mt-2">
-                  <Radio value="traveler">
-                    <Radio.Content className="flex items-center gap-2 cursor-pointer group">
-                      <Radio.Control className="w-5 h-5 rounded-full border-2 border-slate-300 flex items-center justify-center group-data-[selected=true]:border-[#6367FF] group-data-[selected=true]:bg-[#6367FF] transition-all">
-                        <Radio.Indicator>
-                          <span className="w-2 h-2 rounded-full bg-white block" />
-                        </Radio.Indicator>
-                      </Radio.Control>
-                      <span className="text-sm font-medium text-slate-700 group-data-[selected=true]:text-[#6367FF]">
-                        Traveler
-                      </span>
-                    </Radio.Content>
-                  </Radio>
-
-                  <Radio value="vendor">
-                    <Radio.Content className="flex items-center gap-2 cursor-pointer group">
-                      <Radio.Control className="w-5 h-5 rounded-full border-2 border-slate-300 flex items-center justify-center group-data-[selected=true]:border-[#6367FF] group-data-[selected=true]:bg-[#6367FF] transition-all">
-                        <Radio.Indicator>
-                          <span className="w-2 h-2 rounded-full bg-white block" />
-                        </Radio.Indicator>
-                      </Radio.Control>
-                      <span className="text-sm font-medium text-slate-700 group-data-[selected=true]:text-[#6367FF]">
-                        Vendor
-                      </span>
-                    </Radio.Content>
-                  </Radio>
-                </div>
-
-                <FieldError className="text-xs text-rose-500 mt-1" />
-              </RadioGroup>
+              <UserRole></UserRole>
 
               <div className="flex flex-col gap-3 mt-4">
                 <Button

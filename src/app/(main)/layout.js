@@ -11,20 +11,14 @@ export const metadata = {
 const Mainlayout = ({ children }) => {
   return <div>
     <Navbar
-      brand={
-        <Link href="/" className="flex items-center gap-1.5 text-4xl font-black tracking-tight text-primary"> <Logo />
-          <p className="text-primary font-bold tracking-tight">
-            Chalo<span className="text-[#8494FF]">Ticket</span>
-          </p>
-        </Link>
-      }
+      brand={<Logo />}
       items={[
         { label: "Home", href: "/" },
         { label: "All Tickets", href: "/tickets" },
-        { label: "Dashboard", href: "/dashboard" },
+        { label: "About", href: "/about" },
       ]}
       rightContent={
-        <>
+        <div className="flex items-center gap-2 flex-1 justify-end">
           <Link
             href="/auth/login"
             className="text-sm font-semibold text-primary hover:text-[#8494FF] transition-colors px-3 py-2"
@@ -37,7 +31,7 @@ const Mainlayout = ({ children }) => {
           >
             Sign Up
           </Link>
-        </>
+        </div>
       }
     />
     {children}</div>;
