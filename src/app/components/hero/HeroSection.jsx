@@ -27,7 +27,7 @@ export function HeroSection() {
         <div className="absolute bottom-[-20%] right-[10%] w-125 h-125 rounded-full bg-[#C9BEFF]/50" />
       </div>
 
-      <div className="absolute inset-0 z-0 flex items-center justify-center">
+      <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden opacity-90">
         <div className="relative w-full h-full">
           <Image
             src="/Images/Bannar.png"
@@ -35,7 +35,23 @@ export function HeroSection() {
             fill
             sizes=" "
             loading="eager"
-            className="w-auto h-48 md:h-64 object-cover opacity-80"
+            className="w-auto hidden lg:block h-48 md:h-64 object-cover"
+          />
+          <Image
+            src="/Images/Bannar-tablet.png"
+            alt="Hero Banner"
+            fill
+            sizes=" "
+            loading="eager"
+            className="w-auto lg:hidden max-md:hidden h-48 md:h-64 object-cover"
+          />
+          <Image
+            src="/Images/Bannar-mobile.png"
+            alt="Hero Banner"
+            fill
+            sizes=" "
+            loading="eager"
+            className="w-auto md:hidden h-48 md:h-64 object-cover"
           />
         </div>
       </div>
