@@ -10,9 +10,12 @@ import {
   Input,
   Label,
   TextField,
+  RadioGroup,
+  Radio,
 } from "@heroui/react";
 import Link from "next/link";
 import Image from "next/image";
+import { signOut, signUp } from "@/lib/auth-client";
 
 export default function SignupPage() {
   const [loading, setLoading] = useState(false);
@@ -20,6 +23,38 @@ export default function SignupPage() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    setAuthError("");
+    setLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+    const name = formData.get("name");
+    const email = formData.get("email");
+    const password = formData.get("password");
+    const role = formData.get("role");
+    const userRules = [role]; // Default role
+
+    const { data } = await signUp.email(
+      {
+        name,
+        email,
+        password,
+        userRules,
+        image: "",
+        callbackURL: "http://localhost:3000/auth/login",
+      },
+      {
+        onRequest: () => setLoading(true),
+        onSuccess: () => {
+          setLoading(false);
+          signOut();
+        },
+        onError: (ctx) => {
+          setLoading(false);
+          setAuthError(ctx.error.message || "Something went wrong.");
+        },
+      },
+    );
+    console.log("Signup response:", data);
   };
 
   return (
@@ -38,17 +73,14 @@ export default function SignupPage() {
           </div>
         </div>
 
-        {/* 2. RIGHT SIDE: Core Sign Up Form Area */}
         <div className="w-full md:w-1/2 flex items-center justify-center p-6 md:p-16 bg-white">
           <div className="w-full max-w-md flex flex-col">
-            {/* Mobile Logo View */}
             <div className="md:hidden mb-8">
               <div className="text-2xl font-black text-[#6367FF]">
                 Chalo<span className="text-[#8494FF]">Ticket</span>
               </div>
             </div>
 
-            {/* Header Title */}
             <div className="mb-6">
               <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
                 Create Account
@@ -84,7 +116,6 @@ export default function SignupPage() {
               Continue with Google
             </button>
 
-            {/* Divider "OR" */}
             <div className="relative flex py-2 items-center mb-6">
               <div className="grow border-t border-slate-100"></div>
               <span className="shrink mx-4 text-xs font-bold uppercase tracking-wider text-slate-400">
@@ -93,20 +124,17 @@ export default function SignupPage() {
               <div className="grow border-t border-slate-100"></div>
             </div>
 
-            {/* Global Auth Error Notification */}
             {authError && (
               <div className="mb-4 p-3.5 bg-rose-50 border border-rose-100 rounded-xl text-xs font-bold text-rose-600">
                 ⚠️ {authError}
               </div>
             )}
 
-            {/* HeroUI Managed Form */}
             <Form
               className="flex w-full flex-col gap-4"
               render={(props) => <form {...props} />}
               onSubmit={onSubmit}
             >
-              {/* Full Name Field */}
               <TextField
                 isRequired
                 name="name"
@@ -123,7 +151,6 @@ export default function SignupPage() {
                 <FieldError className="text-xs font-semibold text-rose-500 mt-1" />
               </TextField>
 
-              {/* Email Field */}
               <TextField
                 isRequired
                 name="email"
@@ -146,7 +173,6 @@ export default function SignupPage() {
                 <FieldError className="text-xs font-semibold text-rose-500 mt-1" />
               </TextField>
 
-              {/* Password Field */}
               <TextField
                 isRequired
                 minLength={8}
@@ -179,7 +205,47 @@ export default function SignupPage() {
                 <FieldError className="text-xs font-semibold text-rose-500 mt-1" />
               </TextField>
 
-              {/* Submit Button */}
+              <RadioGroup
+                name="role"
+                Required
+                defaultValue="traveler"
+                className="flex flex-col gap-2"
+              >
+                <Label className="text-slate-700 font-semibold text-sm">
+                  Join as a
+                </Label>
+
+                <div className="flex gap-6 items-center mt-2">
+                  <Radio value="traveler">
+                    <Radio.Content className="flex items-center gap-2 cursor-pointer group">
+                      <Radio.Control className="w-5 h-5 rounded-full border-2 border-slate-300 flex items-center justify-center group-data-[selected=true]:border-[#6367FF] group-data-[selected=true]:bg-[#6367FF] transition-all">
+                        <Radio.Indicator>
+                          <span className="w-2 h-2 rounded-full bg-white block" />
+                        </Radio.Indicator>
+                      </Radio.Control>
+                      <span className="text-sm font-medium text-slate-700 group-data-[selected=true]:text-[#6367FF]">
+                        Traveler
+                      </span>
+                    </Radio.Content>
+                  </Radio>
+
+                  <Radio value="vendor">
+                    <Radio.Content className="flex items-center gap-2 cursor-pointer group">
+                      <Radio.Control className="w-5 h-5 rounded-full border-2 border-slate-300 flex items-center justify-center group-data-[selected=true]:border-[#6367FF] group-data-[selected=true]:bg-[#6367FF] transition-all">
+                        <Radio.Indicator>
+                          <span className="w-2 h-2 rounded-full bg-white block" />
+                        </Radio.Indicator>
+                      </Radio.Control>
+                      <span className="text-sm font-medium text-slate-700 group-data-[selected=true]:text-[#6367FF]">
+                        Vendor
+                      </span>
+                    </Radio.Content>
+                  </Radio>
+                </div>
+
+                <FieldError className="text-xs text-rose-500 mt-1" />
+              </RadioGroup>
+
               <div className="flex flex-col gap-3 mt-4">
                 <Button
                   type="submit"
@@ -191,7 +257,6 @@ export default function SignupPage() {
               </div>
             </Form>
 
-            {/* Bottom Login Link */}
             <p className="text-center text-sm font-medium text-slate-500 mt-8">
               Already have an account?{" "}
               <Link
