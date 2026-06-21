@@ -7,28 +7,13 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import {
-  Award,
-  ChartNoAxesCombined,
-  ChevronDown,
-  Code,
-  FileCode,
-  FileText,
-  LayoutDashboard,
-  LifeBuoy,
   LogOut,
   User,
   Ticket,
-  Mail,
-  NotebookPen,
-  Send,
   Settings,
   Users,
-  Video,
   History,
   Store,
   PlusCircle,
@@ -38,11 +23,6 @@ import {
   Megaphone,
 } from "lucide-react";
 
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -63,7 +43,11 @@ const sidebarRoutes = {
     },
   ],
   vendor: [
-    { title: "Vendor Profile", url: "/dashboard/vendor/profile", icon: Store },
+    {
+      title: "Vendor Profile",
+      url: "/dashboard/vendor/vendor-profile",
+      icon: Store,
+    },
     {
       title: "Add Ticket",
       url: "/dashboard/vendor/add-ticket",
@@ -71,7 +55,7 @@ const sidebarRoutes = {
     },
     {
       title: "My Added Tickets",
-      url: "/dashboard/vendor/my-tickets",
+      url: "/dashboard/vendor/my-added-tickets",
       icon: Ticket,
     },
     {
@@ -81,25 +65,29 @@ const sidebarRoutes = {
     },
     {
       title: "Revenue Overview",
-      url: "/dashboard/vendor/revenue",
+      url: "/dashboard/vendor/revenue-overview",
       icon: DollarSign,
     },
   ],
   admin: [
     {
       title: "Admin Profile",
-      url: "/dashboard/admin-profile",
+      url: "/dashboard/admin/admin-profile",
       icon: ShieldCheck,
     },
     {
       title: "Manage Tickets",
-      url: "/dashboard/manage-tickets",
+      url: "/dashboard/admin/manage-tickets",
       icon: Settings,
     },
-    { title: "Manage Users", url: "/dashboard/manage-users", icon: Users },
+    {
+      title: "Manage Users",
+      url: "/dashboard/admin/manage-users",
+      icon: Users,
+    },
     {
       title: "Advertise Tickets",
-      url: "/dashboard/advertise-tickets",
+      url: "/dashboard/admin/advertise-tickets",
       icon: Megaphone,
     },
   ],

@@ -1,0 +1,316 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import {
+  Ticket,
+  MapPin,
+  Calendar,
+  Layers,
+  Edit3,
+  Trash2,
+  Bus,
+  AlertCircle,
+  CheckCircle2,
+  Clock,
+  XCircle,
+  ShieldAlert,
+} from "lucide-react";
+
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import Image from "next/image";
+
+// ─── ১. ডেমো ভেন্ডর টিকিট ডাটা (সবগুলো স্ট্যাটাস কভার করে) ───
+const INITIAL_TICKETS = [
+  {
+    id: "T-901",
+    title: "Hanif Enterprise - Volvo Multi-Axle Sleeper",
+    image:
+      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=600&auto=format&fit=crop",
+    from: "Dhaka",
+    to: "Cox's Bazar",
+    transportType: "Bus",
+    price: 1500,
+    quantity: 40,
+    departureTime: "2026-07-20T22:30",
+    perks: ["Air Conditioned (AC)", "Free Wi-Fi", "Pillow & Blanket"],
+    verificationStatus: "approved", // approved status
+  },
+  {
+    id: "T-902",
+    title: "Green Line Scania - Rajshahi Day Cruise",
+    image:
+      "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?q=80&w=600&auto=format&fit=crop",
+    from: "Dhaka",
+    to: "Rajshahi",
+    transportType: "Bus",
+    price: 1200,
+    quantity: 36,
+    departureTime: "2026-08-05T08:15",
+    perks: ["Air Conditioned (AC)", "Complimentary Breakfast"],
+    verificationStatus: "pending", // Initially pending (Requirement)
+  },
+  {
+    id: "T-903",
+    title: "Saintmartin Travel - Premium Direct Cruise",
+    image:
+      "https://images.unsplash.com/photo-1559136555-9303baea8ebd?q=80&w=600&auto=format&fit=crop",
+    from: "Chittagong",
+    to: "Saintmartin",
+    transportType: "Ship",
+    price: 2200,
+    quantity: 150,
+    departureTime: "2026-06-30T06:00",
+    perks: ["Complimentary Breakfast", "Free Wi-Fi"],
+    verificationStatus: "rejected", // Rejected status -> Buttons will be disabled (Requirement)
+  },
+];
+
+export default function MyAddedTickets() {
+  const [tickets, setTickets] = useState(INITIAL_TICKETS);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // প্রিমিয়াম ফিল দেওয়ার জন্য লোডিং সিমুলেশন
+    const timer = setTimeout(() => setIsLoading(false), 700);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // 🗑️ টিকিট ডিলিট হ্যান্ডলার
+  const handleDelete = (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this ticket route?",
+    );
+    if (confirmDelete) {
+      setTickets((prev) => prev.filter((ticket) => ticket.id !== id));
+    }
+  };
+
+  // 📝 টিকিট আপডেট হ্যান্ডলার (সিমুলেশন)
+  const handleUpdate = (title) => {
+    alert(`Redirecting to update layout for: "${title}"`);
+  };
+
+  // 🏷️ ভেরিফিকেশন স্ট্যাটাস ব্যাজ জেনারেটর
+  const getStatusBadge = (status) => {
+    const styles = {
+      pending:
+        "bg-amber-50 text-amber-700 border-amber-200/60 flex items-center gap-1",
+      approved:
+        "bg-emerald-50 text-emerald-700 border-emerald-200 flex items-center gap-1",
+      rejected:
+        "bg-rose-50 text-rose-700 border-rose-200 flex items-center gap-1",
+    };
+
+    const icons = {
+      pending: <Clock className="w-3 h-3 animate-spin text-amber-500" />,
+      approved: <CheckCircle2 className="w-3 h-3 text-emerald-500" />,
+      rejected: <XCircle className="w-3 h-3 text-rose-500" />,
+    };
+
+    return (
+      <Badge
+        variant="outline"
+        className={`capitalize px-2.5 py-1 rounded-md font-semibold text-xs ${styles[status]}`}
+      >
+        {icons[status]} {status}
+      </Badge>
+    );
+  };
+
+  // ডেট-টাইম সুন্দর করার ফরম্যাটার
+  const formatDateTime = (dateTimeString) => {
+    return new Date(dateTimeString).toLocaleString("en-US", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    });
+  };
+
+  return (
+    <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-6 animate-in fade-in duration-500">
+      {/* PAGE HEADER */}
+      <div>
+        <h1 className="text-2xl md:text-3xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
+          <Ticket className="w-7 h-7 text-[#6367FF]" /> My Added Tickets
+        </h1>
+        <p className="text-sm text-slate-500 mt-1">
+          Monitor your transport routes, check real-time admin approvals, and
+          update route metrics.
+        </p>
+      </div>
+
+      {/* SKELETON LOADER */}
+      {isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Card
+              key={i}
+              className="rounded-2xl overflow-hidden border-slate-100"
+            >
+              <Skeleton className="h-44 w-full" />
+              <div className="p-5 space-y-3">
+                <Skeleton className="h-5 w-2/3" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+            </Card>
+          ))}
+        </div>
+      ) : tickets.length === 0 ? (
+        // এম্পটি স্টেট (যদি কোনো টিকিট না থাকে)
+        <div className="text-center py-16 border border-dashed border-slate-200 rounded-2xl bg-white max-w-xl mx-auto p-6 space-y-3">
+          <AlertCircle className="w-10 h-10 text-slate-300 mx-auto" />
+          <h3 className="text-base font-bold text-slate-700">
+            No tickets found
+          </h3>
+          <p className="text-xs text-slate-400">
+            You haven&apos;t created any ticket routes yet. Click &apos;Add
+            Ticket&apos; to list your first transport service.
+          </p>
+        </div>
+      ) : (
+        // ─── ৩-কলাম গ্রিড লেআউট (3-Column Grid Layout) ───
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {tickets.map((ticket) => {
+            const isRejected = ticket.verificationStatus === "rejected";
+
+            return (
+              <Card
+                key={ticket.id}
+                className="group rounded-2xl overflow-hidden border-slate-100 shadow-sm bg-white flex flex-col justify-between transition-all duration-300 hover:shadow-md"
+              >
+                {/* TICKET THUMBNAIL & STATUS */}
+                <div className="relative h-44 w-full bg-slate-100 overflow-hidden">
+                  <Image
+                    fill
+                    priority
+                    src={ticket.image}
+                    alt={ticket.title}
+                    className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-102 ${isRejected ? "grayscale opacity-75" : ""}`}
+                  />
+
+                  {/* Verification Status Badge */}
+                  <div className="absolute top-3 right-3 z-10 shadow-sm">
+                    {getStatusBadge(ticket.verificationStatus)}
+                  </div>
+
+                  <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md text-white text-[10px] font-mono px-2 py-0.5 rounded">
+                    ROUTE REF: {ticket.id}
+                  </div>
+                </div>
+
+                {/* CARD CONTENT INFO */}
+                <CardContent className="p-5 space-y-3 grow">
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                      {ticket.transportType} Service
+                    </span>
+                    <h3 className="font-bold text-slate-800 text-base line-clamp-1 group-hover:text-[#6367FF] transition-colors mt-0.5">
+                      {ticket.title}
+                    </h3>
+                  </div>
+
+                  {/* ROUTE LOCATION MAP */}
+                  <div className="flex items-center gap-2 text-xs font-semibold text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100/70">
+                    <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+                    <span className="truncate">{ticket.from}</span>
+                    <span className="text-slate-300 mx-0.5">→</span>
+                    <MapPin className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                    <span className="truncate">{ticket.to}</span>
+                  </div>
+
+                  {/* QUANTITY & PER-UNIT PRICE */}
+                  <div className="grid grid-cols-2 gap-2 text-xs border-b border-dashed border-slate-100 pb-3">
+                    <div>
+                      <span className="text-slate-400 block mb-0.5">
+                        Available Supply
+                      </span>
+                      <p className="font-bold text-slate-700 flex items-center gap-1">
+                        <Layers className="w-3.5 h-3.5 text-slate-400" />{" "}
+                        {ticket.quantity} Seats
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-slate-400 block mb-0.5">
+                        Price (Per Unit)
+                      </span>
+                      <p className="font-extrabold text-[#6367FF] text-sm">
+                        ৳ {ticket.price.toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* DEPARTURE TIME */}
+                  <div className="flex items-start gap-2 text-xs text-slate-500 pt-0.5">
+                    <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
+                    <div>
+                      <span className="block font-medium text-slate-700">
+                        Scheduled Departure
+                      </span>
+                      <span className="text-[11px]">
+                        {formatDateTime(ticket.departureTime)}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* PERKS / AMENITIES BADGES */}
+                  <div className="flex flex-wrap gap-1 pt-1.5">
+                    {ticket.perks.map((perk, idx) => (
+                      <span
+                        key={idx}
+                        className="text-[10px] bg-slate-100 text-slate-500 font-medium px-2 py-0.5 rounded-md"
+                      >
+                        {perk}
+                      </span>
+                    ))}
+                  </div>
+                </CardContent>
+
+                {/* ─── ACTION FOOTER BUTTONS ─── */}
+                <CardFooter className="p-5 pt-0 flex flex-col gap-2.5">
+                  {/* রিজেক্টেড হলে ওয়ার্নিং নোটিশ ফ্লাশ করবে */}
+                  {isRejected && (
+                    <div className="w-full bg-rose-50 text-rose-600 p-2 rounded-lg text-[11px] font-medium border border-rose-100 flex items-center gap-1.5">
+                      <ShieldAlert className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+                      Actions disabled because admin rejected this route.
+                    </div>
+                  )}
+
+                  {/* বাটন গ্রিড */}
+                  <div className="grid grid-cols-2 gap-2 w-full">
+                    {/* ১. UPDATE BUTTON */}
+                    <Button
+                      onClick={() => handleUpdate(ticket.title)}
+                      disabled={isRejected} // 👈 Rejected হলে ডিজেবলড থাকবে
+                      variant="outline"
+                      className="border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl font-semibold text-xs flex items-center justify-center gap-1.5 h-9 transition-all disabled:opacity-40 disabled:bg-slate-100 disabled:cursor-not-allowed"
+                    >
+                      <Edit3 className="w-3.5 h-3.5" /> Update
+                    </Button>
+
+                    {/* ২. DELETE BUTTON */}
+                    <Button
+                      onClick={() => handleDelete(ticket.id)}
+                      disabled={isRejected} // 👈 Rejected হলে ডিজেবলড থাকবে
+                      variant="destructive"
+                      className="bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-semibold text-xs flex items-center justify-center gap-1.5 h-9 transition-all disabled:opacity-40 disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" /> Delete
+                    </Button>
+                  </div>
+                </CardFooter>
+              </Card>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
