@@ -29,6 +29,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUserInfo } from "@/lib/user-action";
 import { toast } from "sonner";
+import { createTicket, uploadImageToImgbb } from "@/lib/api-action";
 
 // এভেইলেবল পার্কস লিস্ট
 const AVAILABLE_PERKS = [
@@ -46,10 +47,8 @@ export default function AddTicketPage() {
 
   const [selectedPerks, setSelectedPerks] = useState([]);
   const [imageFile, setImageFile] = useState(null);
-  const [imageUrl, setImageUrl] = useState(
-    "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957",
-  );
-  const IMGBB_API_KEY = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
+  const imageUrl = "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957";
+
   // সাবমিশন ও আপলোড স্টেট
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState("");
@@ -86,46 +85,8 @@ export default function AddTicketPage() {
     setUploadProgress("Uploading image to Imgbb...");
 
     try {
-      //   // ১. Imgbb API-তে ইমেজ আপলোড সিমুলেশন/প্রোসেস
-      const formData = new FormData();
-      formData.append("image", imageFile);
-
       // অ্যাকচুয়াল আপলোড কোড ব্লক (API key থাকলে আনকমেন্ট করবেন)
-
-      if (IMGBB_API_KEY && IMGBB_API_KEY !== "YOUR_IMGBB_API_KEY") {
-        try {
-          const response = await fetch(
-            `https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`,
-            {
-              method: "POST",
-              body: formData,
-            },
-          );
-          const imgData = await response.json();
-
-          if (imgData.success) {
-            setImageUrl(imgData.data.url);
-            toast.success("Image Uploaded", {
-              title: imageUrl,
-              description: "Vehicle image hosted successfully on Imgbb.",
-            });
-          } else {
-            console.warn("Imgbb upload failed, using fallback image.");
-          }
-        } catch (imgError) {
-          // ইমেজ আপলোড ফেইল করলেও যেন অ্যাপ ক্র্যাশ না করে ফলব্যাক ইমেজ নিয়ে সাবমিট হয়
-          console.error("Imgbb Fetch Error:", imgError);
-          toast.warning("Hosting limit / network issue", {
-            description:
-              "Using default fallback vehicle image for this ticket.",
-          });
-        }
-      } else {
-        console.log(
-          "No valid Imgbb key found. Proceeding with fallback image.",
-        );
-      }
-
+      await uploadImageToImgbb(imageUrl, formData, toast);
       setUploadProgress("Saving ticket to database...");
 
       // ২. ফাইনাল পে-লোড যা ডাটাবেজে সেভ হবে
@@ -144,26 +105,17 @@ export default function AddTicketPage() {
         verificationStatus: "pending", // 👈 ইনিশিয়ালি পেন্ডিং থাকবে (Requirement)
       };
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/tickets`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(ticketPayload),
-        },
-      );
+      const result = await createTicket(ticketPayload);
+      console.log("Ticket creation result:", result);
 
-      if (res.ok) {
+      if (result) {
+        formData.reset();
         toast.success(
           "Ticket route submitted successfully! Pending admin approval.",
         );
       } else {
         toast.error("Failed to save ticket. Please try again.");
       }
-
-      // console.log("Saving Ticket Payload:", ticketPayload);
 
       // ৩. ডাটাবেজ এপিআই কল করার ডেমো টাইমার
       setTimeout(() => {

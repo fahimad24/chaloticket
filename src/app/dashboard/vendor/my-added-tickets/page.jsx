@@ -8,7 +8,6 @@ import {
   Layers,
   Edit3,
   Trash2,
-  Bus,
   AlertCircle,
   CheckCircle2,
   Clock,
@@ -26,70 +25,36 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
+import { deleteTicket, fetchAllTickets, getAuthInfo } from "@/lib/api-action";
+import { useUserInfo } from "@/lib/user-action";
+import { DeleteModal } from "@/app/components/modal/DeleteModal";
 
 // ─── ১. ডেমো ভেন্ডর টিকিট ডাটা (সবগুলো স্ট্যাটাস কভার করে) ───
-const INITIAL_TICKETS = [
-  {
-    id: "T-901",
-    title: "Hanif Enterprise - Volvo Multi-Axle Sleeper",
-    image:
-      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=600&auto=format&fit=crop",
-    from: "Dhaka",
-    to: "Cox's Bazar",
-    transportType: "Bus",
-    price: 1500,
-    quantity: 40,
-    departureTime: "2026-07-20T22:30",
-    perks: ["Air Conditioned (AC)", "Free Wi-Fi", "Pillow & Blanket"],
-    verificationStatus: "approved", // approved status
-  },
-  {
-    id: "T-902",
-    title: "Green Line Scania - Rajshahi Day Cruise",
-    image:
-      "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?q=80&w=600&auto=format&fit=crop",
-    from: "Dhaka",
-    to: "Rajshahi",
-    transportType: "Bus",
-    price: 1200,
-    quantity: 36,
-    departureTime: "2026-08-05T08:15",
-    perks: ["Air Conditioned (AC)", "Complimentary Breakfast"],
-    verificationStatus: "pending", // Initially pending (Requirement)
-  },
-  {
-    id: "T-903",
-    title: "Saintmartin Travel - Premium Direct Cruise",
-    image:
-      "https://images.unsplash.com/photo-1559136555-9303baea8ebd?q=80&w=600&auto=format&fit=crop",
-    from: "Chittagong",
-    to: "Saintmartin",
-    transportType: "Ship",
-    price: 2200,
-    quantity: 150,
-    departureTime: "2026-06-30T06:00",
-    perks: ["Complimentary Breakfast", "Free Wi-Fi"],
-    verificationStatus: "rejected", // Rejected status -> Buttons will be disabled (Requirement)
-  },
-];
 
 export default function MyAddedTickets() {
-  const [tickets, setTickets] = useState(INITIAL_TICKETS);
+  const [tickets, setTickets] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { session } = useUserInfo();
 
   useEffect(() => {
-    // প্রিমিয়াম ফিল দেওয়ার জন্য লোডিং সিমুলেশন
-    const timer = setTimeout(() => setIsLoading(false), 700);
-    return () => clearTimeout(timer);
-  }, []);
+    async function fetchTickets() {
+      const result = await fetchAllTickets(session?.email);
+      setTickets(result);
+      setIsLoading(false);
+    }
+    fetchTickets();
+    return () => {
+      setTickets([]); // ক্লিরআপে টিকিট ডাটা রিসেট করা হচ্ছে
+    };
+  }, [session?.email]);
 
   // 🗑️ টিকিট ডিলিট হ্যান্ডলার
-  const handleDelete = (id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this ticket route?",
-    );
-    if (confirmDelete) {
-      setTickets((prev) => prev.filter((ticket) => ticket.id !== id));
+  const handleDelete = async (id) => {
+    try {
+      await deleteTicket(id);
+      setTickets((prev) => prev.filter((ticket) => ticket._id !== id));
+    } catch (error) {
+      console.error("Error deleting ticket:", error);
     }
   };
 
@@ -183,7 +148,7 @@ export default function MyAddedTickets() {
 
             return (
               <Card
-                key={ticket.id}
+                key={ticket._id}
                 className="group rounded-2xl overflow-hidden border-slate-100 shadow-sm bg-white flex flex-col justify-between transition-all duration-300 hover:shadow-md"
               >
                 {/* TICKET THUMBNAIL & STATUS */}
@@ -296,14 +261,11 @@ export default function MyAddedTickets() {
                     </Button>
 
                     {/* ২. DELETE BUTTON */}
-                    <Button
-                      onClick={() => handleDelete(ticket.id)}
-                      disabled={isRejected} // 👈 Rejected হলে ডিজেবলড থাকবে
-                      variant="destructive"
-                      className="bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-semibold text-xs flex items-center justify-center gap-1.5 h-9 transition-all disabled:opacity-40 disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" /> Delete
-                    </Button>
+                    <DeleteModal
+                      ticket={ticket}
+                      isRejected={isRejected}
+                      handleDelete={handleDelete}
+                    ></DeleteModal>
                   </div>
                 </CardFooter>
               </Card>
