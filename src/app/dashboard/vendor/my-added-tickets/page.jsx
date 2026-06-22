@@ -25,9 +25,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
-import { deleteTicket, fetchAllTickets, getAuthInfo } from "@/lib/api-action";
+import { deleteTicket, fetchAllTickets } from "@/lib/api-action";
 import { useUserInfo } from "@/lib/user-action";
 import { DeleteModal } from "@/app/components/modal/DeleteModal";
+import Link from "next/link";
 
 // ─── ১. ডেমো ভেন্ডর টিকিট ডাটা (সবগুলো স্ট্যাটাস কভার করে) ───
 
@@ -56,11 +57,6 @@ export default function MyAddedTickets() {
     } catch (error) {
       console.error("Error deleting ticket:", error);
     }
-  };
-
-  // 📝 টিকিট আপডেট হ্যান্ডলার (সিমুলেশন)
-  const handleUpdate = (title) => {
-    alert(`Redirecting to update layout for: "${title}"`);
   };
 
   // 🏷️ ভেরিফিকেশন স্ট্যাটাস ব্যাজ জেনারেটর
@@ -152,12 +148,13 @@ export default function MyAddedTickets() {
                 className="group rounded-2xl overflow-hidden border-slate-100 shadow-sm bg-white flex flex-col justify-between transition-all duration-300 hover:shadow-md"
               >
                 {/* TICKET THUMBNAIL & STATUS */}
-                <div className="relative h-44 w-full bg-slate-100 overflow-hidden">
+                <div className="relative h-44 w-full bg-slate-100 overflow-hidden aspect-video">
                   <Image
-                    fill
-                    priority
                     src={ticket.image}
                     alt={ticket.title}
+                    fill
+                    loading="eager"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-102 ${isRejected ? "grayscale opacity-75" : ""}`}
                   />
 
@@ -242,31 +239,33 @@ export default function MyAddedTickets() {
                 <CardFooter className="p-5 pt-0 flex flex-col gap-2.5">
                   {/* রিজেক্টেড হলে ওয়ার্নিং নোটিশ ফ্লাশ করবে */}
                   {isRejected && (
-                    <div className="w-full bg-rose-50 text-rose-600 p-2 rounded-lg text-[11px] font-medium border border-rose-100 flex items-center gap-1.5">
+                    <div className="w-full bg-rose-50 text-rose-600 p-2 rounded-lg text-[11px] font-medium border border-rose-100 flex items-center gap-1.5 mt-5">
                       <ShieldAlert className="w-3.5 h-3.5 text-rose-500 shrink-0" />
                       Actions disabled because admin rejected this route.
                     </div>
                   )}
 
                   {/* বাটন গ্রিড */}
-                  <div className="grid grid-cols-2 gap-2 w-full">
-                    {/* ১. UPDATE BUTTON */}
-                    <Button
-                      onClick={() => handleUpdate(ticket.title)}
-                      disabled={isRejected} // 👈 Rejected হলে ডিজেবলড থাকবে
-                      variant="outline"
-                      className="border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl font-semibold text-xs flex items-center justify-center gap-1.5 h-9 transition-all disabled:opacity-40 disabled:bg-slate-100 disabled:cursor-not-allowed"
-                    >
-                      <Edit3 className="w-3.5 h-3.5" /> Update
-                    </Button>
+                  {!isRejected && (
+                    <div className="grid grid-cols-2 gap-2 w-full mt-5">
+                      {/* ১. UPDATE BUTTON */}
+                      <Link
+                        href={`/dashboard/vendor/my-added-tickets/update-ticket/${ticket._id}`} // ডাইনামিক রাউটিং
+                        disabled={isRejected} // 👈 Rejected হলে ডিজেবলড থাকবে
+                        variant="outline"
+                        className="border-slate-200 bg-amber-100 hover:bg-slate-50 text-slate-700 rounded-xl font-semibold text-xs flex items-center justify-center gap-1.5 h-9 transition-all disabled:opacity-40 disabled:bg-slate-100 disabled:cursor-not-allowed"
+                      >
+                        <Edit3 className="w-3.5 h-3.5" /> Update
+                      </Link>
 
-                    {/* ২. DELETE BUTTON */}
-                    <DeleteModal
-                      ticket={ticket}
-                      isRejected={isRejected}
-                      handleDelete={handleDelete}
-                    ></DeleteModal>
-                  </div>
+                      {/* ২. DELETE BUTTON */}
+                      <DeleteModal
+                        ticket={ticket}
+                        isRejected={isRejected}
+                        handleDelete={handleDelete}
+                      ></DeleteModal>
+                    </div>
+                  )}
                 </CardFooter>
               </Card>
             );

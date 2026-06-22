@@ -29,7 +29,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUserInfo } from "@/lib/user-action";
 import { toast } from "sonner";
-import { createTicket, uploadImageToImgbb } from "@/lib/api-action";
+import { createTicket, uploadImage } from "@/lib/api-action";
 
 // এভেইলেবল পার্কস লিস্ট
 const AVAILABLE_PERKS = [
@@ -42,12 +42,14 @@ const AVAILABLE_PERKS = [
 
 export default function AddTicketPage() {
   const { session, isPending } = useUserInfo();
+  const [imageUrl, setImageUrl] = useState(
+    "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957",
+  );
 
   // ফিজিক্যাল ফর্ম স্টেটসমূহ
 
   const [selectedPerks, setSelectedPerks] = useState([]);
   const [imageFile, setImageFile] = useState(null);
-  const imageUrl = "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957";
 
   // সাবমিশন ও আপলোড স্টেট
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -82,57 +84,46 @@ export default function AddTicketPage() {
     const vendorEmail = formData.get("vendorEmail");
 
     setIsSubmitting(true);
-    setUploadProgress("Uploading image to Imgbb...");
+    setUploadProgress("Submitting ticket...");
 
-    try {
-      // অ্যাকচুয়াল আপলোড কোড ব্লক (API key থাকলে আনকমেন্ট করবেন)
-      await uploadImageToImgbb(imageUrl, formData, toast);
-      setUploadProgress("Saving ticket to database...");
+    const imageUploadUrl = await uploadImage(imageFile);
 
-      // ২. ফাইনাল পে-লোড যা ডাটাবেজে সেভ হবে
-      const ticketPayload = {
-        title,
-        from: fromLocation,
-        to: toLocation,
-        transportType,
-        price: Number(price),
-        quantity: Number(quantity),
-        departureTime: departureDateTime,
-        perks: selectedPerks,
-        image: imageUrl, // Mocked image URL for demo
-        vendorName,
-        vendorEmail,
-        verificationStatus: "pending", // 👈 ইনিশিয়ালি পেন্ডিং থাকবে (Requirement)
-      };
+    const ticketPayload = {
+      title,
+      from: fromLocation,
+      to: toLocation,
+      transportType,
+      price: Number(price),
+      quantity: Number(quantity),
+      departureTime: departureDateTime,
+      perks: selectedPerks,
+      image: imageUploadUrl,
+      vendorName,
+      vendorEmail,
+      verificationStatus: "pending",
+    };
 
+    console.log("Ticket Payload:", ticketPayload, "Image URL:", imageUploadUrl);
+
+    if (imageUploadUrl) {
+      setUploadProgress("Image uploaded successfully. Creating ticket...");
       const result = await createTicket(ticketPayload);
-      console.log("Ticket creation result:", result);
-
       if (result) {
-        formData.reset();
-        toast.success(
-          "Ticket route submitted successfully! Pending admin approval.",
-        );
-      } else {
-        toast.error("Failed to save ticket. Please try again.");
-      }
-
-      // ৩. ডাটাবেজ এপিআই কল করার ডেমো টাইমার
-      setTimeout(() => {
-        setIsSubmitting(false);
-        setUploadProgress("");
-        // ফর্ম রিসেট
+        toast.success("Ticket created successfully! Awaiting admin approval.");
+        e.target.reset();
         setSelectedPerks([]);
         setImageFile(null);
-      }, 1500);
-    } catch (error) {
-      toast.error("Upload error:", error);
+      } else {
+        toast.error("Failed to create ticket. Please try again.");
+      }
       setIsSubmitting(false);
-      setUploadProgress("");
+    } else {
+      setUploadProgress("Image upload failed. Please try again.");
+      setIsSubmitting(false);
     }
   };
 
-  // ⏳ পেজ লোডিং কন্ডিশন (Better Auth সেশন লোড হওয়া পর্যন্ত)
+  // ⏳ পেজ লোডিং কন্ডিশন (Better Auth সেশন লোড হওয়া পর্যন্ত)
   if (isPending) {
     return (
       <div className="max-w-4xl mx-auto space-y-6 p-4">
