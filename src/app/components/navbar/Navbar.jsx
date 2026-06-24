@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@heroui/react"; // or your cn utility
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -27,11 +27,40 @@ export function Navbar({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
   const { session, isPending } = useUserInfo();
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const controlNavbar = () => {
+      const currentScrollY = window.scrollY;
+
+      // ১. যদি ইউজার নিচের দিকে স্ক্রোল করে এবং স্ক্রোল পজিশন ৫০px এর বেশি হয়, তবে হাইড করো
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setIsVisible(false);
+      }
+      // ২. যদি ওপরে স্ক্রোল করে, তবে আবার দেখাও
+      else if (currentScrollY < lastScrollY) {
+        setIsVisible(true);
+      }
+
+      // বর্তমান স্ক্রোল পজিশন সেভ করে রাখা হচ্ছে পরবর্তী চেকের জন্য
+      setLastScrollY(currentScrollY);
+    };
+
+    // ব্রাউজারে স্ক্রোল লিসেনার অ্যাড করা হলো
+    window.addEventListener("scroll", controlNavbar);
+
+    // মেমোরি লিক এড়াতে ক্লিনআপ ফাংশন
+    return () => {
+      window.removeEventListener("scroll", controlNavbar);
+    };
+  }, [lastScrollY]);
 
   return (
     <nav
       className={cn(
-        "z-40 w-full bg-transparent ",
+        "z-40 w-full bg-transparent top-0 left-0 right-0 transition-transform duration-500 ease-in-out",
+        isVisible ? "translate-y-0" : "-translate-y-30",
         position === "sticky" && "sticky top-6",
         position === "fixed" && "fixed top-6",
         className,
