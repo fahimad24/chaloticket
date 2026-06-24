@@ -78,6 +78,7 @@ export const createTicket = async (ticketData) => {
 };
 
 
+
 // ========== UPDATE API functions ==========
 
 // Update a ticket by ID
@@ -125,6 +126,28 @@ export const updateUserRole = async (userId, updatedData) => {
         throw error;
     }
 }
+
+// fetch only user booked tickets
+export const fetchUserBookedTickets = async (bookedData, ticketId) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/tickets/booked/${ticketId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ bookedData }),
+        });
+        if (!response.ok) {
+            throw new Error("Failed to fetch user booked tickets");
+        }
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        console.error("Error fetching user booked tickets:", error);
+        throw error;
+    }
+};
+
 
 // ========== DELETE API functions ==========
 
