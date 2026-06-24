@@ -6,7 +6,7 @@ import { fetchAllTickets } from "@/lib/api-action";
 export default async function ManageTickets() {
   let tickets = [];
   try {
-    const data = await fetchAllTickets("");
+    const data = await fetchAllTickets("", "");
     tickets = data;
   } catch (error) {
     console.error("Error fetching tickets:", error);

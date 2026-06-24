@@ -100,6 +100,7 @@ export default function AddTicketPage() {
       image: imageUploadUrl,
       vendorName,
       vendorEmail,
+      isAdvertised: false,
       verificationStatus: "pending",
     };
 

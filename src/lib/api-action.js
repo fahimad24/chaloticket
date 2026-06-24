@@ -29,8 +29,9 @@ export const uploadImage = async (imageFile) => {
 // ========= GET API functions ==========
 
 // Fetch all tickets
-export const fetchAllTickets = async (email) => {
-    const res = await fetch(`${API_BASE_URL}/api/tickets?email=${email}`);
+export const fetchAllTickets = async (email,
+    verificationStatus) => {
+    const res = await fetch(`${API_BASE_URL}/api/tickets?email=${email}&verificationStatus=${verificationStatus}`);
     const tickets = await res.json();
     return tickets;
 };
