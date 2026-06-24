@@ -44,8 +44,6 @@ export function AppSidebar() {
 
   const { session, isPending } = useUserInfo();
 
-  console.log("Session in AppSidebar:", session, "Is Pending:", isPending);
-
   const currentRole = session?.role;
 
   const handleLogout = async () => {

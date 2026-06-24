@@ -17,7 +17,25 @@ export const auth = betterAuth({
                 type: "string",
                 input: true,
                 defaultValue: "traveler",
+            },
+            isFraud: {
+                type: "boolean",
             }
+        }
+    }, hooks: {
+        before: async (ctx) => {
+            if (ctx.path === "/sign-up/email") {
+                const body = ctx.body;
+
+                const userRole = body.role || "traveler";
+
+                if (userRole === "vendor") {
+                    body.isFraud = false;
+                } else if (userRole === "traveler") {
+                    delete body.isFraud;
+                }
+            }
+            return ctx;
         }
     }
 });

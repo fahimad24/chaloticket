@@ -42,6 +42,13 @@ export const fetchTicketById = async (ticketId) => {
     return ticket;
 };
 
+// Fetch all users
+export const fetchAllUsers = async () => {
+    const res = await fetch(`${API_BASE_URL}/api/users`);
+    const users = await res.json();
+    return users;
+};
+
 
 // ========== POST API functions ==========
 
@@ -94,6 +101,29 @@ export const updateTicket = async (ticketId, updatedData) => {
         throw error;
     }
 };
+
+// user Role Update API
+export const updateUserRole = async (userId, updatedData) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/users/${userId}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(updatedData),
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to update user role");
+        }
+
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        console.error("Error updating user role:", error);
+        throw error;
+    }
+}
 
 // ========== DELETE API functions ==========
 
