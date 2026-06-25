@@ -1,6 +1,17 @@
 "use server";
 
 import { toast } from "sonner";
+import { auth } from "./auth";
+import { headers } from "next/headers";
+
+export const getSession = async () => {
+    const result = await auth.api.getSession({
+        headers: await headers()
+    })
+    const session = result?.session;
+    const { userId, token } = session || {};
+    return { userId, token, session };
+}
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
 const IMGBB_API_KEY = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
@@ -50,6 +61,19 @@ export const fetchAllUsers = async () => {
     return users;
 };
 
+// Fetch all booked tickets for a specific user
+export const fetchBookedTicketsByUserId = async (userId) => {
+    const res = await fetch(`${API_BASE_URL}/api/booked-tickets/${userId}`, { cache: 'no-store' });
+    const bookedTickets = await res.json();
+    return bookedTickets;
+};
+
+// Fetch booked tickets for a specific ticket vendor  ID
+export const fetchBookedTicketsByVendorId = async (vendorId) => {
+    const res = await fetch(`${API_BASE_URL}/api/booked-tickets/vendor/${vendorId}`, { cache: 'no-store' });
+    const bookedTickets = await res.json();
+    return bookedTickets;
+};
 
 // ========== POST API functions ==========
 

@@ -129,7 +129,9 @@ function TicketDetailsContent({ params }) {
 
     const bookedData = {
       ...ticket,
-      userId: session?.id, // 👈 সেশন থেকে ইউজার আইডি নিন
+      userId: session?.id,
+      userName: session?.name,
+      userEmail: session?.email,
       quantity: parseInt(quantity),
       status: "pending",
       bookedAt: new Date().toISOString(),

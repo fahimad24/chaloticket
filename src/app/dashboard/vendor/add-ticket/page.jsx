@@ -42,6 +42,7 @@ const AVAILABLE_PERKS = [
 
 export default function AddTicketPage() {
   const { session, isPending } = useUserInfo();
+  console.log("User session data:", session);
   const [imageUrl, setImageUrl] = useState(
     "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957",
   );
@@ -100,6 +101,7 @@ export default function AddTicketPage() {
       image: imageUploadUrl,
       vendorName,
       vendorEmail,
+      vendorId: session?.id,
       isAdvertised: false,
       verificationStatus: "pending",
     };
