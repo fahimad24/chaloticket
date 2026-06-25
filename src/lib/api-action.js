@@ -79,7 +79,6 @@ export const fetchAllUsers = async () => {
 // Fetch all booked tickets for a specific user
 export const fetchBookedTicketsByUserId = async (userId) => {
     const token = await getApiToken();
-    console.log("API Token:", token); // Log the token for debugging
     const res = await fetch(`${API_BASE_URL}/api/booked-tickets/${userId}`, { headers: { "Authorization": `Bearer ${token}` }, cache: 'no-store' });
     const bookedTickets = await res.json();
     return bookedTickets;
@@ -88,7 +87,6 @@ export const fetchBookedTicketsByUserId = async (userId) => {
 // Fetch booked tickets for a specific ticket vendor  ID
 export const fetchBookedTicketsByVendorId = async (vendorId) => {
     const token = await getApiToken();
-    console.log("API Token:", token);
     const res = await fetch(`${API_BASE_URL}/api/booked-tickets/vendor/${vendorId}`, { headers: { "Authorization": `Bearer ${token}` }, cache: 'no-store' });
     const bookedTickets = await res.json();
     return bookedTickets;

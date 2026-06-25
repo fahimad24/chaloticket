@@ -111,12 +111,17 @@ const MyBookingCard = ({ ticket, isDeparturePassed, canPay }) => {
         {/* COUNTDOWN & ACTIONS FOOTER */}
         <CardFooter className="px-5 py-3 flex flex-col gap-3">
           {canPay && (
-            <Button
-              onClick={() => handlePayment(ticket?._id)}
-              className="w-full bg-[#6367FF] hover:bg-[#8494FF] text-white rounded-xl py-5 font-semibold shadow-md shadow-[#6367FF]/20 flex items-center justify-center gap-2 transition-all"
-            >
-              <CreditCard className="w-4 h-4" /> Pay Now (Stripe)
-            </Button>
+            <form action="/api/checkout_sessions" method="POST">
+              <section>
+                <Button
+                  type="submit"
+                  role="link"
+                  className="w-full bg-[#6367FF] hover:bg-[#8494FF] text-white rounded-xl py-5 font-semibold shadow-md shadow-[#6367FF]/20 flex items-center justify-center gap-2 transition-all"
+                >
+                  <CreditCard className="w-4 h-4" /> Pay Now (Stripe)
+                </Button>
+              </section>
+            </form>
           )}
 
           {/* ২. ভেন্ডর অ্যাকসেপ্ট করেছে কিন্তু ডিপার্চার সময় পার হয়ে গেছে -> পেমেন্ট লক */}
