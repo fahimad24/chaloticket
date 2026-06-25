@@ -24,35 +24,46 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { fetchBookedTicketsStatus } from "@/lib/api-action";
+import { toast } from "sonner";
 const RequestedBookingTable = ({ bookingRequests: initialRequests }) => {
   const [bookingRequests, setBookingRequests] = useState(initialRequests);
 
   console.log("Booking requests in table:", bookingRequests);
 
   // ✅ ACCEPT BUTTON HANDLER
-  const handleAccept = (id) => {
-    setBookingRequests((prev) =>
-      prev.map((request) =>
-        request._id === id ? { ...request, status: "accepted" } : request,
-      ),
-    );
+  const handleAccept = async (id) => {
+    const result = await fetchBookedTicketsStatus(id, "accepted");
+    if (result) {
+      setBookingRequests((prev) =>
+        prev.map((request) =>
+          request._id === id ? { ...request, status: "accepted" } : request,
+        ),
+      );
+      toast.success({
+        title: "Booking Accepted",
+        description: "You have successfully accepted the booking request.",
+      });
+    }
   };
 
   // ❌ REJECT BUTTON HANDLER
-  const handleReject = (id) => {
-    const confirmReject = window.confirm(
-      "Are you sure you want to reject this booking request?",
-    );
-    if (confirmReject) {
+  const handleReject = async (id) => {
+    const result = await fetchBookedTicketsStatus(id, "rejected");
+    if (result) {
       setBookingRequests((prev) =>
         prev.map((request) =>
           request._id === id ? { ...request, status: "rejected" } : request,
         ),
       );
+      toast.error({
+        title: "Booking Rejected",
+        description: "You have successfully rejected the booking request.",
+      });
     }
   };
 
-  // 🏷️ স্ট্যাটাস ওয়াইজ ব্যাজ জেনারেটর
+  // 🏷️ স্ট্যাটাস ওয়াইজ ব্যাজ জেনারেটর
   const getStatusBadge = (status) => {
     const badges = {
       pending: (

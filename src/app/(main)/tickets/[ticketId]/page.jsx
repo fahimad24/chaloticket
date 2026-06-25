@@ -113,7 +113,7 @@ function TicketDetailsContent({ params }) {
   // ─── ৩. ভ্যালিডেশন কন্ডিশনস ───
   const isTimePassed = timeLeft.isExpired;
   const isSoldOut = ticket?.quantity === 0;
-  const isBookNowDisabled = isTimePassed || isSoldOut;
+  const isBookNowDisabled = isTimePassed || isSoldOut || !session || isPanding;
 
   // ─── ৪. বুকিং সাবমিট হ্যান্ডলার ───
   const handleBookingSubmit = async (e) => {

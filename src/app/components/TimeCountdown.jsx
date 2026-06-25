@@ -37,7 +37,7 @@ export function TicketCountdown({ departureTime, status }) {
 
   return (
     <div
-      className={`flex items-center gap-1.5 text-xs font-semibold mt-2 px-2.5 py-1.5 rounded-lg bg-slate-50 border border-slate-100 w-full justify-center
+      className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-slate-50 border border-slate-100 justify-center
       ${isExpired ? "text-rose-500 bg-rose-50" : "text-[#6367FF] bg-[#6367FF]/5"}`}
     >
       <Clock className="w-3.5 h-3.5" />
