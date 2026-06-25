@@ -161,177 +161,195 @@ const UserTable = ({ users: initialUsers }) => {
           </TableHeader>
 
           <TableBody>
-            {users.map((user) => (
-              <TableRow
-                key={user._id}
-                className={`hover:bg-slate-50/40 transition-colors border-slate-100 ${user?.isFraud ? "bg-rose-50/20" : ""}`}
-              >
-                {/* ১. LEFT PROFILE IMAGE & DETAILS */}
-                <TableCell className="py-4 pl-6">
-                  <div className="flex items-center gap-3">
-                    {renderAvatar(user.name, user.isFraud)}
-                    <div className="space-y-0.5">
-                      <p
-                        className={`text-sm font-bold ${user?.isFraud ? "text-rose-700 line-through" : "text-slate-800"}`}
-                      >
-                        {user.name}
-                      </p>
-                      <p className="text-xs text-slate-400 font-mono flex items-center gap-1">
-                        <Mail className="w-3 h-3 text-slate-300" />{" "}
-                        {user?.email}
-                      </p>
+            {users.length > 0 ? (
+              users.map((user) => (
+                <TableRow
+                  key={user._id}
+                  className={`hover:bg-slate-50/40 transition-colors border-slate-100 ${user?.isFraud ? "bg-rose-50/20" : ""}`}
+                >
+                  {/* ১. LEFT PROFILE IMAGE & DETAILS */}
+                  <TableCell className="py-4 pl-6">
+                    <div className="flex items-center gap-3">
+                      {renderAvatar(user.name, user.isFraud)}
+                      <div className="space-y-0.5">
+                        <p
+                          className={`text-sm font-bold ${user?.isFraud ? "text-rose-700 line-through" : "text-slate-800"}`}
+                        >
+                          {user.name}
+                        </p>
+                        <p className="text-xs text-slate-400 font-mono flex items-center gap-1">
+                          <Mail className="w-3 h-3 text-slate-300" />{" "}
+                          {user?.email}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </TableCell>
+                  </TableCell>
 
-                {/* ২. ROLE BADGE */}
-                <TableCell className="py-4">
-                  {getRoleBadge(user.role, user?.isFraud)}
-                </TableCell>
+                  {/* ২. ROLE BADGE */}
+                  <TableCell className="py-4">
+                    {getRoleBadge(user.role, user?.isFraud)}
+                  </TableCell>
 
-                {/* ৩. ACTIONS (ADMIN EXCLUDED FROM FRAUD LOCK) */}
-                <TableCell className="py-4 text-right pr-6">
-                  <div className="flex items-center justify-end gap-2">
-                    {user?.isFraud ? (
-                      // ফ্রড অ্যাকাউন্ট রিকভার করার বাটন
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleUnmarkFraud(user._id, user.name)}
-                        className="border-slate-200 text-slate-600 hover:bg-slate-50 h-8 px-3 rounded-xl font-bold text-xs flex items-center gap-1"
-                      >
-                        <RefreshCw className="w-3 h-3" /> Unmark Fraud
-                      </Button>
-                    ) : (
-                      <>
-                        {/* MAKE ADMIN BUTTON */}
-                        {user.role !== "admin" && (
-                          <Button
-                            size="sm"
-                            onClick={() => handleMakeAdmin(user._id, user.name)}
-                            className="bg-purple-600 hover:bg-purple-700 text-white h-8 px-3 rounded-xl font-bold text-xs"
-                          >
-                            Make Admin
-                          </Button>
-                        )}
+                  {/* ৩. ACTIONS (ADMIN EXCLUDED FROM FRAUD LOCK) */}
+                  <TableCell className="py-4 text-right pr-6">
+                    <div className="flex items-center justify-end gap-2">
+                      {user?.isFraud ? (
+                        // ফ্রড অ্যাকাউন্ট রিকভার করার বাটন
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleUnmarkFraud(user._id, user.name)}
+                          className="border-slate-200 text-slate-600 hover:bg-slate-50 h-8 px-3 rounded-xl font-bold text-xs flex items-center gap-1"
+                        >
+                          <RefreshCw className="w-3 h-3" /> Unmark Fraud
+                        </Button>
+                      ) : (
+                        <>
+                          {/* MAKE ADMIN BUTTON */}
+                          {user.role !== "admin" && (
+                            <Button
+                              size="sm"
+                              onClick={() =>
+                                handleMakeAdmin(user._id, user.name)
+                              }
+                              className="bg-purple-600 hover:bg-purple-700 text-white h-8 px-3 rounded-xl font-bold text-xs"
+                            >
+                              Make Admin
+                            </Button>
+                          )}
 
-                        {/* MAKE VENDOR BUTTON */}
-                        {user.role !== "vendor" && (
-                          <Button
-                            size="sm"
-                            onClick={() =>
-                              handleMakeVendor(user._id, user.name)
-                            }
-                            className="bg-[#6367FF] hover:bg-[#5054E3] text-white h-8 px-3 rounded-xl font-bold text-xs"
-                          >
-                            Make Vendor
-                          </Button>
-                        )}
+                          {/* MAKE VENDOR BUTTON */}
+                          {user.role !== "vendor" && (
+                            <Button
+                              size="sm"
+                              onClick={() =>
+                                handleMakeVendor(user._id, user.name)
+                              }
+                              className="bg-[#6367FF] hover:bg-[#5054E3] text-white h-8 px-3 rounded-xl font-bold text-xs"
+                            >
+                              Make Vendor
+                            </Button>
+                          )}
 
-                        {/* MARK AS FRAUD BUTTON (FOR BOTH USERS & VENDORS, EXCLUDING ADMIN) */}
-                        {user.role == "vendor" && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() =>
-                              handleMarkAsFraud(user._id, user.name, user.role)
-                            }
-                            className="border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700 h-8 px-3 rounded-xl font-bold text-xs flex items-center gap-1"
-                          >
-                            <ShieldAlert className="w-3.5 h-3.5" /> Mark as
-                            Fraud
-                          </Button>
-                        )}
-                      </>
-                    )}
-                  </div>
+                          {/* MARK AS FRAUD BUTTON (FOR BOTH USERS & VENDORS, EXCLUDING ADMIN) */}
+                          {user.role == "vendor" && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() =>
+                                handleMarkAsFraud(
+                                  user._id,
+                                  user.name,
+                                  user.role,
+                                )
+                              }
+                              className="border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700 h-8 px-3 rounded-xl font-bold text-xs flex items-center gap-1"
+                            >
+                              <ShieldAlert className="w-3.5 h-3.5" /> Mark as
+                              Fraud
+                            </Button>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={3}
+                  className="text-center text-slate-500 py-6"
+                >
+                  No users found.
                 </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </div>
 
-      {/* ──────────────────────────────────────────────────────────── */}
-      {/* LAYOUT B: MOBILE CARD LIST LAYOUT (মোবাইল স্ক্রিনের জন্য রেস্পনসিভ) */}
-      {/* ──────────────────────────────────────────────────────────── */}
       <div className="block md:hidden space-y-4">
-        {users.map((user) => (
-          <Card
-            key={user._id}
-            className={`rounded-xl border-slate-100 shadow-sm overflow-hidden ${user.isFraud ? "bg-rose-50/30 border-rose-100" : "bg-white"}`}
-          >
-            <CardContent className="p-4 space-y-3.5">
-              {/* মোবাইল প্রোফাইল হেডার (বাম পাশে ইমেজ) */}
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-3 max-w-[70%]">
-                  {renderAvatar(user.name, user.isFraud)}
-                  <div className="space-y-0.5 min-w-0">
-                    <p
-                      className={`text-sm font-bold ${user.isFraud ? "text-rose-700 line-through" : "text-slate-800"} truncate`}
-                    >
-                      {user.name}
-                    </p>
-                    <p className="text-[11px] text-slate-400 font-mono truncate">
-                      {user.email}
-                    </p>
+        {users.length > 0 ? (
+          users.map((user) => (
+            <Card
+              key={user._id}
+              className={`rounded-xl border-slate-100 shadow-sm overflow-hidden ${user.isFraud ? "bg-rose-50/30 border-rose-100" : "bg-white"}`}
+            >
+              <CardContent className="p-4 space-y-3.5">
+                {/* মোবাইল প্রোফাইল হেডার (বাম পাশে ইমেজ) */}
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-3 max-w-[70%]">
+                    {renderAvatar(user.name, user.isFraud)}
+                    <div className="space-y-0.5 min-w-0">
+                      <p
+                        className={`text-sm font-bold ${user.isFraud ? "text-rose-700 line-through" : "text-slate-800"} truncate`}
+                      >
+                        {user.name}
+                      </p>
+                      <p className="text-[11px] text-slate-400 font-mono truncate">
+                        {user.email}
+                      </p>
+                    </div>
                   </div>
+                  <div>{getRoleBadge(user.role, user.isFraud)}</div>
                 </div>
-                <div>{getRoleBadge(user.role, user.isFraud)}</div>
-              </div>
 
-              {/* মোবাইল অ্যাকশন বাটন গ্রুপ */}
-              <div className="pt-2 border-t border-slate-50 flex flex-col gap-2 w-full">
-                {user.isFraud ? (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleUnmarkFraud(user._id, user.name)}
-                    className="border-slate-200 text-slate-600 w-full h-9 font-bold text-xs flex items-center justify-center gap-1"
-                  >
-                    <RefreshCw className="w-3.5 h-3.5 animate-spin-slow" />{" "}
-                    Unmark Fraud Account
-                  </Button>
-                ) : (
-                  <>
-                    {user.role !== "admin" && (
-                      <Button
-                        size="sm"
-                        onClick={() => handleMakeAdmin(user._id, user.name)}
-                        className="bg-purple-600 hover:bg-purple-700 text-white w-full h-9 font-bold text-xs"
-                      >
-                        Make Admin
-                      </Button>
-                    )}
+                {/* মোবাইল অ্যাকশন বাটন গ্রুপ */}
+                <div className="pt-2 border-t border-slate-50 flex flex-col gap-2 w-full">
+                  {user.isFraud ? (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleUnmarkFraud(user._id, user.name)}
+                      className="border-slate-200 text-slate-600 w-full h-9 font-bold text-xs flex items-center justify-center gap-1"
+                    >
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin-slow" />{" "}
+                      Unmark Fraud Account
+                    </Button>
+                  ) : (
+                    <>
+                      {user.role !== "admin" && (
+                        <Button
+                          size="sm"
+                          onClick={() => handleMakeAdmin(user._id, user.name)}
+                          className="bg-purple-600 hover:bg-purple-700 text-white w-full h-9 font-bold text-xs"
+                        >
+                          Make Admin
+                        </Button>
+                      )}
 
-                    {user.role !== "vendor" && (
-                      <Button
-                        size="sm"
-                        onClick={() => handleMakeVendor(user._id, user.name)}
-                        className="bg-[#6367FF] text-white w-full h-9 font-bold text-xs"
-                      >
-                        Make Vendor
-                      </Button>
-                    )}
+                      {user.role !== "vendor" && (
+                        <Button
+                          size="sm"
+                          onClick={() => handleMakeVendor(user._id, user.name)}
+                          className="bg-[#6367FF] text-white w-full h-9 font-bold text-xs"
+                        >
+                          Make Vendor
+                        </Button>
+                      )}
 
-                    {user.role !== "admin" && (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() =>
-                          handleMarkAsFraud(user._id, user.name, user.role)
-                        }
-                        className="border-rose-200 text-rose-600 hover:bg-rose-50 w-full h-9 font-bold text-xs"
-                      >
-                        Mark as Fraud
-                      </Button>
-                    )}
-                  </>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+                      {user.role !== "admin" && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() =>
+                            handleMarkAsFraud(user._id, user.name, user.role)
+                          }
+                          className="border-rose-200 text-rose-600 hover:bg-rose-50 w-full h-9 font-bold text-xs"
+                        >
+                          Mark as Fraud
+                        </Button>
+                      )}
+                    </>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          <div className="text-center text-slate-500 py-6">No users found.</div>
+        )}
       </div>
     </div>
   );

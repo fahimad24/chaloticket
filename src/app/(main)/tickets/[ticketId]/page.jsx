@@ -129,6 +129,7 @@ function TicketDetailsContent({ params }) {
 
     const bookedData = {
       ...ticket,
+      ticketId,
       userId: session?.id,
       userName: session?.name,
       userEmail: session?.email,

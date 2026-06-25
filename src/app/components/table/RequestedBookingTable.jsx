@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { fetchBookedTicketsStatus } from "@/lib/api-action";
+import { fetchBookedTicketsStatus, updateTicket } from "@/lib/api-action";
 import { toast } from "sonner";
 const RequestedBookingTable = ({ bookingRequests: initialRequests }) => {
   const [bookingRequests, setBookingRequests] = useState(initialRequests);
@@ -48,17 +48,18 @@ const RequestedBookingTable = ({ bookingRequests: initialRequests }) => {
   };
 
   // ❌ REJECT BUTTON HANDLER
-  const handleReject = async (id) => {
+  const handleReject = async (id, quantity, ticketId) => {
     const result = await fetchBookedTicketsStatus(id, "rejected");
+    const data = await updateTicket(ticketId, { quantity: quantity });
+    console.log("Reject result:", result);
     if (result) {
       setBookingRequests((prev) =>
         prev.map((request) =>
           request._id === id ? { ...request, status: "rejected" } : request,
         ),
       );
-      toast.error({
-        title: "Booking Rejected",
-        description: "You have successfully rejected the booking request.",
+      toast.error("Booking Rejected", {
+        description: "You have rejected the booking request.",
       });
     }
   };
@@ -203,7 +204,13 @@ const RequestedBookingTable = ({ bookingRequests: initialRequests }) => {
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => handleReject(request._id)}
+                        onClick={() =>
+                          handleReject(
+                            request._id,
+                            request?.quantity,
+                            request?.ticketId,
+                          )
+                        }
                         className="border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700 h-8 px-3 rounded-lg font-semibold text-xs flex items-center gap-1"
                       >
                         <X className="w-3.5 h-3.5" /> Reject

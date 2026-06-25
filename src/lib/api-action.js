@@ -1,8 +1,8 @@
 "use server";
 
 import { toast } from "sonner";
-import { auth } from "./auth";
 import { headers } from "next/headers";
+import { auth } from "./auth";
 
 export const getSession = async () => {
     const result = await auth.api.getSession({
@@ -11,7 +11,20 @@ export const getSession = async () => {
     const session = result?.session;
     const { userId, token } = session || {};
     return { userId, token, session };
+
 }
+
+export const getApiToken = async () => {
+    const { token } = await auth.api.getToken(
+        {
+            headers: await headers()
+        }
+    );
+    return token;
+};
+
+
+
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
 const IMGBB_API_KEY = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
@@ -56,21 +69,27 @@ export const fetchTicketById = async (ticketId) => {
 
 // Fetch all users
 export const fetchAllUsers = async () => {
-    const res = await fetch(`${API_BASE_URL}/api/users`);
+    const token = await getApiToken();
+    console.log("API Token:", token); // Log the token for debugging
+    const res = await fetch(`${API_BASE_URL}/api/users`, { headers: { "Authorization": `Bearer ${token}` } });
     const users = await res.json();
     return users;
 };
 
 // Fetch all booked tickets for a specific user
 export const fetchBookedTicketsByUserId = async (userId) => {
-    const res = await fetch(`${API_BASE_URL}/api/booked-tickets/${userId}`, { cache: 'no-store' });
+    const token = await getApiToken();
+    console.log("API Token:", token); // Log the token for debugging
+    const res = await fetch(`${API_BASE_URL}/api/booked-tickets/${userId}`, { headers: { "Authorization": `Bearer ${token}` }, cache: 'no-store' });
     const bookedTickets = await res.json();
     return bookedTickets;
 };
 
 // Fetch booked tickets for a specific ticket vendor  ID
 export const fetchBookedTicketsByVendorId = async (vendorId) => {
-    const res = await fetch(`${API_BASE_URL}/api/booked-tickets/vendor/${vendorId}`, { cache: 'no-store' });
+    const token = await getApiToken();
+    console.log("API Token:", token);
+    const res = await fetch(`${API_BASE_URL}/api/booked-tickets/vendor/${vendorId}`, { headers: { "Authorization": `Bearer ${token}` }, cache: 'no-store' });
     const bookedTickets = await res.json();
     return bookedTickets;
 };
@@ -80,11 +99,13 @@ export const fetchBookedTicketsByVendorId = async (vendorId) => {
 
 // Create a new ticket
 export const createTicket = async (ticketData) => {
+    const token = await getApiToken();
     try {
         const response = await fetch(`${API_BASE_URL}/api/tickets`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify(ticketData),
         });
@@ -107,11 +128,13 @@ export const createTicket = async (ticketData) => {
 
 // Update a ticket by ID
 export const updateTicket = async (ticketId, updatedData) => {
+    const token = await getApiToken();
     try {
         const response = await fetch(`${API_BASE_URL}/api/tickets/${ticketId}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify(updatedData),
         });
@@ -130,11 +153,13 @@ export const updateTicket = async (ticketId, updatedData) => {
 
 // user Role Update API
 export const updateUserRole = async (userId, updatedData) => {
+    const token = await getApiToken();
     try {
         const response = await fetch(`${API_BASE_URL}/api/users/${userId}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify(updatedData),
         });
@@ -153,11 +178,13 @@ export const updateUserRole = async (userId, updatedData) => {
 
 // fetch only user booked tickets
 export const fetchUserBookedTickets = async (bookedData, ticketId) => {
+    const token = await getApiToken();
     try {
         const response = await fetch(`${API_BASE_URL}/api/tickets/booked/${ticketId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
             },
             body: JSON.stringify({ bookedData }),
         });
@@ -174,11 +201,13 @@ export const fetchUserBookedTickets = async (bookedData, ticketId) => {
 
 // fetch user booked tickets status by ticketId
 export const fetchBookedTicketsStatus = async (ticketId, status) => {
+    const token = await getApiToken();
     try {
         const response = await fetch(`${API_BASE_URL}/api/tickets/booked/${ticketId}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({ status }),
         });
@@ -197,9 +226,13 @@ export const fetchBookedTicketsStatus = async (ticketId, status) => {
 
 // Delete a ticket by ID
 export const deleteTicket = async (ticketId) => {
+    const token = await getApiToken();
     try {
         const response = await fetch(`${API_BASE_URL}/api/tickets/${ticketId}`, {
             method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            },
         });
 
         if (!response.ok) {
