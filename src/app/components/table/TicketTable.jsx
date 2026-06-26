@@ -67,6 +67,8 @@ const TicketTable = ({ allTickets }) => {
     });
   };
 
+  console.log("Tickets in TicketTable:", tickets);
+
   const getStatusBadge = (status) => {
     const styles = {
       pending: "bg-amber-50 text-amber-700 border-amber-200 gap-1",

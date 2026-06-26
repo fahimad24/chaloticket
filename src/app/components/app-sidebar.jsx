@@ -88,7 +88,7 @@ export function AppSidebar() {
       </SidebarHeader>
 
       {/* ─── SIDEBAR CONTENT ─── */}
-      <SidebarNav currentRole={currentRole} />
+      <SidebarNav currentRole={currentRole} handleLogout={handleLogout} />
 
       {/* ─── SIDEBAR FOOTER ─── */}
       <SidebarFooter className="border-t border-slate-100">

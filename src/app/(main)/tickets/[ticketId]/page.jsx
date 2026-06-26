@@ -21,20 +21,17 @@ import {
   fetchUserBookedTickets,
   updateTicket,
 } from "@/lib/api-action";
-import { BookDashed } from "lucide-react";
 import { useUserInfo } from "@/lib/user-action";
+import TicketDetailsSkeleton from "@/app/components/ui/TicketDetailsSkeleton";
 
 function TicketDetailsContent({ params }) {
-  // 💡 নোট: আপনার ফোল্ডারের নাম [id] হলে এখানে { id } ব্যবহার করবেন
   const { ticketId } = use(params);
   const router = useRouter();
 
   const { session, isPanding } = useUserInfo();
 
-  // টিকিট স্টেট (শুরুতে null রাখা ভালো, তাহলে ডাটা লোড হওয়া পর্যন্ত চেনা যায়)
   const [ticket, setTicket] = useState(null);
 
-  // কাউন্টডাউন স্টেট
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -48,12 +45,11 @@ function TicketDetailsContent({ params }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  // ─── 🎯 ১. এপিআই কল করার আলাদা useEffect (কেবল ১ বার চলবে) ───
   useEffect(() => {
     async function loadTicketData() {
       try {
         const ticketData = await fetchTicketById(ticketId);
-        setTicket(ticketData); // 👈 এই লাইনটি মিস হয়েছিল, এখন ডাটা স্টেটে সেভ হবে
+        setTicket(ticketData);
       } catch (error) {
         console.error("Error fetching ticket:", error);
       }
@@ -63,11 +59,10 @@ function TicketDetailsContent({ params }) {
     }
   }, [ticketId]);
 
-  // ─── ⏱️ ২. কাউন্টডাউন টাইমারের আলাদা useEffect ───
   const targetDepartureTime = ticket?.departureTime || ticket?.departure;
 
   useEffect(() => {
-    if (!targetDepartureTime) return; // ডাটা না আসা পর্যন্ত অপেক্ষা করবে
+    if (!targetDepartureTime) return;
 
     const calculateTimeLeft = () => {
       const departureDate = new Date(targetDepartureTime);
@@ -99,23 +94,19 @@ function TicketDetailsContent({ params }) {
     const timer = setInterval(calculateTimeLeft, 1000);
 
     return () => clearInterval(timer);
-  }, [targetDepartureTime]); // 👈 শুধু ডিপার্চার টাইম পেলে বা চেঞ্জ হলে রান করবে
+  }, [targetDepartureTime]);
 
-  // ডাটা লোড হওয়ার আগ পর্যন্ত সেফটি লোডিং স্ক্রিন
   if (!ticket) {
-    return (
-      <div className="text-center py-20 text-slate-500 font-medium">
-        Loading ticket records...
-      </div>
-    );
+    return <TicketDetailsSkeleton></TicketDetailsSkeleton>;
   }
 
-  // ─── ৩. ভ্যালিডেশন কন্ডিশনস ───
   const isTimePassed = timeLeft.isExpired;
   const isSoldOut = ticket?.quantity === 0;
-  const isBookNowDisabled = isTimePassed || isSoldOut || !session || isPanding;
+  const vendor = session?.role === "vendor";
+  const admin = session?.role === "admin";
+  const isBookNowDisabled =
+    isTimePassed || isSoldOut || !session || isPanding || vendor || admin;
 
-  // ─── ৪. বুকিং সাবমিট হ্যান্ডলার ───
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
 
@@ -161,7 +152,7 @@ function TicketDetailsContent({ params }) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50/50 py-10 px-4 md:px-6">
+    <div className="min-h-screen bg-slate-50/50 py-10 px-4 md:px-6 mt-24">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* BREADCRUMB */}
         <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
@@ -492,8 +483,8 @@ export default function TicketDetailsPage({ params }) {
   return (
     <Suspense
       fallback={
-        <div className="text-center py-20 text-slate-500">
-          Loading ticket view...
+        <div className="text-center h-400 flex items-center justify-center text-slate-500">
+          <p>Loading ticket view...</p>
         </div>
       }
     >

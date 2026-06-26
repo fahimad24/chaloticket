@@ -40,7 +40,7 @@ export default function TicketCard({ ticket, isAdvertisement = false }) {
 
   return (
     <div
-      className={`group relative rounded-2xl border bg-white overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
+      className={`group relative rounded-2xl border bg-accent overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
         isAdvertisement
           ? "border-indigo-100 shadow-sm ring-1 ring-indigo-50/50"
           : "border-slate-100 shadow-sm"
@@ -100,7 +100,7 @@ export default function TicketCard({ ticket, isAdvertisement = false }) {
             {ticket.perks.map((perk, index) => (
               <span
                 key={index}
-                className="text-[10px] bg-emerald-50/60 text-emerald-700 font-semibold px-2 py-0.5 rounded border border-emerald-100/50"
+                className="text-[10px] bg-white text-purple-500 font-semibold px-2 py-0.5 rounded border border-emerald-100/50"
               >
                 {perk}
               </span>

@@ -93,9 +93,8 @@ const sidebarRoutes = {
   ],
 };
 
-export default function SidebarNav({ currentRole }) {
+export default function SidebarNav({ currentRole, handleLogout }) {
   const pathname = usePathname();
-  const [projectsOpen, setProjectsOpen] = useState(false);
 
   return (
     <SidebarContent>
@@ -124,7 +123,7 @@ export default function SidebarNav({ currentRole }) {
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
-      <SidebarGroup>
+      <SidebarGroup className="mt-auto">
         <SidebarGroupLabel>Settings</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu>
@@ -132,7 +131,7 @@ export default function SidebarNav({ currentRole }) {
               <SidebarMenuButton asChild tooltip={"Sign Out"}>
                 <div>
                   <LogOut className="h-4 w-4" />
-                  <span className="cursor-pointer" onClick={() => signOut()}>
+                  <span className="cursor-pointer" onClick={handleLogout}>
                     Sign Out
                   </span>
                 </div>

@@ -33,24 +33,14 @@ export function Navbar({
   useEffect(() => {
     const controlNavbar = () => {
       const currentScrollY = window.scrollY;
-
-      // ১. যদি ইউজার নিচের দিকে স্ক্রোল করে এবং স্ক্রোল পজিশন ৫০px এর বেশি হয়, তবে হাইড করো
       if (currentScrollY > lastScrollY && currentScrollY > 100) {
         setIsVisible(false);
-      }
-      // ২. যদি ওপরে স্ক্রোল করে, তবে আবার দেখাও
-      else if (currentScrollY < lastScrollY) {
+      } else if (currentScrollY < lastScrollY) {
         setIsVisible(true);
       }
-
-      // বর্তমান স্ক্রোল পজিশন সেভ করে রাখা হচ্ছে পরবর্তী চেকের জন্য
       setLastScrollY(currentScrollY);
     };
-
-    // ব্রাউজারে স্ক্রোল লিসেনার অ্যাড করা হলো
     window.addEventListener("scroll", controlNavbar);
-
-    // মেমোরি লিক এড়াতে ক্লিনআপ ফাংশন
     return () => {
       window.removeEventListener("scroll", controlNavbar);
     };
@@ -162,9 +152,17 @@ export function Navbar({
               </li>
             ))}
             {rightContent && (
-              <li className="mt-4 flex flex-col gap-2 border-t border-accent/20 pt-4 px-2">
-                {rightContent}
-              </li>
+              <div className="md:hidden justify-end gap-4 flex flex-col flex-1">
+                {isPending ? (
+                  <div className="flex items-center gap-3">
+                    <Skeleton className="h-10 w-10 shrink-0 rounded-full bg-gray-400" />
+                  </div>
+                ) : session ? (
+                  <Profile session={session} />
+                ) : (
+                  rightContent
+                )}
+              </div>
             )}
           </ul>
         </div>

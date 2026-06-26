@@ -1,5 +1,6 @@
 import { fetchAllTickets } from "@/lib/api-action";
 import TicketCard from "../(main)/components/card/TicketCard";
+import { toast } from "sonner";
 
 export default async function TicketsContainer() {
   let advertisementTickets = [];
@@ -11,18 +12,16 @@ export default async function TicketsContainer() {
 
     latestTickets = await fetchAllTickets("", "approved", "");
   } catch (error) {
+    toast.error("Failed to fetch tickets. Please try again later.");
     console.error("Error fetching tickets:", error);
   }
 
-  console.log("Advertisement Tickets:", advertisementTickets);
-  console.log("Latest Tickets:", latestTickets);
-
   return (
-    <div className="space-y-12 max-w-7xl mx-auto px-4 py-8">
+    <div className="space-y-12 max-w-7xl mx-auto px-4 py-8 md:px-6 xl:px-0 md:py-12 lg:py-16">
       {/* 1. ADVERTISEMENT SECTION */}
-      <section className="space-y-4">
-        <div className="border-l-4 border-[#6367FF] pl-3">
-          <h2 className="text-xl md:text-2xl font-bold text-slate-900">
+      <section className="space-y-10">
+        <div className="border-l-4 border-[#6367FF] pl-3 space-y-3">
+          <h2 className="text-xl md:text-4xl font-bold text-slate-900">
             Featured Services
           </h2>
           <p className="text-xs text-slate-500">
@@ -31,20 +30,26 @@ export default async function TicketsContainer() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {advertisementTickets.slice(0, 6).map((ticket) => (
-            <TicketCard
-              key={ticket._id || ticket.id}
-              ticket={ticket}
-              isAdvertisement={true} // এডভারটাইজমেন্ট অন করা হলো
-            />
-          ))}
+          {advertisementTickets.length > 0 ? (
+            advertisementTickets.slice(0, 6).map((ticket) => (
+              <TicketCard
+                key={ticket._id || ticket.id}
+                ticket={ticket}
+                isAdvertisement={true} // এডভারটাইজমেন্ট অন করা হলো
+              />
+            ))
+          ) : (
+            <p className="text-slate-500">
+              No advertisement tickets available.
+            </p>
+          )}
         </div>
       </section>
 
       {/* 2. LATEST TICKETS SECTION */}
-      <section className="space-y-4">
-        <div className="border-l-4 border-emerald-500 pl-3">
-          <h2 className="text-xl md:text-2xl font-bold text-slate-900">
+      <section className="space-y-10 mt-28">
+        <div className="border-l-4 border-emerald-500 pl-3 space-y-3">
+          <h2 className="text-xl md:text-4xl font-bold text-slate-900">
             Recently Added Tickets
           </h2>
           <p className="text-xs text-slate-500">
@@ -53,13 +58,17 @@ export default async function TicketsContainer() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {latestTickets.slice(0, 8).map((ticket) => (
-            <TicketCard
-              key={ticket._id || ticket.id}
-              ticket={ticket}
-              isAdvertisement={false} // সাধারণ লেটেস্ট টিকিট কার্ড
-            />
-          ))}
+          {latestTickets.length > 0 ? (
+            latestTickets.slice(0, 8).map((ticket) => (
+              <TicketCard
+                key={ticket._id || ticket.id}
+                ticket={ticket}
+                isAdvertisement={false} // সাধারণ লেটেস্ট টিকিট কার্ড
+              />
+            ))
+          ) : (
+            <p className="text-slate-500">No latest tickets available.</p>
+          )}
         </div>
       </section>
     </div>

@@ -18,6 +18,7 @@ import Image from "next/image";
 import { signOut, signUp } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import UserRole from "@/app/components/ui/UserRole";
+import { toast } from "sonner";
 
 export default function SignupPage() {
   const [loading, setLoading] = useState(false);
@@ -36,7 +37,7 @@ export default function SignupPage() {
     const role = formData.get("role");
     const userData = { name, email, password, role };
 
-    const { data } = await signUp.email(
+    const { data, error } = await signUp.email(
       {
         ...userData,
         image: "",
@@ -57,10 +58,18 @@ export default function SignupPage() {
         onError: (ctx) => {
           setLoading(false);
           setAuthError(ctx.error.message || "Something went wrong.");
+          toast.error("Failed to create account. Please try again.");
         },
       },
     );
-    console.log("Signup response:", data);
+    if (data) {
+      toast.success(
+        "Account created successfully! Please check your email to verify your account.",
+      );
+    }
+    if (error) {
+      toast.error("Failed to create account. Please try again.");
+    }
   };
 
   return (

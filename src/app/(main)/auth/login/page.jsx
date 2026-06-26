@@ -13,6 +13,7 @@ import {
 import Image from "next/image";
 import UserRole from "@/app/components/ui/UserRole";
 import { signIn } from "@/lib/auth-client";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const onSubmit = async (e) => {
@@ -30,6 +31,12 @@ export default function LoginPage() {
       rememberMe: true,
       callbackURL: "/",
     });
+    if (data) {
+      toast.success("Login successful! Redirecting...");
+    }
+    if (error) {
+      toast.error("Login failed. Please check your credentials and try again.");
+    }
   };
 
   return (

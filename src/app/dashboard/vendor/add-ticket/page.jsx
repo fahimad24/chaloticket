@@ -106,8 +106,6 @@ export default function AddTicketPage() {
       verificationStatus: "pending",
     };
 
-    console.log("Ticket Payload:", ticketPayload, "Image URL:", imageUploadUrl);
-
     if (imageUploadUrl) {
       setUploadProgress("Image uploaded successfully. Creating ticket...");
       const result = await createTicket(ticketPayload);
@@ -118,6 +116,7 @@ export default function AddTicketPage() {
         setImageFile(null);
       } else {
         toast.error("Failed to create ticket. Please try again.");
+        setIsSubmitting(false);
       }
       setIsSubmitting(false);
     } else {

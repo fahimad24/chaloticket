@@ -28,7 +28,7 @@ export function Profile({ session }) {
   };
 
   return (
-    <DropdownMenu>
+    <DropdownMenu className="max-sm:block justify-end">
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="rounded-full">
           <Avatar>

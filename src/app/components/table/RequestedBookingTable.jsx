@@ -11,7 +11,6 @@ import {
   Clock,
   CheckCircle2,
   XCircle,
-  Inbox,
 } from "lucide-react";
 
 import {
@@ -40,9 +39,8 @@ const RequestedBookingTable = ({ bookingRequests: initialRequests }) => {
           request._id === id ? { ...request, status: "accepted" } : request,
         ),
       );
-      toast.success({
-        title: "Booking Accepted",
-        description: "You have successfully accepted the booking request.",
+      toast.success("Booking Accepted", {
+        description: "You have accepted the booking request.",
       });
     }
   };
@@ -89,6 +87,14 @@ const RequestedBookingTable = ({ bookingRequests: initialRequests }) => {
           className="bg-rose-50 text-rose-700 border-rose-200 gap-1"
         >
           <XCircle className="w-3 h-3" /> Rejected
+        </Badge>
+      ),
+      paid: (
+        <Badge
+          variant="outline"
+          className="bg-blue-50 text-blue-700 border-blue-200 gap-1"
+        >
+          <CreditCard className="w-3 h-3" /> Paid
         </Badge>
       ),
     };

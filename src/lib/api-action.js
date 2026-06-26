@@ -137,9 +137,7 @@ export const updateTicket = async (ticketId, updatedData) => {
             body: JSON.stringify(updatedData),
         });
 
-        if (!response.ok) {
-            throw new Error("Failed to update ticket");
-        }
+        console.log("Update ticket response status:", response.status); // Log the response status for debugging
 
         const result = await response.json();
         return result;
@@ -193,6 +191,88 @@ export const fetchUserBookedTickets = async (bookedData, ticketId) => {
         return result;
     } catch (error) {
         console.error("Error fetching user booked tickets:", error);
+        throw error;
+    }
+};
+
+// Fetch total booked and tickets quantity for a specific ticket
+export const fetchTotalTicketsQuantity = async () => {
+    const token = await getApiToken();
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/tickets/total-qty`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+        if (!response.ok) {
+            throw new Error("Failed to fetch total booked and tickets quantity");
+        }
+        const result = await response.json();
+        return result.ticketTotalQty;
+    } catch (error) {
+        console.error("Error fetching total booked and tickets quantity:", error);
+        throw error;
+    }
+};
+
+export const fetchTotalTicketsSold = async () => {
+    const token = await getApiToken();
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/tickets/total-sold`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+        if (!response.ok) {
+            throw new Error("Failed to fetch total tickets sold");
+        }
+        const result = await response.json();
+        return result.totalTicketsSold;
+    } catch (error) {
+        console.error("Error fetching total tickets sold:", error);
+        throw error;
+    }
+};
+
+export const fetchTotalRevenue = async () => {
+    const token = await getApiToken();
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/tickets/total-revenue`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+        if (!response.ok) {
+            throw new Error("Failed to fetch total revenue");
+        }
+        const result = await response.json();
+        return result.totalRevenue;
+    } catch (error) {
+        console.error("Error fetching total revenue:", error);
+        throw error;
+    }
+};
+
+// fetch monthly report data
+export const fetchMonthlyReport = async () => {
+    const token = await getApiToken();
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/monthly-report`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+        if (!response.ok) {
+            throw new Error("Failed to fetch monthly report");
+        }
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        console.error("Error fetching monthly report:", error);
         throw error;
     }
 };

@@ -2,6 +2,7 @@ import { Button } from "@heroui/react";
 import Link from "next/link";
 import { Navbar } from "../components/navbar/Navbar";
 import Logo from "../components/ui/Logo";
+import Footer from "../components/footer/Footer";
 
 export const metadata = {
   title: "ChaloTicket",
@@ -34,7 +35,9 @@ const Mainlayout = ({ children }) => {
         </div>
       }
     />
-    {children}</div>;
+    {children}
+    <Footer />
+  </div>;
 };
 
 export default Mainlayout;
