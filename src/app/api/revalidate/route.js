@@ -19,6 +19,7 @@ export async function POST(request) {
 
         if (deleteTicket === "delete-ticket" || ticketUpdated === "ticket-updated" || verificationStatus === "success") {
             revalidatePath("/");
+            revalidatePath("/tickets");
             revalidatePath("/dashboard/admin/manage-tickets");
             revalidatePath("/dashboard/vendor/my-added-tickets");
             revalidatePath("/dashboard/admin/advertise-tickets");

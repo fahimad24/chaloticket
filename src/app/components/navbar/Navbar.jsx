@@ -7,6 +7,7 @@ import { Skeleton } from "@heroui/react";
 import { useUserInfo } from "@/lib/user-action";
 
 import { Profile } from "../ui/profile";
+import ThemeToggle from "../ThemeToggle";
 const maxWidthClasses = {
   sm: "max-w-[640px]",
   md: "max-w-[768px]",
@@ -58,7 +59,7 @@ export function Navbar({
     >
       <header
         className={cn(
-          "flex h-16 items-center justify-center px-6 rounded-full border-b border-accent/30 bg-surface/50 backdrop-blur-sm transition-all duration-300",
+          "flex h-16 items-center justify-center px-6 rounded-full border-b border-accent/30 dark:bg-surface bg-surface/50 backdrop-blur-sm transition-all duration-300",
           maxWidth !== "full" && maxWidthClasses[maxWidth],
           "mx-auto",
         )}
@@ -125,7 +126,10 @@ export function Navbar({
                 <Skeleton className="h-10 w-10 shrink-0 rounded-full bg-gray-400" />
               </div>
             ) : session ? (
-              <Profile session={session} />
+              <div className="flex items-center gap-3">
+                <ThemeToggle />
+                <Profile session={session} />
+              </div>
             ) : (
               rightContent
             )}
@@ -158,7 +162,10 @@ export function Navbar({
                     <Skeleton className="h-10 w-10 shrink-0 rounded-full bg-gray-400" />
                   </div>
                 ) : session ? (
-                  <Profile session={session} />
+                  <div className="flex items-center gap-3">
+                    <ThemeToggle />
+                    <Profile session={session} />
+                  </div>
                 ) : (
                   rightContent
                 )}

@@ -7,15 +7,13 @@ export function HeroSection() {
   async function handleSearch(formData) {
     "use server";
 
-    const transportType = formData.get("transportType") || "bus";
-    const from = formData.get("from") || "";
-    const to = formData.get("to") || "";
+    const transportType = formData.get("transportType")?.toLowerCase() || "bus";
+    const from = formData.get("from")?.toLowerCase() || "";
+    const to = formData.get("to")?.toLowerCase() || "";
     const date = formData.get("date") || "";
 
-    // সার্চ কুয়েরি সহ রেজাল্ট পেজে রিডাইরেক্ট করবে (সার্ভার সাইড সার্চ ট্রিগার হবে)
-    // এনকোডিং ঠিক রেখে নাম বড় রাখতে চাইলে এভাবে লিখতে পারেন:
     redirect(
-      `/search?transportType=${transportType}&from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&date=${date}`,
+      `/tickets?transportType=${transportType}&from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&date=${date}`,
     );
   }
 

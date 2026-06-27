@@ -15,6 +15,7 @@ import {
   Ticket,
   X,
   ChevronRight,
+  Home,
 } from "lucide-react";
 import {
   fetchTicketById,
@@ -23,6 +24,7 @@ import {
 } from "@/lib/api-action";
 import { useUserInfo } from "@/lib/user-action";
 import TicketDetailsSkeleton from "@/app/components/ui/TicketDetailsSkeleton";
+import Link from "next/link";
 
 function TicketDetailsContent({ params }) {
   const { ticketId } = use(params);
@@ -156,8 +158,14 @@ function TicketDetailsContent({ params }) {
       <div className="max-w-6xl mx-auto space-y-8">
         {/* BREADCRUMB */}
         <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
-          <span>Dashboard</span> <ChevronRight className="w-3 h-3" />
-          <span>Tickets</span> <ChevronRight className="w-3 h-3" />
+          <Link href="/" className="hover:text-[#6367FF]">
+            <Home /> Home
+          </Link>
+          <ChevronRight className="w-3 h-3" />
+          <Link href="/tickets" className="hover:text-[#6367FF]">
+            Tickets
+          </Link>
+          <ChevronRight className="w-3 h-3" />
           <span className="text-[#6367FF] truncate max-w-50">
             {ticket?.title}
           </span>

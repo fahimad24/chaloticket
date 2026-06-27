@@ -42,8 +42,8 @@ export default function TicketCard({ ticket, isAdvertisement = false }) {
     <div
       className={`group relative rounded-2xl border bg-accent overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
         isAdvertisement
-          ? "border-indigo-100 shadow-sm ring-1 ring-indigo-50/50"
-          : "border-slate-100 shadow-sm"
+          ? "border-indigo-100 dark:border-indigo-500 shadow-sm ring-1 ring-indigo-50/50"
+          : "border-slate-100 dark:border-slate-500 shadow-sm"
       }`}
     >
       {/* ADVERTISEMENT TAG / BADGE */}

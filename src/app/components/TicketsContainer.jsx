@@ -21,10 +21,10 @@ export default async function TicketsContainer() {
       {/* 1. ADVERTISEMENT SECTION */}
       <section className="space-y-10">
         <div className="border-l-4 border-[#6367FF] pl-3 space-y-3">
-          <h2 className="text-xl md:text-4xl font-bold text-slate-900">
+          <h2 className="text-xl md:text-4xl font-bold text-slate-900 dark:text-slate-200">
             Featured Services
           </h2>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 dark:text-slate-300">
             Premium choices recommended by admin
           </p>
         </div>
@@ -39,7 +39,7 @@ export default async function TicketsContainer() {
               />
             ))
           ) : (
-            <p className="text-slate-500">
+            <p className="text-slate-500 dark:text-slate-300">
               No advertisement tickets available.
             </p>
           )}
@@ -49,10 +49,10 @@ export default async function TicketsContainer() {
       {/* 2. LATEST TICKETS SECTION */}
       <section className="space-y-10 mt-28">
         <div className="border-l-4 border-emerald-500 pl-3 space-y-3">
-          <h2 className="text-xl md:text-4xl font-bold text-slate-900">
+          <h2 className="text-xl md:text-4xl font-bold text-slate-900 dark:text-slate-200">
             Recently Added Tickets
           </h2>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 dark:text-slate-300">
             Latest transport routes updated live
           </p>
         </div>
@@ -67,7 +67,9 @@ export default async function TicketsContainer() {
               />
             ))
           ) : (
-            <p className="text-slate-500">No latest tickets available.</p>
+            <p className="text-slate-500 dark:text-slate-300">
+              No latest tickets available.
+            </p>
           )}
         </div>
       </section>

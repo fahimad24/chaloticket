@@ -56,7 +56,6 @@ const SearchBar = ({ handleSearch }) => {
                 type="text"
                 name="from"
                 placeholder="Enter departure city"
-                required
                 className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 placeholder-slate-400 font-medium focus:outline-none focus:border-[#6367FF] focus:bg-white transition-all text-sm"
               />
             </div>
@@ -72,7 +71,6 @@ const SearchBar = ({ handleSearch }) => {
                 type="text"
                 name="to"
                 placeholder="Enter destination"
-                required
                 className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 placeholder-slate-400 font-medium focus:outline-none focus:border-[#6367FF] focus:bg-white transition-all text-sm"
               />
             </div>
@@ -87,7 +85,6 @@ const SearchBar = ({ handleSearch }) => {
               <input
                 type="date"
                 name="date"
-                required
                 className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-600 font-medium focus:outline-none focus:border-[#6367FF] focus:bg-white transition-all text-sm"
               />
             </div>

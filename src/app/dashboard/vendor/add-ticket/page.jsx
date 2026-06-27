@@ -91,9 +91,9 @@ export default function AddTicketPage() {
 
     const ticketPayload = {
       title,
-      from: fromLocation,
-      to: toLocation,
-      transportType,
+      from: fromLocation.toLowerCase(),
+      to: toLocation.toLowerCase(),
+      transportType: transportType.toLowerCase(),
       price: Number(price),
       quantity: Number(quantity),
       departureTime: departureDateTime,
@@ -265,8 +265,8 @@ export default function AddTicketPage() {
                 >
                   <option value="Bus">🚌 Bus</option>
                   <option value="Train">🚂 Train</option>
-                  <option value="Ship">🚢 Launch/Ship</option>
-                  <option value="Air">✈️ Air/Flight</option>
+                  <option value="Ship">🚢 Ship</option>
+                  <option value="Plane">✈️ Plane</option>
                 </select>
               </div>
 

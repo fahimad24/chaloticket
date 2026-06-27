@@ -60,6 +60,34 @@ export const fetchAllTickets = async (email = "",
     return tickets;
 };
 
+export const fetchAllTicketsSearch = async (from = "", to = "", transportType = "", sort = "") => {
+    try {
+        const baseUrl = `${API_BASE_URL}/api/tickets-search`;
+        const params = new URLSearchParams();
+
+        if (from) params.append("from", from);
+        if (to) params.append("to", to);
+        if (transportType) params.append("transportType", transportType);
+        if (sort) params.append("sort", sort);
+
+        const response = await fetch(`${baseUrl}?${params.toString()}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            cache: "no-store"
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch tickets");
+        }
+
+        return await response.json();
+    } catch (error) {
+        return [];
+    }
+};
+
 // Fetch single ticket by ID
 export const fetchTicketById = async (ticketId) => {
     const res = await fetch(`${API_BASE_URL}/api/tickets/${ticketId}`);

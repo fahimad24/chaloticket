@@ -11,7 +11,6 @@ import {
   TextField,
 } from "@heroui/react";
 import Image from "next/image";
-import UserRole from "@/app/components/ui/UserRole";
 import { signIn } from "@/lib/auth-client";
 import { toast } from "sonner";
 
@@ -21,13 +20,10 @@ export default function LoginPage() {
     const formData = new FormData(e.currentTarget);
     const email = formData.get("email");
     const password = formData.get("password");
-    const role = formData.get("role");
-    const userData = { email, password, role };
 
     const { data, error } = await signIn.email({
       email,
       password,
-      role,
       rememberMe: true,
       callbackURL: "/",
     });
@@ -181,8 +177,6 @@ export default function LoginPage() {
                 </Description>
                 <FieldError className="text-xs font-semibold text-rose-500 mt-1" />
               </TextField>
-
-              <UserRole />
 
               {/* Action Buttons */}
               <div className="flex flex-col gap-3 mt-4">
