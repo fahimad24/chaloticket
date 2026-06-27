@@ -49,7 +49,7 @@ export function Profile({ session }) {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link href="/dashboard" className="flex items-center gap-2">
+            <Link href="/dashboard/profile" className="flex items-center gap-2">
               <LayoutDashboard />
               Dashboard
             </Link>

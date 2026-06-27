@@ -7,7 +7,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-slate-900 text-slate-300 border-t border-slate-800">
-      <div className="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 lg:grid-cols-4 gap-8">
         <div className="space-y-4">
           <div className="text-white font-black text-xl tracking-tight">
             Ticket<span className="text-[#6367FF]">Bari</span>

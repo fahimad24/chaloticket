@@ -121,13 +121,13 @@ export function Navbar({
         {/* Right Side: Action Buttons / Avatar */}
         {rightContent && (
           <div className="hidden items-center justify-end gap-4 md:flex flex-1">
+            <ThemeToggle />
             {isPending ? (
               <div className="flex items-center gap-3">
                 <Skeleton className="h-10 w-10 shrink-0 rounded-full bg-gray-400" />
               </div>
             ) : session ? (
               <div className="flex items-center gap-3">
-                <ThemeToggle />
                 <Profile session={session} />
               </div>
             ) : (
@@ -157,13 +157,13 @@ export function Navbar({
             ))}
             {rightContent && (
               <div className="md:hidden justify-end gap-4 flex flex-col flex-1">
+                <ThemeToggle />
                 {isPending ? (
                   <div className="flex items-center gap-3">
                     <Skeleton className="h-10 w-10 shrink-0 rounded-full bg-gray-400" />
                   </div>
                 ) : session ? (
                   <div className="flex items-center gap-3">
-                    <ThemeToggle />
                     <Profile session={session} />
                   </div>
                 ) : (

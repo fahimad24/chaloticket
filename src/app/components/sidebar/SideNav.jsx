@@ -30,7 +30,7 @@ import { signOut } from "@/lib/auth-client";
 
 const sidebarRoutes = {
   traveler: [
-    { title: "User Profile", url: "/dashboard/user/profile", icon: User },
+    { title: "User Profile", url: "/dashboard/profile", icon: User },
     {
       title: "My Booked Tickets",
       url: "/dashboard/user/my-bookings",
@@ -45,7 +45,7 @@ const sidebarRoutes = {
   vendor: [
     {
       title: "Vendor Profile",
-      url: "/dashboard/vendor/vendor-profile",
+      url: "/dashboard/profile",
       icon: Store,
     },
     {
@@ -72,7 +72,7 @@ const sidebarRoutes = {
   admin: [
     {
       title: "Admin Profile",
-      url: "/dashboard/admin/admin-profile",
+      url: "/dashboard/profile",
       icon: ShieldCheck,
     },
     {

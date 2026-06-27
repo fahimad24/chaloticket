@@ -154,9 +154,8 @@ function TicketDetailsContent({ params }) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50/50 py-10 px-4 md:px-6 mt-24">
+    <div className="min-h-screen bg-background py-10 px-4 md:px-6 mt-24">
       <div className="max-w-6xl mx-auto space-y-8">
-        {/* BREADCRUMB */}
         <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
           <Link href="/" className="hover:text-[#6367FF]">
             <Home /> Home
@@ -171,11 +170,9 @@ function TicketDetailsContent({ params }) {
           </span>
         </div>
 
-        {/* MAIN LAYOUT */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          {/* LEFT COLUMN: DETAILS */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+            <div className="bg-background dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-600 shadow-sm overflow-hidden">
               <div className="relative h-64 md:h-96 w-full bg-slate-100">
                 <Image
                   src={
@@ -196,21 +193,21 @@ function TicketDetailsContent({ params }) {
                   <span className="text-xs uppercase font-extrabold text-[#6367FF] tracking-wider px-2.5 py-1 bg-indigo-50 rounded-md">
                     {ticket?.transportType} Fleet
                   </span>
-                  <h1 className="text-xl md:text-3xl font-bold text-slate-800 tracking-tight mt-3">
+                  <h1 className="text-xl md:text-3xl font-bold text-slate-800 dark:text-slate-200 tracking-tight mt-3">
                     {ticket?.title}
                   </h1>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 dark:bg-slate-700 p-4 rounded-2xl border border-slate-100 dark:border-slate-600">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-xl bg-rose-50 flex items-center justify-center text-rose-500 shrink-0">
                       <MapPin className="w-4 h-4" />
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase font-bold text-slate-400">
+                      <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-300 tracking-wider">
                         From
                       </p>
-                      <p className="text-sm font-semibold text-slate-700">
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                         {ticket?.from}
                       </p>
                     </div>
@@ -220,10 +217,10 @@ function TicketDetailsContent({ params }) {
                       <MapPin className="w-4 h-4" />
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase font-bold text-slate-400">
+                      <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-300 tracking-wider">
                         To
                       </p>
-                      <p className="text-sm font-semibold text-slate-700">
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                         {ticket?.to}
                       </p>
                     </div>
@@ -231,9 +228,9 @@ function TicketDetailsContent({ params }) {
                 </div>
 
                 <div className="space-y-3">
-                  <h3 className="font-bold text-slate-800 text-sm flex items-center gap-1.5">
-                    <Info className="w-4 h-4 text-slate-400" /> Amenities &
-                    Perks
+                  <h3 className="font-bold text-slate-800 dark:text-slate-200 text-sm flex items-center gap-1.5">
+                    <Info className="w-4 h-4 text-slate-400 dark:text-slate-300" />{" "}
+                    Amenities & Perks
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {ticket?.perks && ticket.perks.length > 0 ? (
@@ -246,7 +243,7 @@ function TicketDetailsContent({ params }) {
                         </span>
                       ))
                     ) : (
-                      <p className="text-xs text-slate-400">
+                      <p className="text-xs text-slate-400 dark:text-slate-300">
                         No extra perks specified.
                       </p>
                     )}
@@ -256,15 +253,14 @@ function TicketDetailsContent({ params }) {
             </div>
           </div>
 
-          {/* RIGHT COLUMN: WIDGET */}
           <div className="space-y-6 lg:sticky lg:top-24">
-            <div className="bg-white rounded-3xl border border-slate-100 shadow-md p-6 space-y-6">
+            <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-600 shadow-md p-6 space-y-6">
               <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                 <div>
                   <p className="text-xs text-slate-400 font-medium">
                     Ticket Price
                   </p>
-                  <p className="text-2xl md:text-3xl font-black text-slate-900">
+                  <p className="text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-200">
                     <span className="text-base font-bold text-[#6367FF]">
                       ৳
                     </span>
@@ -288,7 +284,6 @@ function TicketDetailsContent({ params }) {
                 </div>
               </div>
 
-              {/* COUNTDOWN */}
               <div className="space-y-2.5">
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
                   <Clock className="w-3.5 h-3.5 text-[#6367FF]" /> Time
@@ -324,10 +319,9 @@ function TicketDetailsContent({ params }) {
                 )}
               </div>
 
-              {/* DATE & TIME BOX */}
               <div className="bg-slate-50/50 rounded-2xl p-4 border border-slate-100 text-xs space-y-2 text-slate-600">
                 <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-slate-400" />
+                  <Calendar className="w-4 h-4 text-slate-400 dark:text-slate-300" />
                   <span className="font-medium">
                     Date:{" "}
                     {targetDepartureTime
@@ -339,7 +333,7 @@ function TicketDetailsContent({ params }) {
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-slate-400" />
+                  <Clock className="w-4 h-4 text-slate-400 dark:text-slate-300" />
                   <span className="font-medium">
                     Time:{" "}
                     {targetDepartureTime
@@ -355,7 +349,7 @@ function TicketDetailsContent({ params }) {
               <button
                 onClick={() => setIsModalOpen(true)}
                 disabled={isBookNowDisabled}
-                className="w-full h-12 rounded-2xl bg-[#6367FF] text-white font-bold text-sm tracking-wide shadow-lg shadow-indigo-100 hover:bg-[#5054E6] active:scale-98 transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed"
+                className="w-full h-12 rounded-2xl bg-[#6367FF] text-white font-bold text-sm tracking-wide shadow-lg shadow-indigo-400  dark:disabled:shadow-indigo-50/70 hover:bg-[#5054E6] active:scale-98 transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:bg-secondary/40 dark:disabled:bg-slate-600 disabled:text-slate-600 dark:disabled:text-slate-300 disabled:cursor-not-allowed"
               >
                 <Ticket className="w-4 h-4" />
                 {isSoldOut
@@ -369,7 +363,6 @@ function TicketDetailsContent({ params }) {
         </div>
       </div>
 
-      {/* ─── MODAL ─── */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl border border-slate-100 w-full max-w-md p-6 relative shadow-2xl">
@@ -486,7 +479,6 @@ function TicketDetailsContent({ params }) {
   );
 }
 
-// ─── ৫. মেইন এক্সপোর্ট (Suspense Wrapper এর সাথে) ───
 export default function TicketDetailsPage({ params }) {
   return (
     <Suspense

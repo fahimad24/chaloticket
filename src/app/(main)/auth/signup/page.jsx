@@ -73,7 +73,7 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen w-full flex justify-center items-center bg-white font-sans antialiased px-4 py-28">
+    <div className="min-h-screen w-full flex justify-center items-center bg-background font-sans antialiased px-4 py-28">
       <div className="flex flex-col md:flex-row  w-full h-full max-w-5xl mx-auto shadow-lg rounded-xl overflow-hidden">
         <div className="hidden md:flex md:w-1/2 bg-[#FFDBFD] relative overflow-hidden flex-col justify-between">
           <div className="relative aspect-5/6 w-full h-full">
@@ -88,7 +88,7 @@ export default function SignupPage() {
           </div>
         </div>
 
-        <div className="w-full md:w-1/2 flex items-center justify-center p-6 md:p-16 bg-white">
+        <div className="w-full md:w-1/2 flex items-center justify-center p-6 md:p-16 bg-background dark:bg-slate-800">
           <div className="w-full max-w-md flex flex-col">
             <div className="md:hidden mb-8">
               <div className="text-2xl font-black text-[#6367FF]">
@@ -97,7 +97,7 @@ export default function SignupPage() {
             </div>
 
             <div className="mb-6">
-              <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
+              <h1 className="text-3xl font-extrabold text-slate-900 dark:text-secondary tracking-tight mb-2">
                 Create Account
               </h1>
               <p className="text-sm font-medium text-slate-500">
@@ -156,7 +156,7 @@ export default function SignupPage() {
                 type="text"
                 className="flex flex-col gap-1.5 w-full"
               >
-                <Label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                <Label className="text-xs font-bold text-slate-700 dark:text-secondary uppercase tracking-wider">
                   Full Name
                 </Label>
                 <Input
@@ -178,7 +178,7 @@ export default function SignupPage() {
                   return null;
                 }}
               >
-                <Label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                <Label className="text-xs font-bold text-slate-700 dark:text-secondary uppercase tracking-wider">
                   Email Address
                 </Label>
                 <Input
@@ -207,7 +207,7 @@ export default function SignupPage() {
                   return null;
                 }}
               >
-                <Label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                <Label className="text-xs font-bold text-slate-700 dark:text-secondary uppercase tracking-wider">
                   Password
                 </Label>
                 <Input

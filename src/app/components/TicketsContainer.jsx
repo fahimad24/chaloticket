@@ -31,13 +31,15 @@ export default async function TicketsContainer() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {advertisementTickets.length > 0 ? (
-            advertisementTickets.slice(0, 6).map((ticket) => (
-              <TicketCard
-                key={ticket._id || ticket.id}
-                ticket={ticket}
-                isAdvertisement={true} // এডভারটাইজমেন্ট অন করা হলো
-              />
-            ))
+            advertisementTickets
+              .slice(0, 6)
+              .map((ticket) => (
+                <TicketCard
+                  key={ticket._id || ticket.id}
+                  ticket={ticket}
+                  isAdvertisement={true}
+                />
+              ))
           ) : (
             <p className="text-slate-500 dark:text-slate-300">
               No advertisement tickets available.

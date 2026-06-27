@@ -19,7 +19,7 @@ const Mainlayout = ({ children }) => {
         { label: "About", href: "/about" },
       ]}
       rightContent={
-        <div className="flex items-center gap-2 flex-1 justify-end">
+        <div className="flex items-center gap-2 justify-end">
           <Link
             href="/auth/login"
             className="text-sm font-semibold text-primary hover:text-[#8494FF] transition-colors px-3 py-2"

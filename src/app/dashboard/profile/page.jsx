@@ -1,0 +1,387 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import {
+  Shield,
+  ShoppingBag,
+  DollarSign,
+  PlusCircle,
+  CheckCircle,
+  Users,
+  BarChart3,
+  Ticket,
+  Bus,
+  ArrowRight,
+  TicketX,
+} from "lucide-react";
+import { useUserInfo } from "@/lib/user-action";
+import { fetchBookedTicketsByUserId } from "@/lib/api-action";
+import HistoryTable from "@/app/components/table/HistoryTable";
+import ProfileSkeleton from "@/app/components/skeleton/ProfileSkeleton";
+
+export default function UnifiedProfilePage() {
+  const { session } = useUserInfo();
+
+  const currentRole = session?.role || "traveler";
+
+  const [isPending, setIsPending] = useState(true);
+  const [bookedTickets, setBookedTickets] = useState([]);
+
+  const profileData = {
+    name: session?.name || "User",
+    email: session?.email || "No email provided",
+    avatar:
+      session?.image ||
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb",
+    joinedDate: session?.createdAt
+      ? new Date(session.createdAt).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        })
+      : "N/A",
+  };
+
+  useEffect(() => {
+    async function fetchData() {
+      if (!session?.id) return;
+
+      setIsPending(true);
+      try {
+        if (currentRole === "traveler") {
+          const data = await fetchBookedTicketsByUserId(session.id);
+          if (data) setBookedTickets(data);
+        } else if (currentRole === "vendor") {
+        } else if (currentRole === "admin") {
+        }
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
+      } finally {
+        setIsPending(false);
+      }
+    }
+
+    if (session?.id) {
+      fetchData();
+    }
+  }, [session?.id, currentRole]);
+
+  const completedTrips = bookedTickets.filter(
+    (t) =>
+      t.status?.toLowerCase() === "accepted" ||
+      t.status?.toLowerCase() === "paid",
+  ).length;
+
+  const rejectedTrips = bookedTickets.filter(
+    (t) => t.status?.toLowerCase() === "rejected",
+  ).length;
+
+  const userStats = [
+    {
+      label: "Total Bookings",
+      value: `${bookedTickets.length} Tickets`,
+      icon: <Ticket className="w-5 h-5 text-[#6367FF]" />,
+    },
+    {
+      label: "Completed Trips",
+      value: `${completedTrips} Tickets`,
+      icon: <CheckCircle className="w-5 h-5 text-emerald-500" />,
+    },
+    {
+      label: "Rejected Trips",
+      value: `${rejectedTrips} Tickets`,
+      icon: <TicketX className="w-5 h-5 text-rose-500" />,
+    },
+  ];
+
+  const vendorStats = [
+    {
+      label: "Total Earnings",
+      value: "৳45,200",
+      icon: <DollarSign className="w-5 h-5 text-emerald-500" />,
+    },
+    {
+      label: "Active Routes",
+      value: "8 Bus/Train",
+      icon: <Bus className="w-5 h-5 text-[#6367FF]" />,
+    },
+    {
+      label: "Seats Sold",
+      value: "184 Seats",
+      icon: <Users className="w-5 h-5 text-[#8494FF]" />,
+    },
+  ];
+
+  const adminStats = [
+    {
+      label: "Total Users",
+      value: "1,240",
+      icon: <Users className="w-5 h-5 text-[#6367FF]" />,
+    },
+    {
+      label: "Active Vendors",
+      value: "84 Companies",
+      icon: <ShoppingBag className="w-5 h-5 text-[#8494FF]" />,
+    },
+    {
+      label: "Total System Sales",
+      value: "৳3,80,000",
+      icon: <BarChart3 className="w-5 h-5 text-emerald-500" />,
+    },
+  ];
+
+  // লোডিং স্টেট হ্যান্ডলার
+  if (isPending || (!session && currentRole === "traveler")) {
+    return <ProfileSkeleton />;
+  }
+
+  return (
+    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 antialiased pb-24">
+      {/* প্রোফাইল হেডার কার্ড */}
+      <div className="max-w-5xl mx-auto px-4 pt-8">
+        <div className="bg-white border border-slate-100 dark:bg-slate-900 dark:border-slate-800 rounded-3xl p-6 md:p-8 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
+            <div className="relative w-24 h-24 rounded-2xl overflow-hidden ring-4 ring-[#6367FF]/10 shrink-0">
+              <Image
+                src={profileData.avatar}
+                alt="User Avatar"
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
+            <div className="space-y-1.5">
+              <div className="flex flex-col sm:flex-row items-center gap-2">
+                <h2 className="text-2xl font-black text-slate-950 dark:text-white tracking-tight">
+                  {profileData.name}
+                </h2>
+                <span
+                  className={`inline-flex items-center gap-1 px-2.5 py-0.5 text-[10px] font-black rounded-lg uppercase tracking-wider border ${
+                    currentRole === "admin"
+                      ? "bg-rose-50 text-rose-600 border-rose-200/50 dark:bg-rose-950/30 dark:text-rose-400 dark:border-rose-900"
+                      : currentRole === "vendor"
+                        ? "bg-amber-50 text-amber-600 border-amber-200/50 dark:bg-amber-950/30 dark:text-amber-400 dark:border-amber-900"
+                        : "bg-[#ffdbfd]/40 text-[#6367FF] border-[#C9BEFF]/40 dark:bg-[#6367FF]/10 dark:text-[#8494FF]"
+                  }`}
+                >
+                  <Shield className="w-3 h-3" />
+                  {currentRole}
+                </span>
+              </div>
+              <p className="text-sm font-medium text-slate-400">
+                {profileData.email}
+              </p>
+              <p className="text-xs text-slate-400 font-semibold">
+                Member Since: {profileData.joinedDate}
+              </p>
+            </div>
+          </div>
+
+          {/* রোল ভিত্তিক অ্যাকশন বাটন */}
+          <div className="shrink-0 w-full md:w-auto">
+            {currentRole === "vendor" && (
+              <button className="w-full inline-flex items-center justify-center gap-2 bg-[#6367FF] hover:bg-[#5054E6] text-white font-bold text-sm px-5 h-12 rounded-xl transition-all shadow-md active:scale-95">
+                <PlusCircle className="w-4 h-4" />
+                <span>Create New Ticket</span>
+              </button>
+            )}
+            {currentRole === "traveler" && (
+              <button className="w-full inline-flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 font-bold text-sm px-5 h-12 rounded-xl transition-all active:scale-95">
+                <span>Edit Profile Settings</span>
+              </button>
+            )}
+            {currentRole === "admin" && (
+              <button className="w-full inline-flex items-center justify-center gap-2 bg-slate-950 hover:bg-slate-900 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-bold text-sm px-5 h-12 rounded-xl transition-all shadow-md active:scale-95">
+                <span>System Configuration</span>
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* স্ট্যাটস গ্রিড সেকশন */}
+      <div className="max-w-5xl mx-auto px-4 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {currentRole === "traveler" &&
+            userStats.map((stat, i) => (
+              <div
+                key={i}
+                className="bg-white border border-slate-100 dark:bg-slate-900 dark:border-slate-800 p-6 rounded-2xl flex items-center justify-between shadow-sm"
+              >
+                <div className="space-y-1">
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wide">
+                    {stat.label}
+                  </p>
+                  <p className="text-2xl font-black text-slate-950 dark:text-white">
+                    {stat.value}
+                  </p>
+                </div>
+                <div className="w-12 h-12 bg-slate-50 dark:bg-slate-800/50 rounded-xl flex items-center justify-center border border-slate-100 dark:border-slate-800">
+                  {stat.icon}
+                </div>
+              </div>
+            ))}
+
+          {currentRole === "vendor" &&
+            vendorStats.map((stat, i) => (
+              <div
+                key={i}
+                className="bg-white border border-slate-100 dark:bg-slate-900 dark:border-slate-800 p-6 rounded-2xl flex items-center justify-between shadow-sm"
+              >
+                <div className="space-y-1">
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wide">
+                    {stat.label}
+                  </p>
+                  <p className="text-2xl font-black text-slate-950 dark:text-white">
+                    {stat.value}
+                  </p>
+                </div>
+                <div className="w-12 h-12 bg-slate-50 dark:bg-slate-800/50 rounded-xl flex items-center justify-center border border-slate-100 dark:border-slate-800">
+                  {stat.icon}
+                </div>
+              </div>
+            ))}
+
+          {currentRole === "admin" &&
+            adminStats.map((stat, i) => (
+              <div
+                key={i}
+                className="bg-white border border-slate-100 dark:bg-slate-900 dark:border-slate-800 p-6 rounded-2xl flex items-center justify-between shadow-sm"
+              >
+                <div className="space-y-1">
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wide">
+                    {stat.label}
+                  </p>
+                  <p className="text-2xl font-black text-slate-950 dark:text-white">
+                    {stat.value}
+                  </p>
+                </div>
+                <div className="w-12 h-12 bg-slate-50 dark:bg-slate-800/50 rounded-xl flex items-center justify-center border border-slate-100 dark:border-slate-800">
+                  {stat.icon}
+                </div>
+              </div>
+            ))}
+        </div>
+      </div>
+
+      {/* মেইন কন্টেন্ট / টেবিল সেকশন */}
+      <div className="max-w-5xl mx-auto px-4 mt-8">
+        <div className="bg-white border border-slate-100 dark:bg-slate-900 dark:border-slate-800 rounded-3xl p-6 md:p-8 shadow-sm">
+          {currentRole === "traveler" && (
+            <div className="space-y-6">
+              <div className="border-b border-slate-100 dark:border-slate-800 pb-4">
+                <h3 className="text-lg font-black tracking-tight text-slate-950 dark:text-white">
+                  Recent Purchase History
+                </h3>
+              </div>
+              <div className="w-full">
+                <HistoryTable bookedTickets={bookedTickets} />
+              </div>
+            </div>
+          )}
+
+          {currentRole === "vendor" && (
+            <div className="space-y-6">
+              <div className="border-b border-slate-100 dark:border-slate-800 pb-4">
+                <h3 className="text-lg font-black tracking-tight text-slate-950 dark:text-white">
+                  Your Active Transport Lists
+                </h3>
+              </div>
+              <div className="space-y-4">
+                {[
+                  {
+                    title: "Dhaka to Cox's Bazar Sleeper",
+                    sales: "৳18,500",
+                    type: "Bus",
+                    seats: "4 Left",
+                  },
+                  {
+                    title: "Chattogram to Dhaka Night Coach",
+                    sales: "৳12,400",
+                    type: "Bus",
+                    seats: "12 Left",
+                  },
+                ].map((ticket, idx) => (
+                  <div
+                    key={idx}
+                    className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40"
+                  >
+                    <div className="space-y-1">
+                      <p className="font-bold text-slate-900 dark:text-white text-sm sm:text-base">
+                        {ticket.title}
+                      </p>
+                      <p className="text-xs text-slate-400 font-semibold">
+                        Vehicle Class: {ticket.type} • Status: Active
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap items-center justify-between sm:justify-end gap-4 w-full sm:w-auto border-t sm:border-none border-slate-100 dark:border-slate-800 pt-3 sm:pt-0">
+                      <div className="text-left sm:text-right">
+                        <p className="text-[10px] text-slate-400 font-bold uppercase">
+                          Total Revenue
+                        </p>
+                        <p className="font-extrabold text-slate-950 dark:text-white">
+                          {ticket.sales}
+                        </p>
+                      </div>
+                      <span className="px-2.5 py-1 text-[10px] font-black rounded-lg bg-[#ffdbfd]/40 text-[#6367FF] border border-[#C9BEFF]/40">
+                        {ticket.seats}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {currentRole === "admin" && (
+            <div className="space-y-6">
+              <div className="border-b border-slate-100 dark:border-slate-800 pb-4">
+                <h3 className="text-lg font-black tracking-tight text-slate-950 dark:text-white">
+                  Pending Approvals Queue
+                </h3>
+              </div>
+              <div className="space-y-4">
+                {[
+                  {
+                    route: "Rajshahi to Dhaka Bullet Train",
+                    vendor: "Hanif Enterprises",
+                    date: "Requested 2h ago",
+                  },
+                  {
+                    route: "Dhaka to Sylhet Skyways",
+                    vendor: "Bismillah Travels",
+                    date: "Requested 5h ago",
+                  },
+                ].map((req, idx) => (
+                  <div
+                    key={idx}
+                    className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40"
+                  >
+                    <div className="space-y-1">
+                      <p className="font-bold text-slate-900 dark:text-white text-sm sm:text-base">
+                        {req.route}
+                      </p>
+                      <p className="text-xs text-slate-400 font-semibold">
+                        Vendor: {req.vendor} • {req.date}
+                      </p>
+                    </div>
+                    <div className="flex gap-2 w-full sm:w-auto border-t sm:border-none border-slate-100 dark:border-slate-800 pt-3 sm:pt-0 justify-end">
+                      <button className="px-3.5 h-9 rounded-xl bg-rose-50 text-rose-600 dark:bg-rose-950/20 dark:text-rose-400 text-xs font-bold border border-rose-100 dark:border-rose-900/30">
+                        Reject
+                      </button>
+                      <button className="px-3.5 h-9 rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-400 text-xs font-bold border border-emerald-100 dark:border-emerald-900/30 flex items-center gap-1">
+                        <span>Approve</span>
+                        <ArrowRight className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

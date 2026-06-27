@@ -10,7 +10,7 @@ export default function SearchBar({ searchParams, handleSearch }) {
   const defaultDate = searchParams.get("date") || "";
 
   return (
-    <div className="w-full rounded-3xl shadow-[0_20px_50px_rgba(99,103,255,0.08)] border border-[#C9BEFF]/30 p-6 text-left backdrop-blur-xl bg-white/90">
+    <div className="w-full rounded-3xl shadow-[0_20px_50px_rgba(99,103,255,0.08)] border border-[#C9BEFF]/30 p-6 text-left backdrop-blur-xl bg-accent  dark:border-slate-700">
       <form action={handleSearch} className="space-y-6">
         <div className="flex gap-2 border-b border-slate-100 pb-4 overflow-x-auto scrollbar-none">
           {[
@@ -52,7 +52,7 @@ export default function SearchBar({ searchParams, handleSearch }) {
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
           <div className="flex flex-col gap-2">
-            <label className="text-[11px] font-extrabold uppercase tracking-widest text-slate-400 flex items-center gap-1">
+            <label className="text-[11px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-600 flex items-center gap-1">
               <MapPin className="w-3 h-3 text-[#8494FF]" />
               <span>From</span>
             </label>
@@ -66,7 +66,7 @@ export default function SearchBar({ searchParams, handleSearch }) {
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="text-[11px] font-extrabold uppercase tracking-widest text-slate-400 flex items-center gap-1">
+            <label className="text-[11px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-600 flex items-center gap-1">
               <MapPin className="w-3 h-3 text-[#8494FF]" />
               <span>To</span>
             </label>
@@ -80,7 +80,7 @@ export default function SearchBar({ searchParams, handleSearch }) {
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="text-[11px] font-extrabold uppercase tracking-widest text-slate-400 flex items-center gap-1">
+            <label className="text-[11px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-600 flex items-center gap-1">
               <Calendar className="w-3 h-3 text-[#8494FF]" />
               <span>Journey Date</span>
             </label>

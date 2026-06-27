@@ -17,6 +17,7 @@ import {
 import { fetchAllTicketsSearch } from "@/lib/api-action";
 import SearchBar from "@/app/components/SearchBar";
 import TicketsSkeleton from "@/app/components/skeleton/TicketsSkeleton";
+import TicketCard from "../components/card/TicketCard";
 
 function TicketsContent() {
   const router = useRouter();
@@ -100,7 +101,7 @@ function TicketsContent() {
 
   return (
     <div className="min-h-screen bg-background text-foreground antialiased">
-      <div className="max-w-6xl mx-auto px-4 pt-28 pb-8 text-center space-y-8">
+      <div className="max-w-7xl mx-auto px-4 pt-28 pb-8 text-center space-y-8">
         <div className="space-y-3">
           <h1 className="text-4xl font-black tracking-tight text-slate-950 dark:text-slate-200 sm:text-5xl">
             All Available <span className="text-[#6367FF]">Tickets</span>
@@ -114,7 +115,7 @@ function TicketsContent() {
         <SearchBar searchParams={searchParams} handleSearch={handleSearch} />
       </div>
 
-      <main className="max-w-6xl mx-auto px-4 pb-24">
+      <main className="max-w-7xl mx-auto px-4 pb-24">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-100 pb-6 mb-8">
           <p className="text-sm font-bold text-slate-500 dark:text-slate-300">
             Showing <span className="text-[#6367FF]">{tickets.length}</span>{" "}
@@ -137,91 +138,12 @@ function TicketsContent() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {tickets.map((ticket, index) => (
-            <Card
-              key={ticket._id?.$oid || ticket._id?.toString() || index}
-              className={`group relative rounded-3xl overflow-hidden transition-all duration-300 bg-white border hover:-translate-y-1 hover:shadow-xl ${
-                ticket.isAdvertised
-                  ? "border-[#C9BEFF] shadow-sm ring-4 ring-[#ffdbfd]/30"
-                  : "border-slate-100 dark:border-slate-500 shadow-sm"
-              }`}
-            >
-              {ticket.isAdvertised && (
-                <div className="absolute top-3 left-3 z-20 bg-linear-to-r from-[#6367FF] to-[#8494FF] text-white text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-lg shadow-sm flex items-center gap-1">
-                  <Sparkles className="w-3 h-3" />
-                  <span>Featured Ad</span>
-                </div>
-              )}
-
-              <div className="relative h-48 w-full bg-slate-50 overflow-hidden">
-                <Image
-                  src={
-                    ticket?.image ||
-                    "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957"
-                  }
-                  alt={ticket?.title || "Ticket Image"}
-                  fill
-                  sizes="(max-w-768px) 100vw, (max-w-1200px) 50vw, 33vw"
-                  priority={ticket.isAdvertised}
-                  className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-                />
-                <div className="absolute inset-0 bg-linear-to-t from-slate-950/20 to-transparent" />
-              </div>
-
-              <CardContent className="p-5 space-y-4">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-xl border capitalize bg-[#ffdbfd]/40 text-[#6367FF] border-[#C9BEFF]/40">
-                    {getTransportIcon(ticket?.transportType)}
-                    {ticket?.transportType || "Bus"}
-                  </span>
-
-                  <span className="flex items-center gap-1 text-xs text-slate-500 font-semibold bg-slate-50 px-2.5 py-1 rounded-xl border border-slate-100">
-                    <Layers className="w-3.5 h-3.5 text-slate-400" />
-                    {ticket?.quantity || 0} Seats Left
-                  </span>
-                </div>
-
-                <div>
-                  <h3 className="font-bold text-slate-900 text-base md:text-lg line-clamp-1 group-hover:text-[#6367FF] transition-colors duration-200">
-                    {ticket?.title || "Untitled Route"}
-                  </h3>
-                </div>
-
-                {ticket?.perks && ticket.perks.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 min-h-6">
-                    {ticket.perks.map((perk, index) => (
-                      <span
-                        key={index}
-                        className="text-[10px] bg-white text-[#8494FF] font-bold px-2 py-0.5 rounded-md border border-[#C9BEFF]/30 shadow-[0_2px_4px_rgba(99,103,255,0.02)]"
-                      >
-                        {perk}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                <div className="border-t border-dashed border-slate-100 pt-3 flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
-                      Per Unit Price
-                    </p>
-                    <p className="font-extrabold text-slate-950 text-lg md:text-xl flex items-baseline gap-0.5">
-                      <span className="text-sm font-semibold text-[#6367FF]">
-                        ৳
-                      </span>
-                      {Number(ticket?.price || 0).toLocaleString()}
-                    </p>
-                  </div>
-
-                  <Link
-                    href={`/tickets/${ticket._id?.$oid || ticket._id}`}
-                    className="inline-flex items-center justify-center gap-1.5 bg-[#6367FF] hover:bg-[#5054E6] text-white font-bold text-xs px-4 h-10 rounded-xl transition-all duration-200 shadow-sm active:scale-95"
-                  >
-                    <span>See Details</span>
-                    <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
+            <TicketCard
+              key={index}
+              ticket={ticket}
+              isAdvertised={ticket?.isAdvertised}
+              getTransportIcon={getTransportIcon}
+            />
           ))}
         </div>
       </main>

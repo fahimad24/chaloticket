@@ -36,7 +36,7 @@ export default function LoginPage() {
   };
 
   return (
-    <section className="min-h-screen w-full flex justify-center items-center bg-white font-sans antialiased px-4 py-28">
+    <section className="min-h-screen w-full flex justify-center items-center bg-background font-sans antialiased px-4 py-28">
       <div className="flex flex-col md:flex-row  w-full h-full max-w-5xl mx-auto shadow-lg rounded-xl overflow-hidden">
         {/* 1. LEFT SIDE: Premium Brand Banner (Visible on Desktop) */}
         <div className="hidden md:flex md:w-1/2 bg-[#FFDBFD] relative overflow-hidden flex-col justify-between">
@@ -53,7 +53,7 @@ export default function LoginPage() {
         </div>
 
         {/* 2. RIGHT SIDE: Core Login Form Area */}
-        <div className="w-full md:w-1/2 flex items-center justify-center p-6 md:p-16 bg-white">
+        <div className="w-full md:w-1/2 flex items-center justify-center p-6 md:p-16 bg-background dark:bg-slate-800">
           <div className="w-full max-w-md flex flex-col">
             {/* Mobile Logo View */}
             <div className="md:hidden mb-8">
@@ -64,7 +64,7 @@ export default function LoginPage() {
 
             {/* Header Title */}
             <div className="mb-8">
-              <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
+              <h1 className="text-3xl font-extrabold text-slate-900 dark:text-secondary tracking-tight mb-2">
                 Welcome Back
               </h1>
               <p className="text-sm font-medium text-slate-500">
@@ -127,7 +127,7 @@ export default function LoginPage() {
                   return null;
                 }}
               >
-                <Label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                <Label className="text-xs font-bold text-slate-700 dark:text-secondary uppercase tracking-wider">
                   Email Address
                 </Label>
                 <Input
@@ -158,7 +158,7 @@ export default function LoginPage() {
                 }}
               >
                 <div className="flex justify-between items-center">
-                  <Label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                  <Label className="text-xs font-bold text-slate-700 dark:text-secondary uppercase tracking-wider">
                     Password
                   </Label>
                   <Link

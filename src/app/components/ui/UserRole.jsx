@@ -12,7 +12,9 @@ const UserRole = () => {
       defaultValue="traveler"
       className="flex flex-col gap-2"
     >
-      <Label className="text-slate-700 font-semibold text-sm">Join as a</Label>
+      <Label className="text-slate-700 dark:text-secondary font-semibold text-sm">
+        Join as a
+      </Label>
 
       <div className="flex gap-6 items-center mt-2">
         <Radio value="traveler">
@@ -22,7 +24,7 @@ const UserRole = () => {
                 <span className="w-2 h-2 rounded-full bg-white block" />
               </Radio.Indicator>
             </Radio.Control>
-            <span className="text-sm font-medium text-slate-700 group-data-[selected=true]:text-[#6367FF]">
+            <span className="text-sm font-medium text-slate-700 dark:text-slate-300 group-data-[selected=true]:text-[#6367FF] dark:group-data-[selected=true]:text-primary">
               Traveler
             </span>
           </Radio.Content>
@@ -35,7 +37,7 @@ const UserRole = () => {
                 <span className="w-2 h-2 rounded-full bg-white block" />
               </Radio.Indicator>
             </Radio.Control>
-            <span className="text-sm font-medium text-slate-700 group-data-[selected=true]:text-[#6367FF]">
+            <span className="text-sm font-medium text-slate-700 dark:text-slate-300 group-data-[selected=true]:text-[#6367FF] dark:group-data-[selected=true]:text-primary">
               Vendor
             </span>
           </Radio.Content>

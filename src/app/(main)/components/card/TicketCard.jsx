@@ -4,11 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Bus, Train, Plane, Layers, Ticket, ArrowRight } from "lucide-react";
 
-export default function TicketCard({ ticket, isAdvertisement = false }) {
-  // MongoDB _id অথবা সাধারণ id হ্যান্ডেল করার জন্য
+export default function TicketCard({ ticket, isAdvertised }) {
   const ticketId = ticket?._id || ticket?.id;
-
-  // ট্রান্সপোর্ট টাইপ অনুযায়ী কাস্টম কালার প্যালেট এবং আইকন জেনারেটর
   const getTransportMeta = (type) => {
     const lowerType = type?.toLowerCase();
     switch (lowerType) {
@@ -41,19 +38,17 @@ export default function TicketCard({ ticket, isAdvertisement = false }) {
   return (
     <div
       className={`group relative rounded-2xl border bg-accent overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
-        isAdvertisement
+        isAdvertised
           ? "border-indigo-100 dark:border-indigo-500 shadow-sm ring-1 ring-indigo-50/50"
           : "border-slate-100 dark:border-slate-500 shadow-sm"
       }`}
     >
-      {/* ADVERTISEMENT TAG / BADGE */}
-      {isAdvertisement && (
+      {isAdvertised && (
         <span className="absolute top-3 left-3 z-20 bg-linear-to-r from-[#6367FF] to-indigo-600 text-white text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-md shadow-sm">
           Featured Ad
         </span>
       )}
 
-      {/* 1. IMAGE SECTION (NEXT.JS OPTIMIZED) */}
       <div className="relative h-48 w-full bg-slate-50 overflow-hidden">
         <Image
           src={
@@ -63,16 +58,13 @@ export default function TicketCard({ ticket, isAdvertisement = false }) {
           alt={ticket?.title || "Ticket Image"}
           fill
           sizes="(max-w-768px) 100vw, (max-w-1200px) 50vw, 33vw"
-          priority={isAdvertisement} // এডভারটাইজমেন্ট ইমেজ আগে লোড হওয়ার জন্য প্রিঅরিটি ট্রু
+          priority={isAdvertised}
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
-        {/* শ্যাডো ওভারলে প্রিমিয়াম লুকের জন্য */}
         <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />
       </div>
 
-      {/* CARD CONTENT */}
       <div className="p-5 space-y-4">
-        {/* TRANSPORT TYPE BADGE & QUANTITY */}
         <div className="flex items-center justify-between gap-2">
           <span
             className={`flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-semibold rounded-full border capitalize ${transportMeta.className}`}
@@ -87,14 +79,12 @@ export default function TicketCard({ ticket, isAdvertisement = false }) {
           </span>
         </div>
 
-        {/* 2. TICKET TITLE */}
         <div>
           <h3 className="font-bold text-slate-800 text-base md:text-lg line-clamp-1 group-hover:text-[#6367FF] transition-colors duration-200">
             {ticket?.title || "Untitled Route"}
           </h3>
         </div>
 
-        {/* 3. PERKS (CONDITIONAL BADGES WITH SEPARATE COLOR) */}
         {ticket?.perks && ticket.perks.length > 0 && (
           <div className="flex flex-wrap gap-1.5 min-h-6">
             {ticket.perks.map((perk, index) => (
@@ -108,9 +98,7 @@ export default function TicketCard({ ticket, isAdvertisement = false }) {
           </div>
         )}
 
-        {/* LINE DIVIDER */}
         <div className="border-t border-dashed border-slate-100 pt-3 flex items-center justify-between gap-4">
-          {/* 4. PRICE (PER UNIT) */}
           <div>
             <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">
               Per Unit Price
@@ -121,7 +109,6 @@ export default function TicketCard({ ticket, isAdvertisement = false }) {
             </p>
           </div>
 
-          {/* 5. "SEE DETAILS" BUTTON */}
           <Link
             href={`/tickets/${ticketId}`}
             className="inline-flex items-center justify-center gap-1.5 bg-[#6367FF] hover:bg-[#5054E6] text-white font-semibold text-xs px-4 h-10 rounded-xl transition-all duration-200 shadow-sm shadow-indigo-100 active:scale-98"
