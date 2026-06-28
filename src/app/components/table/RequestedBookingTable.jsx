@@ -28,9 +28,6 @@ import { toast } from "sonner";
 const RequestedBookingTable = ({ bookingRequests: initialRequests }) => {
   const [bookingRequests, setBookingRequests] = useState(initialRequests);
 
-  console.log("Booking requests in table:", bookingRequests);
-
-  // ✅ ACCEPT BUTTON HANDLER
   const handleAccept = async (id) => {
     const result = await fetchBookedTicketsStatus(id, "accepted");
     if (result) {
@@ -45,7 +42,6 @@ const RequestedBookingTable = ({ bookingRequests: initialRequests }) => {
     }
   };
 
-  // ❌ REJECT BUTTON HANDLER
   const handleReject = async (id, quantity, ticketId) => {
     const result = await fetchBookedTicketsStatus(id, "rejected");
     const data = await updateTicket(ticketId, { quantity: quantity });

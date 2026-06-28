@@ -43,7 +43,7 @@ export function Profile({ session }) {
       <DropdownMenuContent align="end">
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <Link href="/profile" className="flex items-center gap-2">
+            <Link href="/dashboard/profile" className="flex items-center gap-2">
               <BadgeCheckIcon />
               Account
             </Link>

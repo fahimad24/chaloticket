@@ -7,7 +7,6 @@ export default async function MyBookedTickets() {
   let bookings = [];
   try {
     bookings = await fetchBookedTicketsByUserId(userId);
-    console.log("Fetched Bookings:", bookings);
   } catch (error) {
     console.error("Error fetching booked tickets:", error);
   }
@@ -37,6 +36,7 @@ export default async function MyBookedTickets() {
                 ticket={ticket}
                 isDeparturePassed={isDeparturePassed}
                 canPay={canPay}
+                session
               />
             );
           })}

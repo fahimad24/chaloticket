@@ -98,7 +98,6 @@ export const fetchTicketById = async (ticketId) => {
 // Fetch all users
 export const fetchAllUsers = async () => {
     const token = await getApiToken();
-    console.log("API Token:", token); // Log the token for debugging
     const res = await fetch(`${API_BASE_URL}/api/users`, { headers: { "Authorization": `Bearer ${token}` } });
     const users = await res.json();
     return users;
@@ -164,8 +163,6 @@ export const updateTicket = async (ticketId, updatedData) => {
             },
             body: JSON.stringify(updatedData),
         });
-
-        console.log("Update ticket response status:", response.status); // Log the response status for debugging
 
         const result = await response.json();
         return result;

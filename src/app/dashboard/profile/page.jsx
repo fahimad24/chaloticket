@@ -90,30 +90,36 @@ export default function UnifiedProfilePage() {
     }
   }, [session?.id, currentRole]);
 
-  const completedTrips = bookedTickets.filter(
-    (t) =>
-      t.status?.toLowerCase() === "accepted" ||
-      t.status?.toLowerCase() === "paid",
-  ).length;
+  let completedTrips = 0;
+  if (bookedTickets.length === 0 && currentRole === "traveler") {
+    completedTrips = bookedTickets.filter(
+      (t) =>
+        t.status?.toLowerCase() === "accepted" ||
+        t.status?.toLowerCase() === "paid",
+    ).length;
+  }
 
-  const rejectedTrips = bookedTickets.filter(
-    (t) => t.status?.toLowerCase() === "rejected",
-  ).length;
+  let rejectedTrips = 0;
+  if (bookedTickets.length === 0 && currentRole === "traveler") {
+    rejectedTrips = bookedTickets.filter(
+      (t) => t.status?.toLowerCase() === "rejected",
+    ).length;
+  }
 
   const userStats = [
     {
       label: "Total Bookings",
-      value: `${bookedTickets.length} Tickets`,
+      value: `${bookedTickets.length || 0} Tickets`,
       icon: <Ticket className="w-5 h-5 text-[#6367FF]" />,
     },
     {
       label: "Completed Trips",
-      value: `${completedTrips} Tickets`,
+      value: `${completedTrips || 0} Tickets`,
       icon: <CheckCircle className="w-5 h-5 text-emerald-500" />,
     },
     {
       label: "Rejected Trips",
-      value: `${rejectedTrips} Tickets`,
+      value: `${rejectedTrips || 0} Tickets`,
       icon: <TicketX className="w-5 h-5 text-rose-500" />,
     },
   ];
@@ -126,12 +132,12 @@ export default function UnifiedProfilePage() {
     },
     {
       label: "Total Transport Routes",
-      value: `${totalTicketsAdded} Routes`,
+      value: `${totalTicketsAdded || 0} Routes`,
       icon: <Bus className="w-5 h-5 text-[#6367FF]" />,
     },
     {
       label: "Seats Sold",
-      value: `${totalTicketsSold.totalTicketsSold} Seats`,
+      value: `${totalTicketsSold.totalTicketsSold || 0} Seats`,
       icon: <Users className="w-5 h-5 text-[#8494FF]" />,
     },
   ];
@@ -139,17 +145,17 @@ export default function UnifiedProfilePage() {
   const adminStats = [
     {
       label: "Total Users",
-      value: `${users.length} users`,
+      value: `${users.length || 0} users`,
       icon: <Users className="w-5 h-5 text-[#6367FF]" />,
     },
     {
       label: "Active Vendors",
-      value: `${users.filter((user) => user.role === "vendor").length} Companies`,
+      value: `${users ? users.filter((user) => user.role === "vendor").length : 0} Companies`,
       icon: <ShoppingBag className="w-5 h-5 text-[#8494FF]" />,
     },
     {
       label: "Total System Sales",
-      value: "৳3,80,000",
+      value: `৳${totalRevenue.toLocaleString() || 0}`,
       icon: <BarChart3 className="w-5 h-5 text-emerald-500" />,
     },
   ];

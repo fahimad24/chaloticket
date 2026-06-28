@@ -19,8 +19,10 @@ import {
 } from "@/components/ui/card";
 import { TicketCountdown } from "../TimeCountdown";
 import { GetStatusBadge } from "./GetStatusBadge";
+import { useUserInfo } from "@/lib/user-action";
 
 const MyBookingCard = ({ ticket, isDeparturePassed, canPay }) => {
+  const { session } = useUserInfo();
   const handlePayment = (id) => {
     setBookings((prev) =>
       prev.map((booking) =>
@@ -58,7 +60,6 @@ const MyBookingCard = ({ ticket, isDeparturePassed, canPay }) => {
           </div>
         </div>
 
-        {/* TICKET DETAILS CONTAINER */}
         <CardContent className="p-5 space-y-4 grow">
           <div>
             <h3 className="font-bold text-slate-800 dark:text-slate-300 text-base line-clamp-1 group-hover:text-[#6367FF] transition-colors">
@@ -66,7 +67,6 @@ const MyBookingCard = ({ ticket, isDeparturePassed, canPay }) => {
             </h3>
           </div>
 
-          {/* ROUTE INFORMATION */}
           <div className="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-600 p-2.5 rounded-xl border border-slate-100 dark:border-slate-500">
             <MapPin className="w-4 h-4 text-rose-500 shrink-0" />
             <span className="truncate">{ticket?.from}</span>
@@ -75,7 +75,6 @@ const MyBookingCard = ({ ticket, isDeparturePassed, canPay }) => {
             <span className="truncate">{ticket?.to}</span>
           </div>
 
-          {/* QUANTITY & PRICING */}
           <div className="grid grid-cols-2 gap-2 border-b border-dashed border-slate-100 pb-3 text-sm">
             <div className="text-slate-500 space-y-0.5">
               <span>Quantity</span>
@@ -92,7 +91,6 @@ const MyBookingCard = ({ ticket, isDeparturePassed, canPay }) => {
             </div>
           </div>
 
-          {/* DEPARTURE TIME */}
           <div className="flex items-start justify-between gap-2 text-xs text-slate-500">
             <div className="flex items-start gap-2 text-xs text-slate-500">
               <Calendar className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
@@ -110,11 +108,12 @@ const MyBookingCard = ({ ticket, isDeparturePassed, canPay }) => {
           </div>
         </CardContent>
 
-        {/* COUNTDOWN & ACTIONS FOOTER */}
         <CardFooter className="px-5 py-3 flex flex-col gap-3">
           {canPay && (
             <form action="/api/checkout_sessions" method="POST">
               <section>
+                <input type="hidden" name="ticketId" value={ticket?._id} />
+                <input type="hidden" name="email" value={session?.email} />
                 <Button
                   type="submit"
                   role="link"
@@ -126,7 +125,6 @@ const MyBookingCard = ({ ticket, isDeparturePassed, canPay }) => {
             </form>
           )}
 
-          {/* ২. ভেন্ডর অ্যাকসেপ্ট করেছে কিন্তু ডিপার্চার সময় পার হয়ে গেছে -> পেমেন্ট লক */}
           {ticket?.status === "accepted" && isDeparturePassed && (
             <div className="w-full bg-slate-100 text-slate-400 text-xs font-medium text-center p-3 rounded-xl border border-slate-200 dark:bg-slate-600 dark:text-slate-300 dark:border-slate-500 flex items-center justify-center gap-1.5 cursor-not-allowed">
               <AlertCircle className="w-4 h-4 text-slate-400" /> Payment Expired
@@ -134,7 +132,6 @@ const MyBookingCard = ({ ticket, isDeparturePassed, canPay }) => {
             </div>
           )}
 
-          {/* ৩. ইনিশিয়ালি পেন্ডিং স্টেট */}
           {ticket?.status === "pending" && (
             <div className="w-full bg-amber-50 text-amber-600 text-xs font-semibold text-center p-3 rounded-xl border border-amber-100/60 dark:bg-amber-600 dark:text-amber-300 dark:border-amber-500 flex items-center justify-center gap-1.5">
               <Clock className="w-4 h-4 animate-spin" /> Waiting for Vendor
@@ -142,14 +139,12 @@ const MyBookingCard = ({ ticket, isDeparturePassed, canPay }) => {
             </div>
           )}
 
-          {/* ৪. পেমেন্ট কমপ্লিট সাকসেস স্টেট */}
           {ticket?.status === "paid" && (
             <div className="w-full bg-emerald-50 text-emerald-600 text-xs font-bold text-center p-3 rounded-xl border border-emerald-100 dark:bg-emerald-600 dark:text-emerald-300 dark:border-emerald-500 flex items-center justify-center gap-1.5">
               <CheckCircle2 className="w-4 h-4" /> Ticket Secured & Paid
             </div>
           )}
 
-          {/* ৫. রিজেক্টেড স্টেট */}
           {ticket?.status === "rejected" && (
             <div className="w-full bg-rose-50 text-rose-600 text-xs font-medium text-center p-3 rounded-xl border border-rose-100 dark:bg-rose-600 dark:text-rose-300 dark:border-rose-500 flex items-center justify-center gap-1.5">
               <XCircle className="w-4 h-4" /> Booking Cancelled by Vendor
