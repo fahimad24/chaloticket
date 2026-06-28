@@ -41,7 +41,7 @@ export default function SignupPage() {
       {
         ...userData,
         image: "",
-        callbackURL: "http://localhost:3000/auth/login",
+        callbackURL: `${process.env.NEXT_PUBLIC_URL}/auth/login`,
       },
       {
         onRequest: () => setLoading(true),
@@ -107,7 +107,7 @@ export default function SignupPage() {
             <button
               type="button"
               onClick={signInWithGoogle}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3.5 border-2 border-slate-100 hover:border-[#C9BEFF] rounded-xl text-sm font-bold text-slate-700 transition-all bg-slate-50 hover:bg-white mb-6"
+              className="w-full flex items-center justify-center gap-3 px-4 py-3.5 border-2 border-slate-100 hover:border-[#C9BEFF] rounded-xl text-sm font-bold text-slate-700 transition-all bg-slate-50 hover:bg-white mb-6 cursor-pointer"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path
