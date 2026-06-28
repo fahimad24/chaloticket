@@ -19,6 +19,7 @@ export async function POST(request) {
 
         if (deleteTicket === "delete-ticket" || ticketUpdated === "ticket-updated" || verificationStatus === "success") {
             revalidatePath("/");
+            revalidatePath("/dashboard/profile");
             revalidatePath("/tickets");
             revalidatePath("/dashboard/admin/manage-tickets");
             revalidatePath("/dashboard/vendor/my-added-tickets");
@@ -28,6 +29,7 @@ export async function POST(request) {
 
         if (isAdvertised === "isAdvertised") {
             revalidatePath("/");
+            revalidatePath("/tickets");
             return NextResponse.json({ message: "Revalidation successful." });
         }
 
@@ -35,6 +37,8 @@ export async function POST(request) {
             revalidatePath("/");
             revalidatePath("/dashboard/admin/manage-tickets");
             revalidatePath("/dashboard/vendor/my-added-tickets");
+            revalidatePath("/tickets");
+            revalidatePath("/dashboard/profile");
             return NextResponse.json({ message: "Revalidation successful." });
         }
 

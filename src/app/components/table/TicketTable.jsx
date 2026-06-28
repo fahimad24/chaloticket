@@ -25,11 +25,11 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { toast } from "sonner";
 import { updateTicket } from "@/lib/api-action";
+import { GetStatusBadges } from "../ui/GetStatusBadges";
 
 const TicketTable = ({ allTickets }) => {
   const [tickets, setTickets] = useState(allTickets);
 
-  // APPROVE BUTTON HANDLER
   const handleApprove = async (id, title) => {
     const result = await updateTicket(id, { verificationStatus: "approved" });
     if (result) {
@@ -48,7 +48,6 @@ const TicketTable = ({ allTickets }) => {
     }
   };
 
-  // REJECT BUTTON HANDLER
   const handleReject = async (id) => {
     const result = await updateTicket(id, { verificationStatus: "rejected" });
     if (!result) {
@@ -67,50 +66,26 @@ const TicketTable = ({ allTickets }) => {
     });
   };
 
-  console.log("Tickets in TicketTable:", tickets);
-
-  const getStatusBadge = (status) => {
-    const styles = {
-      pending: "bg-amber-50 text-amber-700 border-amber-200 gap-1",
-      approved: "bg-emerald-50 text-emerald-700 border-emerald-200 gap-1",
-      rejected: "bg-rose-50 text-rose-700 border-rose-200 gap-1",
-    };
-
-    const icons = {
-      pending: <Clock className="w-3 h-3 animate-spin text-amber-500" />,
-      approved: <CheckCircle2 className="w-3 h-3 text-emerald-500" />,
-      rejected: <XCircle className="w-3 h-3 text-rose-500" />,
-    };
-
-    return (
-      <Badge
-        variant="outline"
-        className={`capitalize px-2.5 py-1 rounded-md font-semibold text-xs ${styles[status]}`}
-      >
-        {icons[status]} {status}
-      </Badge>
-    );
-  };
   return (
-    <Table>
-      <TableHeader className="bg-slate-50/70">
-        <TableRow className="hover:bg-transparent border-slate-100">
-          <TableHead className="w-70 font-semibold text-slate-700 py-4 pl-6">
+    <Table className="w-full border-slate-100 dark:border-slate-600">
+      <TableHeader className="bg-slate-50/70 dark:bg-slate-700/70 border-b border-slate-100 dark:border-slate-600">
+        <TableRow className="hover:bg-transparent border-slate-100 dark:border-slate-600">
+          <TableHead className="w-70 font-semibold text-slate-700 dark:text-slate-300 py-4 pl-6">
             Ticket Route Details
           </TableHead>
-          <TableHead className="w-55 font-semibold text-slate-700 py-4">
+          <TableHead className="w-55 font-semibold text-slate-700 dark:text-slate-300 py-4">
             Vendor Info
           </TableHead>
-          <TableHead className="font-semibold text-slate-700 py-4">
+          <TableHead className="font-semibold text-slate-700 dark:text-slate-300 py-4">
             Destination
           </TableHead>
-          <TableHead className="font-semibold text-slate-700 py-4 text-right">
+          <TableHead className="font-semibold text-slate-700 dark:text-slate-300 py-4 text-right">
             Pricing & Seats
           </TableHead>
-          <TableHead className="font-semibold text-slate-700 py-4 text-center">
+          <TableHead className="font-semibold text-slate-700 dark:text-slate-300 py-4 text-center">
             Verification Status
           </TableHead>
-          <TableHead className="font-semibold text-slate-700 py-4 text-right pr-6">
+          <TableHead className="font-semibold text-slate-700 dark:text-slate-300 py-4 text-right pr-6">
             Moderation Actions
           </TableHead>
         </TableRow>
@@ -121,7 +96,7 @@ const TicketTable = ({ allTickets }) => {
           <TableRow>
             <TableCell
               colSpan={6}
-              className="text-center py-12 text-slate-400 font-medium"
+              className="text-center py-12 text-slate-400 dark:text-slate-300 font-medium"
             >
               No ticket logs found in the moderation queue.
             </TableCell>
@@ -133,9 +108,8 @@ const TicketTable = ({ allTickets }) => {
             return (
               <TableRow
                 key={ticket._id}
-                className="hover:bg-slate-50/40 transition-colors border-slate-100"
+                className="hover:bg-slate-50/40 transition-colors border-slate-100 dark:border-slate-600"
               >
-                {/* ১. TICKET TITLE & ID */}
                 <TableCell className="py-4 pl-6 font-medium">
                   <div className="flex items-start gap-2.5">
                     <div className="p-2 bg-indigo-50 text-[#6367FF] rounded-lg shrink-0 mt-0.5">
@@ -193,7 +167,7 @@ const TicketTable = ({ allTickets }) => {
 
                 {/* ৫. VERIFICATION STATUS */}
                 <TableCell className="py-4 text-center">
-                  {getStatusBadge(ticket.verificationStatus)}
+                  <GetStatusBadges status={ticket.verificationStatus} />
                 </TableCell>
 
                 {/* ৬. MODERATION BUTTONS (APPROVE / REJECT) */}

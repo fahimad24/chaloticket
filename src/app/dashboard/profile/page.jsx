@@ -17,8 +17,9 @@ import {
 } from "lucide-react";
 import { useUserInfo } from "@/lib/user-action";
 import {
+  fetchAllTickets,
+  fetchAllUsers,
   fetchBookedTicketsByUserId,
-  fetchMonthlyReport,
   fetchTotalRevenue,
   fetchTotalTicketsQuantity,
   fetchTotalTicketsSold,
@@ -26,6 +27,7 @@ import {
 import HistoryTable from "@/app/components/table/HistoryTable";
 import ProfileSkeleton from "@/app/components/skeleton/ProfileSkeleton";
 import { EditProfileDialog } from "@/app/components/ui/EditProfileModal";
+import { GetStatusBadges } from "@/app/components/ui/GetStatusBadges";
 
 export default function UnifiedProfilePage() {
   const { session, refetch } = useUserInfo();
@@ -37,7 +39,7 @@ export default function UnifiedProfilePage() {
   const [totalTicketsAdded, setTotalTicketsAdded] = useState(0);
   const [totalTicketsSold, setTotalTicketsSold] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
-  const [monthlyReport, setMonthlyReport] = useState([]);
+  const [users, setUsers] = useState([]);
 
   const profileData = {
     name: session?.name || "User",
@@ -64,15 +66,17 @@ export default function UnifiedProfilePage() {
           const data = await fetchBookedTicketsByUserId(session.id);
           if (data) setBookedTickets(data);
         } else if (currentRole === "vendor") {
-          const totalTicketsAdded = await fetchTotalTicketsQuantity();
-          const totalTicketsSold = await fetchTotalTicketsSold();
-          const totalRevenue = await fetchTotalRevenue();
-          const monthlyReport = await fetchMonthlyReport();
+          const totalTicketsAdded = await fetchTotalTicketsQuantity(session.id);
+          const totalTicketsSold = await fetchTotalTicketsSold(session.id);
+          const totalRevenue = await fetchTotalRevenue(session.id);
           if (totalTicketsAdded) setTotalTicketsAdded(totalTicketsAdded);
           if (totalTicketsSold) setTotalTicketsSold(totalTicketsSold);
           if (totalRevenue) setTotalRevenue(totalRevenue);
-          if (monthlyReport) setMonthlyReport(monthlyReport);
         } else if (currentRole === "admin") {
+          const usersData = await fetchAllUsers();
+          const data = await fetchAllTickets("", "");
+          if (data) setBookedTickets(data);
+          if (usersData) setUsers(usersData);
         }
       } catch (error) {
         console.error("Error fetching profile data:", error);
@@ -135,12 +139,12 @@ export default function UnifiedProfilePage() {
   const adminStats = [
     {
       label: "Total Users",
-      value: "1,240",
+      value: `${users.length} users`,
       icon: <Users className="w-5 h-5 text-[#6367FF]" />,
     },
     {
       label: "Active Vendors",
-      value: "84 Companies",
+      value: `${users.filter((user) => user.role === "vendor").length} Companies`,
       icon: <ShoppingBag className="w-5 h-5 text-[#8494FF]" />,
     },
     {
@@ -329,38 +333,22 @@ export default function UnifiedProfilePage() {
                 </h3>
               </div>
               <div className="space-y-4">
-                {[
-                  {
-                    route: "Rajshahi to Dhaka Bullet Train",
-                    vendor: "Hanif Enterprises",
-                    date: "Requested 2h ago",
-                  },
-                  {
-                    route: "Dhaka to Sylhet Skyways",
-                    vendor: "Bismillah Travels",
-                    date: "Requested 5h ago",
-                  },
-                ].map((req, idx) => (
+                {bookedTickets.map((req, idx) => (
                   <div
                     key={idx}
                     className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40"
                   >
                     <div className="space-y-1">
                       <p className="font-bold text-slate-900 dark:text-white text-sm sm:text-base">
-                        {req.route}
+                        {req.title}
                       </p>
                       <p className="text-xs text-slate-400 font-semibold">
-                        Vendor: {req.vendor} • {req.date}
+                        Vendor: {req.vendorName} • {req.transportType} • Seats:{" "}
+                        {req.quantity}
                       </p>
                     </div>
                     <div className="flex gap-2 w-full sm:w-auto border-t sm:border-none border-slate-100 dark:border-slate-800 pt-3 sm:pt-0 justify-end">
-                      <button className="px-3.5 h-9 rounded-xl bg-rose-50 text-rose-600 dark:bg-rose-950/20 dark:text-rose-400 text-xs font-bold border border-rose-100 dark:border-rose-900/30">
-                        Reject
-                      </button>
-                      <button className="px-3.5 h-9 rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-400 text-xs font-bold border border-emerald-100 dark:border-emerald-900/30 flex items-center gap-1">
-                        <span>Approve</span>
-                        <ArrowRight className="w-3 h-3" />
-                      </button>
+                      <GetStatusBadges status={req.verificationStatus} />
                     </div>
                   </div>
                 ))}

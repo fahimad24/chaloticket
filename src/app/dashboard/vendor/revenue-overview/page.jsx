@@ -7,16 +7,18 @@ import {
   fetchTotalRevenue,
   fetchTotalTicketsQuantity,
   fetchTotalTicketsSold,
+  getSession,
 } from "@/lib/api-action";
 
 import RevenueChart from "@/app/components/chart/RevenueChart";
 import SoldChart from "@/app/components/chart/SoldChart";
 
 export default async function RevenueOverview() {
-  const totalTicketsAdded = await fetchTotalTicketsQuantity();
-  const totalTicketsSold = await fetchTotalTicketsSold();
-  const totalRevenue = await fetchTotalRevenue();
-  const monthlyReport = await fetchMonthlyReport();
+  const { userId } = await getSession();
+  const totalTicketsAdded = await fetchTotalTicketsQuantity(userId);
+  const totalTicketsSold = await fetchTotalTicketsSold(userId);
+  const totalRevenue = await fetchTotalRevenue(userId);
+  const monthlyReport = await fetchMonthlyReport(userId);
   return (
     <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

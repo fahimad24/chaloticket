@@ -224,10 +224,10 @@ export const fetchUserBookedTickets = async (bookedData, ticketId) => {
 };
 
 // Fetch total booked and tickets quantity for a specific ticket
-export const fetchTotalTicketsQuantity = async () => {
+export const fetchTotalTicketsQuantity = async (userId) => {
     const token = await getApiToken();
     try {
-        const response = await fetch(`${API_BASE_URL}/api/tickets/total-qty`, {
+        const response = await fetch(`${API_BASE_URL}/api/tickets/total-qty/${userId}`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`
@@ -244,10 +244,10 @@ export const fetchTotalTicketsQuantity = async () => {
     }
 };
 
-export const fetchTotalTicketsSold = async () => {
+export const fetchTotalTicketsSold = async (userId) => {
     const token = await getApiToken();
     try {
-        const response = await fetch(`${API_BASE_URL}/api/tickets/total-sold`, {
+        const response = await fetch(`${API_BASE_URL}/api/tickets/total-sold/${userId}`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`
@@ -264,10 +264,10 @@ export const fetchTotalTicketsSold = async () => {
     }
 };
 
-export const fetchTotalRevenue = async () => {
+export const fetchTotalRevenue = async (userId) => {
     const token = await getApiToken();
     try {
-        const response = await fetch(`${API_BASE_URL}/api/tickets/total-revenue`, {
+        const response = await fetch(`${API_BASE_URL}/api/tickets/total-revenue/${userId}`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`
@@ -285,10 +285,10 @@ export const fetchTotalRevenue = async () => {
 };
 
 // fetch monthly report data
-export const fetchMonthlyReport = async () => {
+export const fetchMonthlyReport = async (userId) => {
     const token = await getApiToken();
     try {
-        const response = await fetch(`${API_BASE_URL}/api/monthly-report`, {
+        const response = await fetch(`${API_BASE_URL}/api/monthly-report/${userId}`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`
