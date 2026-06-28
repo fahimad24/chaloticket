@@ -25,6 +25,7 @@ import {
 import { useUserInfo } from "@/lib/user-action";
 import TicketDetailsSkeleton from "@/app/components/ui/TicketDetailsSkeleton";
 import Link from "next/link";
+import { toast } from "sonner";
 
 function TicketDetailsContent({ params }) {
   const { ticketId } = use(params);
@@ -106,8 +107,7 @@ function TicketDetailsContent({ params }) {
   const isSoldOut = ticket?.quantity === 0;
   const vendor = session?.role === "vendor";
   const admin = session?.role === "admin";
-  const isBookNowDisabled =
-    isTimePassed || isSoldOut || !session || isPanding || vendor || admin;
+  const isBookNowDisabled = isTimePassed || isSoldOut || vendor || admin;
 
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
@@ -153,6 +153,14 @@ function TicketDetailsContent({ params }) {
     }
   };
 
+  const handleBookingModal = () => {
+    if (!session && !session?.role) {
+      toast.error("Please login to book a ticket.");
+      return router.push("/auth/login");
+    }
+    setIsModalOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-background py-10 px-4 md:px-6 mt-24">
       <div className="max-w-6xl mx-auto space-y-8">
@@ -184,7 +192,6 @@ function TicketDetailsContent({ params }) {
                   priority
                   className="object-cover"
                 />
-                {/* Tailwind v4-এ bg-linear-to-t বা পুরোনো ভার্সনে bg-gradient-to-t */}
                 <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent" />
               </div>
 
@@ -347,7 +354,7 @@ function TicketDetailsContent({ params }) {
               </div>
 
               <button
-                onClick={() => setIsModalOpen(true)}
+                onClick={handleBookingModal}
                 disabled={isBookNowDisabled}
                 className="w-full h-12 rounded-2xl bg-[#6367FF] text-white font-bold text-sm tracking-wide shadow-lg shadow-indigo-400  dark:disabled:shadow-indigo-50/70 hover:bg-[#5054E6] active:scale-98 transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:bg-secondary/40 dark:disabled:bg-slate-600 disabled:text-slate-600 dark:disabled:text-slate-300 disabled:cursor-not-allowed"
               >
