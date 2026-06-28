@@ -3,7 +3,6 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 
 export function HeroSection() {
-  // Server Action: এটি সরাসরি সার্ভারে রান করবে এবং ক্লায়েন্ট সাইড জাভাস্ক্রিপ্ট ছাড়াই কাজ করতে পারবে
   async function handleSearch(formData) {
     "use server";
 
@@ -19,7 +18,6 @@ export function HeroSection() {
 
   return (
     <section className="relative w-full bg-white px-4 py-101">
-      {/* ব্যাকগ্রাউন্ড ব্যানার ও গ্লো ইফেক্ট */}
       <div className="absolute inset-0 z-0 opacity-40 mix-blend-multiply filter blur-3xl">
         <div className="absolute top-[-10%] left-[5%] w-100 h-100 rounded-full bg-[#FFDBFD]" />
         <div className="absolute bottom-[-20%] right-[10%] w-125 h-125 rounded-full bg-[#C9BEFF]/50" />
@@ -70,7 +68,6 @@ export function HeroSection() {
         </p>
       </div> */}
 
-      {/* সার্ভার-সাইড সার্চ ফর্ম কন্টেইনার */}
       <div className="mx-auto max-w-5xl absolute left-1/2 transform -translate-x-1/2 w-full px-4 bottom-48 translate-y-1/2">
         <SearchBar handleSearch={handleSearch} />
       </div>

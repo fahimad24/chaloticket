@@ -1,24 +1,20 @@
 import { fetchAllTickets } from "@/lib/api-action";
 import TicketCard from "../(main)/components/card/TicketCard";
-import { toast } from "sonner";
 
 export default async function TicketsContainer() {
   let advertisementTickets = [];
   let latestTickets = [];
 
-  // Fetch tickets from the API
   try {
     advertisementTickets = await fetchAllTickets("", "", true);
 
     latestTickets = await fetchAllTickets("", "approved", "");
   } catch (error) {
-    toast.error("Failed to fetch tickets. Please try again later.");
     console.error("Error fetching tickets:", error);
   }
 
   return (
     <div className="space-y-12 max-w-7xl mx-auto px-4 py-8 md:px-6 xl:px-0 md:py-12 lg:py-16">
-      {/* 1. ADVERTISEMENT SECTION */}
       <section className="space-y-10">
         <div className="border-l-4 border-[#6367FF] pl-3 space-y-3">
           <h2 className="text-xl md:text-4xl font-bold text-slate-900 dark:text-slate-200">
@@ -48,7 +44,6 @@ export default async function TicketsContainer() {
         </div>
       </section>
 
-      {/* 2. LATEST TICKETS SECTION */}
       <section className="space-y-10 mt-28">
         <div className="border-l-4 border-emerald-500 pl-3 space-y-3">
           <h2 className="text-xl md:text-4xl font-bold text-slate-900 dark:text-slate-200">
@@ -61,13 +56,15 @@ export default async function TicketsContainer() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {latestTickets.length > 0 ? (
-            latestTickets.slice(0, 8).map((ticket) => (
-              <TicketCard
-                key={ticket._id || ticket.id}
-                ticket={ticket}
-                isAdvertisement={false} // সাধারণ লেটেস্ট টিকিট কার্ড
-              />
-            ))
+            latestTickets
+              .slice(0, 8)
+              .map((ticket) => (
+                <TicketCard
+                  key={ticket._id || ticket.id}
+                  ticket={ticket}
+                  isAdvertisement={false}
+                />
+              ))
           ) : (
             <p className="text-slate-500 dark:text-slate-300">
               No latest tickets available.

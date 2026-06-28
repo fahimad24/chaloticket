@@ -4,7 +4,6 @@ const SearchBar = ({ handleSearch }) => {
   return (
     <div className="w-full  rounded-3xl shadow-[0_20px_50px_rgba(99,103,255,0.12)] border border-[#C9BEFF]/40 p-6 md:p-8 text-left backdrop-blur-lg bg-white/80">
       <form action={handleSearch} className="space-y-6">
-        {/* ট্রান্সপোর্ট টাইপ সিলেকশন (Bus, Train, Plane) */}
         <div className="flex gap-4 border-b border-slate-100 pb-4">
           <label className="flex items-center gap-2 cursor-pointer group">
             <input
@@ -44,9 +43,7 @@ const SearchBar = ({ handleSearch }) => {
           </label>
         </div>
 
-        {/* ইনপুট গ্রিড (From, To, Date, Search Button) */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-          {/* From Input */}
           <div className="flex flex-col gap-2">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
               From
@@ -61,7 +58,6 @@ const SearchBar = ({ handleSearch }) => {
             </div>
           </div>
 
-          {/* To Input */}
           <div className="flex flex-col gap-2">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
               To
@@ -76,7 +72,6 @@ const SearchBar = ({ handleSearch }) => {
             </div>
           </div>
 
-          {/* Date Input */}
           <div className="flex flex-col gap-2">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
               Journey Date
@@ -90,7 +85,6 @@ const SearchBar = ({ handleSearch }) => {
             </div>
           </div>
 
-          {/* Submit Search Button */}
           <div>
             <button
               type="submit"

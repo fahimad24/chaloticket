@@ -58,7 +58,6 @@ export default function SignupPage() {
         onError: (ctx) => {
           setLoading(false);
           setAuthError(ctx.error.message || "Something went wrong.");
-          toast.error("Failed to create account. Please try again.");
         },
       },
     );
