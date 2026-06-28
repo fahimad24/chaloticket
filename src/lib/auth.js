@@ -11,7 +11,15 @@ export const auth = betterAuth({
     }),
     emailAndPassword: {
         enabled: true,
-    }, session: {
+    },
+    socialProviders: {
+        google: {
+            prompt: "select_account",
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        },
+    },
+    session: {
         cookieCache: {
             enabled: true,
             strategy: "jwt",

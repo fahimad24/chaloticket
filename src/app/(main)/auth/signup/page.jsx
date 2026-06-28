@@ -15,7 +15,7 @@ import {
 } from "@heroui/react";
 import Link from "next/link";
 import Image from "next/image";
-import { signOut, signUp } from "@/lib/auth-client";
+import { signInWithGoogle, signOut, signUp } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import UserRole from "@/app/components/ui/UserRole";
 import { toast } from "sonner";
@@ -107,7 +107,7 @@ export default function SignupPage() {
 
             <button
               type="button"
-              onClick={() => alert("Google Auth Triggered")}
+              onClick={signInWithGoogle}
               className="w-full flex items-center justify-center gap-3 px-4 py-3.5 border-2 border-slate-100 hover:border-[#C9BEFF] rounded-xl text-sm font-bold text-slate-700 transition-all bg-slate-50 hover:bg-white mb-6"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
