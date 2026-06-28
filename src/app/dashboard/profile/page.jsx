@@ -19,9 +19,10 @@ import { useUserInfo } from "@/lib/user-action";
 import { fetchBookedTicketsByUserId } from "@/lib/api-action";
 import HistoryTable from "@/app/components/table/HistoryTable";
 import ProfileSkeleton from "@/app/components/skeleton/ProfileSkeleton";
+import { EditProfileDialog } from "@/app/components/ui/EditProfileModal";
 
 export default function UnifiedProfilePage() {
-  const { session } = useUserInfo();
+  const { session, refetch } = useUserInfo();
 
   const currentRole = session?.role || "traveler";
 
@@ -147,6 +148,7 @@ export default function UnifiedProfilePage() {
                 src={profileData.avatar}
                 alt="User Avatar"
                 fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-cover"
                 priority
               />
@@ -178,24 +180,8 @@ export default function UnifiedProfilePage() {
             </div>
           </div>
 
-          {/* রোল ভিত্তিক অ্যাকশন বাটন */}
           <div className="shrink-0 w-full md:w-auto">
-            {currentRole === "vendor" && (
-              <button className="w-full inline-flex items-center justify-center gap-2 bg-[#6367FF] hover:bg-[#5054E6] text-white font-bold text-sm px-5 h-12 rounded-xl transition-all shadow-md active:scale-95">
-                <PlusCircle className="w-4 h-4" />
-                <span>Create New Ticket</span>
-              </button>
-            )}
-            {currentRole === "traveler" && (
-              <button className="w-full inline-flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 font-bold text-sm px-5 h-12 rounded-xl transition-all active:scale-95">
-                <span>Edit Profile Settings</span>
-              </button>
-            )}
-            {currentRole === "admin" && (
-              <button className="w-full inline-flex items-center justify-center gap-2 bg-slate-950 hover:bg-slate-900 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-bold text-sm px-5 h-12 rounded-xl transition-all shadow-md active:scale-95">
-                <span>System Configuration</span>
-              </button>
-            )}
+            <EditProfileDialog session={session} refetch={refetch} />
           </div>
         </div>
       </div>

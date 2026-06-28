@@ -79,7 +79,6 @@ const TicketForm = ({ ticketData }) => {
     let imageUrl = null;
 
     try {
-      // অ্যাকচুয়াল আপলোড কোড ব্লক (API key থাকলে আনকমেন্ট করবেন)
       console.log("Image file to upload:", image.size);
       if (image.size) {
         const imagedata = await uploadImage(image);
@@ -92,7 +91,6 @@ const TicketForm = ({ ticketData }) => {
       }
       setUploadProgress("Saving ticket to database...");
 
-      // ২. ফাইনাল পে-লোড যা ডাটাবেজে সেভ হবে
       const ticketPayload = {
         title,
         from: fromLocation,
@@ -155,7 +153,6 @@ const TicketForm = ({ ticketData }) => {
         </CardHeader>
 
         <CardContent className="p-6 space-y-6">
-          {/* ─── READONLY VENDOR SECTIONS ─── */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-xl bg-[#6367FF]/20 border border-[#6367FF]/10">
             <div className="space-y-1.5">
               <Label className="text-xs font-semibold text-slate-500 flex items-center gap-1">
@@ -182,7 +179,6 @@ const TicketForm = ({ ticketData }) => {
             </div>
           </div>
 
-          {/* ─── TICKET TITLE ─── */}
           <div className="space-y-2">
             <Label htmlFor="title" className="font-semibold text-slate-700">
               Ticket Title / Route Name
@@ -200,7 +196,6 @@ const TicketForm = ({ ticketData }) => {
             </div>
           </div>
 
-          {/* ─── FROM & TO LOCATIONS ─── */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="from" className="font-semibold text-slate-700">
@@ -237,7 +232,6 @@ const TicketForm = ({ ticketData }) => {
             </div>
           </div>
 
-          {/* ─── TRANSPORT TYPE, PRICE, QUANTITY ─── */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label
@@ -255,7 +249,7 @@ const TicketForm = ({ ticketData }) => {
                 <option value="Bus">🚌 Bus</option>
                 <option value="Train">🚂 Train</option>
                 <option value="Ship">🚢 Launch/Ship</option>
-                <option value="Air">✈️ Air/Flight</option>
+                <option value="Plane">✈️ Air/Flight</option>
               </select>
             </div>
 
@@ -303,7 +297,6 @@ const TicketForm = ({ ticketData }) => {
             </div>
           </div>
 
-          {/* ─── DEPARTURE DATE & TIME ─── */}
           <div className="space-y-2 w-full">
             <Label htmlFor="departure" className="font-semibold text-slate-700">
               Departure Date & Time
@@ -321,7 +314,6 @@ const TicketForm = ({ ticketData }) => {
             </div>
           </div>
 
-          {/* ─── PERKS (CHECKBOXES) ─── */}
           <div className="space-y-3 pt-2">
             <Label className="font-semibold text-slate-700 flex items-center gap-1">
               <CheckSquare className="w-4 h-4 text-[#6367FF]" /> Select Trip
@@ -351,7 +343,6 @@ const TicketForm = ({ ticketData }) => {
             </div>
           </div>
 
-          {/* ─── IMAGE UPLOAD (IMGBB SELECTOR) ─── */}
           <div className="space-y-2">
             <Label className="font-semibold text-slate-700">
               Route / Transport Image
@@ -384,7 +375,6 @@ const TicketForm = ({ ticketData }) => {
           </div>
         </CardContent>
 
-        {/* ─── FOOTER SUBMIT ACTIONS ─── */}
         <CardFooter className="bg-slate-50/50 border-t border-slate-50 p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <span className="text-xs text-slate-400 font-medium text-center sm:text-left">
             {uploadProgress || "Ready to submit route to verification process."}

@@ -142,10 +142,10 @@ const TicketTable = ({ allTickets }) => {
                       <Ticket className="w-4 h-4" />
                     </div>
                     <div className="space-y-0.5">
-                      <p className="text-sm font-bold text-slate-800 line-clamp-1">
+                      <p className="text-sm font-bold text-slate-800 dark:text-slate-200 line-clamp-1">
                         {ticket.title}
                       </p>
-                      <p className="text-[10px] text-slate-400 font-mono">
+                      <p className="text-[10px] text-slate-400 dark:text-slate-300 font-mono">
                         REF: {ticket.id}
                       </p>
                     </div>
@@ -155,12 +155,12 @@ const TicketTable = ({ allTickets }) => {
                 {/* ২. VENDOR NAME & EMAIL */}
                 <TableCell className="py-4">
                   <div className="flex items-start gap-2 text-xs">
-                    <User className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
+                    <User className="w-3.5 h-3.5 text-slate-400 dark:text-slate-300 shrink-0 mt-0.5" />
                     <div className="space-y-0.5 truncate">
-                      <p className="font-semibold text-slate-700">
+                      <p className="font-semibold text-slate-700 dark:text-slate-300 truncate select-all">
                         {ticket.vendorName}
                       </p>
-                      <p className="text-[11px] text-slate-400 font-mono truncate select-all">
+                      <p className="text-[11px] text-slate-400 dark:text-slate-300 font-mono truncate select-all">
                         {ticket.vendorEmail}
                       </p>
                     </div>
@@ -169,10 +169,12 @@ const TicketTable = ({ allTickets }) => {
 
                 {/* ৩. FROM & TO GEOLOCATION */}
                 <TableCell className="py-4">
-                  <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 bg-slate-50 border border-slate-100 px-2 py-1 rounded-lg">
+                  <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 px-2 py-1 rounded-lg">
                     <MapPin className="w-3 h-3 text-rose-500" />
                     <span>{ticket.from}</span>
-                    <span className="text-slate-300 font-normal">→</span>
+                    <span className="text-slate-300 dark:text-slate-400 font-normal">
+                      →
+                    </span>
                     <span>{ticket.to}</span>
                   </div>
                 </TableCell>
@@ -180,10 +182,10 @@ const TicketTable = ({ allTickets }) => {
                 {/* ৪. PRICING & SEATS QUANTITY */}
                 <TableCell className="py-4 text-right">
                   <div className="text-xs space-y-0.5">
-                    <p className="font-extrabold text-slate-800">
+                    <p className="font-extrabold text-slate-800 dark:text-slate-200">
                       ৳ {ticket.price.toLocaleString()}
                     </p>
-                    <p className="text-[10px] text-slate-400 font-medium">
+                    <p className="text-[10px] text-slate-400 dark:text-slate-300 font-medium">
                       {ticket.quantity} Tickets Left
                     </p>
                   </div>
@@ -219,8 +221,8 @@ const TicketTable = ({ allTickets }) => {
                     </div>
                   ) : (
                     // অলরেডি ডিসাইড হয়ে গেলে অ্যাকশন লক মেসেজ শো করবে
-                    <div className="text-xs text-slate-400 font-semibold pr-2 flex items-center justify-end gap-1 select-none">
-                      <ShieldAlert className="w-3.5 h-3.5 text-slate-300" />{" "}
+                    <div className="text-xs text-slate-400 dark:text-slate-300 font-semibold pr-2 flex items-center justify-end gap-1 select-none">
+                      <ShieldAlert className="w-3.5 h-3.5 text-slate-300 dark:text-slate-400" />{" "}
                       Moderated
                     </div>
                   )}

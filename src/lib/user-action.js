@@ -4,9 +4,9 @@ const IMGBB_API_KEY = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
 import { useSession } from "./auth-client";
 
 export const useUserInfo = () => {
-    const { data, isPending, refetch, error } = useSession();
+    const { data, isPending, refetch, error, update } = useSession();
     const session = data?.user || null;
-    return { session, isPending, refetch, error };
+    return { session, isPending, refetch, error, update };
 };
 
 export const uploadImageToImgbb = async (setImageUrl, formData, toast) => {

@@ -28,12 +28,9 @@ import { updateUserRole } from "@/lib/api-action";
 const UserTable = ({ users: initialUsers }) => {
   const [users, setUsers] = useState(initialUsers);
 
-  // ─── ২. অ্যাকশন হ্যান্ডলার ফাংশনস ───
-
-  // ROLE: MAKE ADMIN
   const handleMakeAdmin = async (id, name) => {
     const result = await updateUserRole(id, { role: "admin" });
-    console.log("Update result:", result); // Debugging line
+    console.log("Update result:", result);
     if (result) {
       setUsers((prev) =>
         prev.map((user) =>
@@ -44,7 +41,6 @@ const UserTable = ({ users: initialUsers }) => {
     }
   };
 
-  // ROLE: MAKE VENDOR
   const handleMakeVendor = async (id, name) => {
     const result = await updateUserRole(id, { role: "vendor" });
     if (result) {
@@ -56,7 +52,7 @@ const UserTable = ({ users: initialUsers }) => {
       toast.success(`${name} is now a Vendor`);
     }
   };
-  // 🚨 MARK AS FRAUD FOR BOTH  VENDOR)
+
   const handleMarkAsFraud = async (id, name, role) => {
     const result = await updateUserRole(id, { isFraud: true });
     if (result) {
@@ -71,7 +67,6 @@ const UserTable = ({ users: initialUsers }) => {
     }
   };
 
-  // 🔄 UNMARK FRAUD (রিকভারি অপশন)
   const handleUnmarkFraud = async (id, name) => {
     const result = await updateUserRole(id, { isFraud: false });
     if (result) {
@@ -86,9 +81,6 @@ const UserTable = ({ users: initialUsers }) => {
     }
   };
 
-  // ─── ৩. হেল্পার UI জেনারেটরস ───
-
-  // নামের প্রথম অক্ষর দিয়ে ডাইনামিক প্রোফাইল ইমেজ (Avatar)
   const renderAvatar = (name, isFraud) => {
     const initials = name
       .split(" ")
@@ -110,7 +102,6 @@ const UserTable = ({ users: initialUsers }) => {
     );
   };
 
-  // রোল ও ফ্রড স্টেট ওয়াইজ ব্যাজ
   const getRoleBadge = (role, isFraud) => {
     if (isFraud)
       return (
@@ -144,17 +135,17 @@ const UserTable = ({ users: initialUsers }) => {
 
   return (
     <div>
-      <div className="hidden md:block bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+      <div className="hidden md:block bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-600 shadow-sm overflow-hidden">
         <Table>
-          <TableHeader className="bg-slate-50/70">
-            <TableRow className="hover:bg-transparent border-slate-100">
-              <TableHead className="font-semibold text-slate-700 py-4 pl-6">
+          <TableHeader className="bg-slate-50/70 dark:bg-slate-700">
+            <TableRow className="hover:bg-transparent border-slate-100 dark:border-slate-600">
+              <TableHead className="font-semibold text-slate-700 dark:text-slate-300 py-4 pl-6">
                 Profile & Identity
               </TableHead>
-              <TableHead className="font-semibold text-slate-700 py-4">
+              <TableHead className="font-semibold text-slate-700 dark:text-slate-300 py-4">
                 Account Type
               </TableHead>
-              <TableHead className="font-semibold text-slate-700 py-4 text-right pr-6">
+              <TableHead className="font-semibold text-slate-700 dark:text-slate-300 py-4 text-right pr-6">
                 Access Control Options
               </TableHead>
             </TableRow>
@@ -165,19 +156,18 @@ const UserTable = ({ users: initialUsers }) => {
               users.map((user) => (
                 <TableRow
                   key={user._id}
-                  className={`hover:bg-slate-50/40 transition-colors border-slate-100 ${user?.isFraud ? "bg-rose-50/20" : ""}`}
+                  className={`hover:bg-slate-50/40 transition-colors border-slate-100 dark:border-slate-600 ${user?.isFraud ? "bg-rose-50/20 dark:bg-rose-900/20" : ""}`}
                 >
-                  {/* ১. LEFT PROFILE IMAGE & DETAILS */}
                   <TableCell className="py-4 pl-6">
                     <div className="flex items-center gap-3">
                       {renderAvatar(user.name, user.isFraud)}
                       <div className="space-y-0.5">
                         <p
-                          className={`text-sm font-bold ${user?.isFraud ? "text-rose-700 line-through" : "text-slate-800"}`}
+                          className={`text-sm font-bold ${user?.isFraud ? "text-rose-700 line-through dark:text-rose-400" : "text-slate-800 dark:text-slate-300"}`}
                         >
                           {user.name}
                         </p>
-                        <p className="text-xs text-slate-400 font-mono flex items-center gap-1">
+                        <p className="text-xs text-slate-400 dark:text-slate-300 font-mono flex items-center gap-1">
                           <Mail className="w-3 h-3 text-slate-300" />{" "}
                           {user?.email}
                         </p>
@@ -185,27 +175,23 @@ const UserTable = ({ users: initialUsers }) => {
                     </div>
                   </TableCell>
 
-                  {/* ২. ROLE BADGE */}
                   <TableCell className="py-4">
                     {getRoleBadge(user.role, user?.isFraud)}
                   </TableCell>
 
-                  {/* ৩. ACTIONS (ADMIN EXCLUDED FROM FRAUD LOCK) */}
                   <TableCell className="py-4 text-right pr-6">
                     <div className="flex items-center justify-end gap-2">
                       {user?.isFraud ? (
-                        // ফ্রড অ্যাকাউন্ট রিকভার করার বাটন
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() => handleUnmarkFraud(user._id, user.name)}
-                          className="border-slate-200 text-slate-600 hover:bg-slate-50 h-8 px-3 rounded-xl font-bold text-xs flex items-center gap-1"
+                          className="border-slate-200 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-600 h-8 px-3 rounded-xl font-bold text-xs flex items-center gap-1"
                         >
                           <RefreshCw className="w-3 h-3" /> Unmark Fraud
                         </Button>
                       ) : (
                         <>
-                          {/* MAKE ADMIN BUTTON */}
                           {user.role !== "admin" && (
                             <Button
                               size="sm"
@@ -218,7 +204,6 @@ const UserTable = ({ users: initialUsers }) => {
                             </Button>
                           )}
 
-                          {/* MAKE VENDOR BUTTON */}
                           {user.role !== "vendor" && (
                             <Button
                               size="sm"
@@ -231,7 +216,6 @@ const UserTable = ({ users: initialUsers }) => {
                             </Button>
                           )}
 
-                          {/* MARK AS FRAUD BUTTON (FOR BOTH USERS & VENDORS, EXCLUDING ADMIN) */}
                           {user.role == "vendor" && (
                             <Button
                               size="sm"
@@ -274,10 +258,9 @@ const UserTable = ({ users: initialUsers }) => {
           users.map((user) => (
             <Card
               key={user._id}
-              className={`rounded-xl border-slate-100 shadow-sm overflow-hidden ${user.isFraud ? "bg-rose-50/30 border-rose-100" : "bg-white"}`}
+              className={`rounded-xl border-slate-100 dark:border-slate-600 shadow-sm overflow-hidden ${user.isFraud ? "bg-rose-50/30 border-rose-100" : "bg-white"}`}
             >
               <CardContent className="p-4 space-y-3.5">
-                {/* মোবাইল প্রোফাইল হেডার (বাম পাশে ইমেজ) */}
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-3 max-w-[70%]">
                     {renderAvatar(user.name, user.isFraud)}
@@ -295,7 +278,6 @@ const UserTable = ({ users: initialUsers }) => {
                   <div>{getRoleBadge(user.role, user.isFraud)}</div>
                 </div>
 
-                {/* মোবাইল অ্যাকশন বাটন গ্রুপ */}
                 <div className="pt-2 border-t border-slate-50 flex flex-col gap-2 w-full">
                   {user.isFraud ? (
                     <Button

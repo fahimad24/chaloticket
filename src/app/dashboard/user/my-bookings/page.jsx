@@ -15,10 +15,10 @@ export default async function MyBookedTickets() {
   return (
     <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
       <div>
-        <h1 className="text-2xl md:text-3xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
+        <h1 className="text-2xl md:text-3xl font-bold text-slate-800 dark:text-primary tracking-tight flex items-center gap-2">
           <Ticket className="w-7 h-7 text-[#6367FF]" /> My Booked Tickets
         </h1>
-        <p className="text-sm text-slate-500 mt-1">
+        <p className="text-sm dark:text-slate-300 text-slate-500 mt-1">
           Manage, track count-downs, and make secure payments for your booked
           trips.
         </p>
@@ -44,7 +44,7 @@ export default async function MyBookedTickets() {
       ) : (
         <div className="flex flex-col items-center justify-center gap-3 py-20">
           <Ticket className="w-12 h-12 text-slate-400" />
-          <p className="text-slate-500 text-sm">
+          <p className="text-slate-500 dark:text-slate-300 text-sm">
             You haven&apos;t booked any tickets yet.
           </p>
         </div>

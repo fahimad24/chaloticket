@@ -90,10 +90,10 @@ export default function TransactionHistory() {
       {/* PAGE HEADER */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-800 dark:text-primary tracking-tight flex items-center gap-2">
             <History className="w-7 h-7 text-[#6367FF]" /> Transaction History
           </h1>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-slate-500 dark:text-slate-300 mt-1">
             View and download receipts for all payments made securely via
             Stripe.
           </p>
@@ -107,12 +107,12 @@ export default function TransactionHistory() {
           placeholder="Search by ticket title or Transaction ID..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="pl-9 focus-visible:ring-[#6367FF] rounded-xl border-slate-200"
+          className="pl-9 focus-visible:ring-[#6367FF] rounded-xl border-slate-200 dark:border-slate-500"
         />
       </div>
 
       {/* TRANSACTIONS TABLE */}
-      <Card className="border-slate-100 shadow-sm rounded-2xl overflow-hidden bg-white">
+      <Card className="border-slate-100 dark:border-slate-500 shadow-sm rounded-2xl overflow-hidden bg-white dark:bg-slate-800">
         <CardContent className="p-0">
           {isLoading ? (
             // টেবিল স্কেলিটন লোডার
@@ -132,33 +132,32 @@ export default function TransactionHistory() {
           ) : filteredTransactions.length === 0 ? (
             // নো ডাটা ফাউন্ড স্টেট
             <div className="text-center py-12 space-y-3">
-              <div className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center mx-auto text-slate-400">
+              <div className="w-12 h-12 rounded-full bg-slate-50  flex items-center justify-center mx-auto text-slate-400">
                 <CreditCard className="w-6 h-6" />
               </div>
-              <h3 className="text-base font-semibold text-slate-700">
+              <h3 className="text-base font-semibold text-slate-700 dark:text-slate-300">
                 No transactions found
               </h3>
-              <p className="text-xs text-slate-400 max-w-xs mx-auto">
+              <p className="text-xs text-slate-400 dark:text-slate-300 max-w-xs mx-auto">
                 We couldn&apos;t find any matching payment histories for your
                 search query.
               </p>
             </div>
           ) : (
-            // মেইন রেসপন্সিভ টেবিল
             <div className="overflow-x-auto">
               <Table>
-                <TableHeader className="bg-slate-50/70">
-                  <TableRow className="border-slate-100 hover:bg-transparent">
-                    <TableHead className="font-semibold text-slate-600 pl-6 py-4">
+                <TableHeader className="bg-slate-50/70 dark:bg-slate-700/50">
+                  <TableRow className="border-slate-100 dark:border-slate-500 hover:bg-transparent">
+                    <TableHead className="font-semibold text-slate-600 dark:text-slate-300 pl-6 py-4">
                       Ticket Title
                     </TableHead>
-                    <TableHead className="font-semibold text-slate-600">
+                    <TableHead className="font-semibold text-slate-600 dark:text-slate-300">
                       Transaction ID
                     </TableHead>
-                    <TableHead className="font-semibold text-slate-600">
+                    <TableHead className="font-semibold text-slate-600 dark:text-slate-300">
                       Payment Date
                     </TableHead>
-                    <TableHead className="font-semibold text-slate-600 text-right pr-6">
+                    <TableHead className="font-semibold text-slate-600 dark:text-slate-300 text-right pr-6">
                       Amount
                     </TableHead>
                   </TableRow>
@@ -167,10 +166,10 @@ export default function TransactionHistory() {
                   {filteredTransactions.map((tx) => (
                     <TableRow
                       key={tx.id}
-                      className="border-slate-50 hover:bg-slate-50/40 transition-colors group"
+                      className="border-slate-50 dark:border-slate-500 hover:bg-slate-50/40 transition-colors group"
                     >
                       {/* TICKET TITLE & LOGO */}
-                      <TableCell className="font-medium text-slate-800 pl-6 py-4 max-w-75">
+                      <TableCell className="font-medium text-slate-800 dark:text-slate-300 pl-6 py-4 max-w-75">
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-lg bg-[#FFDBFD] text-[#6367FF] flex items-center justify-center shrink-0">
                             <Ticket className="w-4 h-4" />
@@ -182,18 +181,18 @@ export default function TransactionHistory() {
                       </TableCell>
 
                       {/* TRANSACTION ID */}
-                      <TableCell className="font-mono text-xs text-slate-500">
+                      <TableCell className="font-mono text-xs text-slate-500 dark:text-slate-400">
                         <div className="flex items-center gap-1.5">
-                          <span className="bg-slate-100 px-2.5 py-1 rounded-md tracking-tight">
+                          <span className="bg-slate-100 dark:bg-slate-600 px-2.5 py-1 rounded-md tracking-tight">
                             {tx.id}
                           </span>
                         </div>
                       </TableCell>
 
                       {/* PAYMENT DATE */}
-                      <TableCell className="text-slate-600 text-sm">
+                      <TableCell className="text-slate-600 dark:text-slate-400 text-sm">
                         <div className="flex items-center gap-1.5 text-xs">
-                          <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                          <Calendar className="w-3.5 h-3.5 text-slate-400 " />
                           {formatDate(tx.paymentDate)}
                         </div>
                       </TableCell>
@@ -203,7 +202,7 @@ export default function TransactionHistory() {
                         <span className="font-extrabold text-[#6367FF] text-sm md:text-base">
                           ৳ {tx.amount.toLocaleString()}
                         </span>
-                        <span className="block text-[10px] text-emerald-600 font-medium">
+                        <span className="block text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">
                           Stripe Verified
                         </span>
                       </TableCell>

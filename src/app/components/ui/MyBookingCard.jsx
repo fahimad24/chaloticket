@@ -38,14 +38,16 @@ const MyBookingCard = ({ ticket, isDeparturePassed, canPay }) => {
 
   return (
     <div>
-      <Card className="group rounded-2xl overflow-hidden border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 bg-white flex flex-col justify-between">
+      <Card className="group rounded-2xl overflow-hidden border-slate-100 dark:border-slate-600 dark:bg-slate-800 shadow-sm hover:shadow-md transition-all duration-300 bg-white flex flex-col justify-between pt-0">
         {/* TICKET CARD TOP / IMAGE */}
         <div className="relative h-44 w-full bg-slate-100 overflow-hidden">
           <Image
-            fill
-            priority
             src={ticket?.image}
             alt={ticket?.title}
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            loading="eager"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
           <div className="absolute top-3 right-3 z-10">
@@ -59,16 +61,16 @@ const MyBookingCard = ({ ticket, isDeparturePassed, canPay }) => {
         {/* TICKET DETAILS CONTAINER */}
         <CardContent className="p-5 space-y-4 grow">
           <div>
-            <h3 className="font-bold text-slate-800 text-base line-clamp-1 group-hover:text-[#6367FF] transition-colors">
+            <h3 className="font-bold text-slate-800 dark:text-slate-300 text-base line-clamp-1 group-hover:text-[#6367FF] transition-colors">
               {ticket?.title}
             </h3>
           </div>
 
           {/* ROUTE INFORMATION */}
-          <div className="flex items-center gap-2 text-sm font-semibold text-slate-700 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+          <div className="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-600 p-2.5 rounded-xl border border-slate-100 dark:border-slate-500">
             <MapPin className="w-4 h-4 text-rose-500 shrink-0" />
             <span className="truncate">{ticket?.from}</span>
-            <span className="text-slate-400 mx-1">→</span>
+            <span className="text-slate-400  mx-1">→</span>
             <MapPin className="w-4 h-4 text-emerald-500 shrink-0" />
             <span className="truncate">{ticket?.to}</span>
           </div>
@@ -77,7 +79,7 @@ const MyBookingCard = ({ ticket, isDeparturePassed, canPay }) => {
           <div className="grid grid-cols-2 gap-2 border-b border-dashed border-slate-100 pb-3 text-sm">
             <div className="text-slate-500 space-y-0.5">
               <span>Quantity</span>
-              <p className="font-bold text-slate-800 text-base flex items-center gap-1">
+              <p className="font-bold text-slate-800 dark:text-slate-300 text-base flex items-center gap-1">
                 <Ticket className="w-3.5 h-3.5 text-slate-400" />{" "}
                 {ticket?.quantity} Pcs
               </p>
@@ -95,7 +97,7 @@ const MyBookingCard = ({ ticket, isDeparturePassed, canPay }) => {
             <div className="flex items-start gap-2 text-xs text-slate-500">
               <Calendar className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
               <div>
-                <span className="block font-medium text-slate-700">
+                <span className="block font-medium text-slate-700 dark:text-slate-300">
                   Departure Schedule
                 </span>
                 <span>{formatDepartureDate(ticket?.departureTime)}</span>
@@ -126,7 +128,7 @@ const MyBookingCard = ({ ticket, isDeparturePassed, canPay }) => {
 
           {/* ২. ভেন্ডর অ্যাকসেপ্ট করেছে কিন্তু ডিপার্চার সময় পার হয়ে গেছে -> পেমেন্ট লক */}
           {ticket?.status === "accepted" && isDeparturePassed && (
-            <div className="w-full bg-slate-100 text-slate-400 text-xs font-medium text-center p-3 rounded-xl border border-slate-200 flex items-center justify-center gap-1.5 cursor-not-allowed">
+            <div className="w-full bg-slate-100 text-slate-400 text-xs font-medium text-center p-3 rounded-xl border border-slate-200 dark:bg-slate-600 dark:text-slate-300 dark:border-slate-500 flex items-center justify-center gap-1.5 cursor-not-allowed">
               <AlertCircle className="w-4 h-4 text-slate-400" /> Payment Expired
               (Time Passed)
             </div>
@@ -134,7 +136,7 @@ const MyBookingCard = ({ ticket, isDeparturePassed, canPay }) => {
 
           {/* ৩. ইনিশিয়ালি পেন্ডিং স্টেট */}
           {ticket?.status === "pending" && (
-            <div className="w-full bg-amber-50 text-amber-600 text-xs font-semibold text-center p-3 rounded-xl border border-amber-100/60 flex items-center justify-center gap-1.5">
+            <div className="w-full bg-amber-50 text-amber-600 text-xs font-semibold text-center p-3 rounded-xl border border-amber-100/60 dark:bg-amber-600 dark:text-amber-300 dark:border-amber-500 flex items-center justify-center gap-1.5">
               <Clock className="w-4 h-4 animate-spin" /> Waiting for Vendor
               Approval
             </div>
@@ -142,14 +144,14 @@ const MyBookingCard = ({ ticket, isDeparturePassed, canPay }) => {
 
           {/* ৪. পেমেন্ট কমপ্লিট সাকসেস স্টেট */}
           {ticket?.status === "paid" && (
-            <div className="w-full bg-emerald-50 text-emerald-600 text-xs font-bold text-center p-3 rounded-xl border border-emerald-100 flex items-center justify-center gap-1.5">
+            <div className="w-full bg-emerald-50 text-emerald-600 text-xs font-bold text-center p-3 rounded-xl border border-emerald-100 dark:bg-emerald-600 dark:text-emerald-300 dark:border-emerald-500 flex items-center justify-center gap-1.5">
               <CheckCircle2 className="w-4 h-4" /> Ticket Secured & Paid
             </div>
           )}
 
           {/* ৫. রিজেক্টেড স্টেট */}
           {ticket?.status === "rejected" && (
-            <div className="w-full bg-rose-50 text-rose-600 text-xs font-medium text-center p-3 rounded-xl border border-rose-100 flex items-center justify-center gap-1.5">
+            <div className="w-full bg-rose-50 text-rose-600 text-xs font-medium text-center p-3 rounded-xl border border-rose-100 dark:bg-rose-600 dark:text-rose-300 dark:border-rose-500 flex items-center justify-center gap-1.5">
               <XCircle className="w-4 h-4" /> Booking Cancelled by Vendor
             </div>
           )}

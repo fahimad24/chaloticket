@@ -10,11 +10,11 @@ export default function DashboardLayout({ children }) {
                 <div className="flex min-h-screen w-full bg-slate-50/50">
 
                     <AppSidebar />
-                    <main className="flex-1 p-4 md:p-8 w-full transition-all duration-300">
+                    <main className="flex-1 p-4 md:p-8 w-full transition-all duration-300 bg-background">
                         <div className="flex items-center mb-6 ">
                             <SidebarTrigger className="p-2 rounded-lg border border-slate-200 bg-white shadow-sm" />
                         </div>
-                        <div className="w-full">
+                        <div className="w-full ">
                             {children}
                         </div>
                     </main>
