@@ -326,7 +326,7 @@ function TicketDetailsContent({ params }) {
                 )}
               </div>
 
-              <div className="bg-slate-50/50 rounded-2xl p-4 border border-slate-100 text-xs space-y-2 text-slate-600">
+              <div className="bg-slate-50/50 rounded-2xl p-4 border border-slate-100 text-xs space-y-2 text-slate-600 dark:text-slate-300">
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4 text-slate-400 dark:text-slate-300" />
                   <span className="font-medium">
@@ -372,19 +372,19 @@ function TicketDetailsContent({ params }) {
 
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl border border-slate-100 w-full max-w-md p-6 relative shadow-2xl">
+          <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-600 w-full max-w-md p-6 relative shadow-2xl">
             <button
               onClick={() => setIsModalOpen(false)}
-              className="absolute top-4 right-4 p-1.5 rounded-xl hover:bg-slate-100 text-slate-400"
+              className="absolute top-4 right-4 p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-400 dark:text-slate-300"
             >
               <X className="w-4 h-4" />
             </button>
 
             <div className="space-y-1 mb-5">
-              <h2 className="text-xl font-bold text-slate-800">
+              <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200">
                 Confirm Seat Booking
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-400 dark:text-slate-300">
                 Specify your seat allocation count.
               </p>
             </div>
@@ -397,13 +397,13 @@ function TicketDetailsContent({ params }) {
                 <h3 className="font-bold text-slate-700 text-base">
                   Booking Success!
                 </h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-slate-400 dark:text-slate-300">
                   Redirecting to dashboard...
                 </p>
               </div>
             ) : (
               <form onSubmit={handleBookingSubmit} className="space-y-4">
-                <div className="bg-slate-50 border border-slate-100 p-3.5 rounded-2xl flex items-center gap-3">
+                <div className="bg-slate-50 dark:bg-slate-600 border border-slate-100 dark:border-slate-500 p-3.5 rounded-2xl flex items-center gap-3">
                   <div className="relative w-14 h-14 rounded-xl overflow-hidden shrink-0">
                     <Image
                       src={
@@ -416,7 +416,7 @@ function TicketDetailsContent({ params }) {
                     />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-xs font-bold text-slate-700 truncate">
+                    <p className="text-xs font-bold text-slate-700 dark:text-slate-300 truncate">
                       {ticket?.title}
                     </p>
                     <p className="text-[11px] text-[#6367FF] font-semibold mt-0.5">
@@ -429,11 +429,11 @@ function TicketDetailsContent({ params }) {
                   <div className="flex justify-between items-center text-xs">
                     <label
                       htmlFor="quantity"
-                      className="font-bold text-slate-600"
+                      className="font-bold text-slate-600 dark:text-slate-300 tracking-wide"
                     >
                       Desired Quantity
                     </label>
-                    <span className="text-slate-400">
+                    <span className="text-slate-400 dark:text-slate-500 font-medium">
                       Max limit: <b>{ticket?.quantity} seats</b>
                     </span>
                   </div>
@@ -453,10 +453,10 @@ function TicketDetailsContent({ params }) {
                       )
                     }
                     required
-                    className="w-full h-11 px-3.5 bg-slate-50/50 border border-slate-200 focus:border-[#6367FF] rounded-xl font-semibold text-sm outline-none"
+                    className="w-full h-11 px-3.5 bg-slate-50/50 dark:bg-slate-600 border border-slate-200 dark:border-slate-500 focus:border-[#6367FF] dark:focus:border-[#6367FF] rounded-xl font-semibold text-sm outline-none"
                   />
 
-                  <div className="bg-indigo-50/40 p-3 rounded-xl border border-indigo-100/30 flex items-center justify-between text-xs mt-2">
+                  <div className="bg-indigo-50/40 dark:bg-indigo-900/30 p-3 rounded-xl border border-indigo-100/30 dark:border-indigo-500/50 flex items-center justify-between text-xs mt-2">
                     <span className="text-slate-500 font-medium">
                       Subtotal Estimate:
                     </span>

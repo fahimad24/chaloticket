@@ -91,16 +91,14 @@ export default function UnifiedProfilePage() {
   }, [session?.id, currentRole]);
 
   let completedTrips = 0;
-  if (bookedTickets.length === 0 && currentRole === "traveler") {
+  if (bookedTickets.length !== 0 && currentRole === "traveler") {
     completedTrips = bookedTickets.filter(
-      (t) =>
-        t.status?.toLowerCase() === "accepted" ||
-        t.status?.toLowerCase() === "paid",
+      (t) => t.status?.toLowerCase() === "paid",
     ).length;
   }
 
   let rejectedTrips = 0;
-  if (bookedTickets.length === 0 && currentRole === "traveler") {
+  if (bookedTickets.length !== 0 && currentRole === "traveler") {
     rejectedTrips = bookedTickets.filter(
       (t) => t.status?.toLowerCase() === "rejected",
     ).length;
@@ -109,17 +107,17 @@ export default function UnifiedProfilePage() {
   const userStats = [
     {
       label: "Total Bookings",
-      value: `${bookedTickets.length || 0} Tickets`,
+      value: `${bookedTickets.map((t) => t.quantity).reduce((a, b) => a + b, 0) || 0} Tickets`,
       icon: <Ticket className="w-5 h-5 text-[#6367FF]" />,
     },
     {
       label: "Completed Trips",
-      value: `${completedTrips || 0} Tickets`,
+      value: `${completedTrips} Tickets`,
       icon: <CheckCircle className="w-5 h-5 text-emerald-500" />,
     },
     {
       label: "Rejected Trips",
-      value: `${rejectedTrips || 0} Tickets`,
+      value: `${rejectedTrips} Tickets`,
       icon: <TicketX className="w-5 h-5 text-rose-500" />,
     },
   ];
