@@ -2,22 +2,19 @@
 
 import React, { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Image from "next/image";
-import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card";
 import {
-  Layers,
-  ArrowRight,
-  Sparkles,
   Bus,
   Train,
   Plane,
   ArrowUpDown,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { fetchAllTicketsSearch } from "@/lib/api-action";
 import SearchBar from "@/app/components/SearchBar";
 import TicketsSkeleton from "@/app/components/skeleton/TicketsSkeleton";
 import TicketCard from "../components/card/TicketCard";
+const ITEMS_PER_PAGE = 6;
 
 function TicketsContent() {
   const router = useRouter();
@@ -25,6 +22,7 @@ function TicketsContent() {
   const [tickets, setTickets] = useState([]);
 
   const currentSort = searchParams.get("sort") || "default";
+  const currentPage = parseInt(searchParams.get("page") || "1", 10);
 
   useEffect(() => {
     const transportType =
@@ -38,15 +36,14 @@ function TicketsContent() {
       setTickets(data);
     };
 
-    console.log("Fetching tickets with params:", {
-      transportType,
-      from,
-      to,
-      sort,
-    });
-
     loadTickets();
   }, [searchParams]);
+
+  const handlePageChange = (pageNumber) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", pageNumber.toString());
+    router.push(`?${params.toString()}`);
+  };
 
   const handleSearch = (formData) => {
     const transportType = formData.get("transportType")?.toLowerCase();
@@ -55,6 +52,7 @@ function TicketsContent() {
     const date = formData.get("date");
 
     const params = new URLSearchParams(searchParams.toString());
+    params.set("page", "1");
 
     if (transportType === "all") {
       params.set("transportType", transportType);
@@ -78,6 +76,8 @@ function TicketsContent() {
 
   const handleSortChange = (e) => {
     const params = new URLSearchParams(searchParams.toString());
+    params.set("page", "1");
+
     if (e.target.value !== "default") {
       params.set("sort", e.target.value);
     } else {
@@ -85,6 +85,11 @@ function TicketsContent() {
     }
     router.push(`?${params.toString()}`);
   };
+
+  const totalPages = Math.ceil(tickets.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const displayedTickets = tickets.slice(startIndex, endIndex);
 
   const getTransportIcon = (type) => {
     switch (type?.toLowerCase()) {
@@ -118,8 +123,10 @@ function TicketsContent() {
       <main className="max-w-7xl mx-auto px-4 pb-24">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-100 pb-6 mb-8">
           <p className="text-sm font-bold text-slate-500 dark:text-slate-300">
-            Showing <span className="text-[#6367FF]">{tickets.length}</span>{" "}
-            verified results
+            Showing{" "}
+            <span className="text-[#6367FF]">{displayedTickets.length}</span> of{" "}
+            <span className="text-[#6367FF]">{tickets.length}</span> verified
+            results
           </p>
 
           <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800 border border-slate-200/60 px-4 py-2 rounded-xl w-full sm:w-auto">
@@ -136,8 +143,9 @@ function TicketsContent() {
           </div>
         </div>
 
+        {/* 🌟 tickets.map এর বদলে displayedTickets.map ব্যবহার করা হয়েছে */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {tickets.map((ticket, index) => (
+          {displayedTickets.map((ticket, index) => (
             <TicketCard
               key={index}
               ticket={ticket}
@@ -146,6 +154,41 @@ function TicketsContent() {
             />
           ))}
         </div>
+
+        {/* 🌟 নিচে চমৎকার একটি Pagination UI Controls যোগ করা হলো */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-12">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="p-2 border border-slate-200 dark:border-slate-700 rounded-xl disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => handlePageChange(page)}
+                className={`w-10 h-10 text-sm font-bold rounded-xl transition-all ${
+                  currentPage === page
+                    ? "bg-[#6367FF] text-white shadow-lg shadow-[#6367FF]/20"
+                    : "border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800"
+                }`}
+              >
+                {page}
+              </button>
+            ))}
+
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="p-2 border border-slate-200 dark:border-slate-700 rounded-xl disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+        )}
       </main>
     </div>
   );
