@@ -34,6 +34,7 @@ import {
   uploadImageToImgbb,
 } from "@/lib/api-action";
 import { cn } from "@/lib/utils";
+import { redirect } from "next/navigation";
 
 const AVAILABLE_PERKS = [
   { id: "ac", label: "Air Conditioned (AC)" },
@@ -111,10 +112,10 @@ const TicketForm = ({ ticketData }) => {
         toast.success(
           "Ticket updated successfully! Redirecting to My Tickets page...",
         );
+        redirect("/dashboard/vendor/my-added-tickets");
       } else {
         toast.error("Failed to update ticket. Please try again.");
       }
-      console.log("Final ticket payload:", imageUrl);
     } catch (error) {
       toast.error("Upload error:", error);
       setIsSubmitting(false);

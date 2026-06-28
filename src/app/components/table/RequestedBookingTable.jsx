@@ -102,24 +102,24 @@ const RequestedBookingTable = ({ bookingRequests: initialRequests }) => {
   };
   return (
     <Table>
-      <TableHeader className="bg-slate-50/70">
-        <TableRow className="hover:bg-transparent border-slate-100">
-          <TableHead className="w-62.5 font-semibold text-slate-700 py-4 pl-6">
+      <TableHeader className="bg-slate-50/70 dark:bg-slate-700">
+        <TableRow className="hover:bg-transparent border-slate-100 dark:border-slate-600">
+          <TableHead className="w-62.5 font-semibold text-slate-700 dark:text-slate-300 py-4 pl-6">
             User Details
           </TableHead>
-          <TableHead className="font-semibold text-slate-700 py-4">
+          <TableHead className="font-semibold text-slate-700 dark:text-slate-300 py-4">
             Ticket Title
           </TableHead>
-          <TableHead className="font-semibold text-slate-700 py-4 text-center">
+          <TableHead className="font-semibold text-slate-700 dark:text-slate-300 py-4 text-center">
             Quantity
           </TableHead>
-          <TableHead className="font-semibold text-slate-700 py-4 text-right">
+          <TableHead className="font-semibold text-slate-700 dark:text-slate-300 py-4 text-right">
             Total Price
           </TableHead>
-          <TableHead className="font-semibold text-slate-700 py-4 text-center">
+          <TableHead className="font-semibold text-slate-700 dark:text-slate-300 py-4 text-center">
             Status
           </TableHead>
-          <TableHead className="font-semibold text-slate-700 py-4 text-right pr-6">
+          <TableHead className="font-semibold text-slate-700 dark:text-slate-300 py-4 text-right pr-6">
             Actions
           </TableHead>
         </TableRow>
@@ -134,50 +134,44 @@ const RequestedBookingTable = ({ bookingRequests: initialRequests }) => {
           </TableRow>
         ) : (
           bookingRequests.map((request) => {
-            // মোট প্রাইস হিসাব করা হচ্ছে: unitPrice * bookingQuantity
-
             const isPending = request?.status === "pending";
 
             return (
               <TableRow
                 key={request?._id}
-                className="hover:bg-slate-50/50 transition-colors border-slate-100"
+                className="hover:bg-slate-50/50 dark:hover:bg-slate-600/50 transition-colors border-slate-100 dark:border-slate-600"
               >
-                {/* ১. USER NAME / EMAIL */}
                 <TableCell className="py-4 pl-6 font-medium">
                   <div className="flex items-start gap-2.5">
-                    <div className="p-2 bg-slate-100 rounded-lg text-slate-600 shrink-0 mt-0.5">
+                    <div className="p-2 bg-slate-100 dark:bg-slate-600 rounded-lg text-slate-600 dark:text-slate-300 shrink-0 mt-0.5">
                       <User className="w-4 h-4" />
                     </div>
                     <div className="space-y-0.5">
-                      <p className="text-sm font-bold text-slate-800">
+                      <p className="text-sm font-bold text-slate-800 dark:text-slate-200">
                         {request?.userName}
                       </p>
-                      <p className="text-xs text-slate-400 font-mono select-all">
+                      <p className="text-xs text-slate-400  font-mono select-all">
                         {request?.userEmail}
                       </p>
                     </div>
                   </div>
                 </TableCell>
 
-                {/* ২. TICKET TITLE */}
                 <TableCell className="py-4 max-w-75">
-                  <div className="flex items-start gap-2 text-sm text-slate-700 font-medium">
+                  <div className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-300 font-medium">
                     <Ticket className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
                     <span className="line-clamp-2">{request?.title}</span>
                   </div>
                 </TableCell>
 
-                {/* ৩. BOOKING QUANTITY */}
-                <TableCell className="py-4 text-center font-semibold text-slate-700">
-                  <div className="inline-flex items-center gap-1 bg-slate-100/80 px-2.5 py-1 rounded-md text-xs">
+                <TableCell className="py-4 text-center font-semibold text-slate-700 dark:text-slate-300">
+                  <div className="inline-flex items-center gap-1 bg-slate-100/80 dark:bg-slate-600/50 px-2.5 py-1 rounded-md text-xs">
                     <Layers className="w-3 h-3 text-slate-500" />
                     {request?.quantity} Pcs
                   </div>
                 </TableCell>
 
-                {/* ৪. TOTAL PRICE */}
-                <TableCell className="py-4 text-right font-extrabold text-slate-900">
+                <TableCell className="py-4 text-right font-extrabold text-slate-900 dark:text-slate-300">
                   <div className="space-y-0.5">
                     <p className="text-sm">
                       ৳ {request?.price.toLocaleString()}
@@ -188,16 +182,13 @@ const RequestedBookingTable = ({ bookingRequests: initialRequests }) => {
                   </div>
                 </TableCell>
 
-                {/* ৫. LIVE STATUS BADGE */}
                 <TableCell className="py-4 text-center">
                   {getStatusBadge(request?.status)}
                 </TableCell>
 
-                {/* ৬. ACTION BUTTONS (ACCEPT / REJECT) */}
                 <TableCell className="py-4 text-right pr-6">
                   {isPending ? (
                     <div className="flex items-center justify-end gap-2">
-                      {/* ACCEPT BUTTON */}
                       <Button
                         size="sm"
                         onClick={() => handleAccept(request._id)}
@@ -206,7 +197,6 @@ const RequestedBookingTable = ({ bookingRequests: initialRequests }) => {
                         <Check className="w-3.5 h-3.5" /> Accept
                       </Button>
 
-                      {/* REJECT BUTTON */}
                       <Button
                         size="sm"
                         variant="outline"
@@ -223,7 +213,6 @@ const RequestedBookingTable = ({ bookingRequests: initialRequests }) => {
                       </Button>
                     </div>
                   ) : (
-                    // অ্যাকশন নেওয়া হয়ে গেলে বাটন হাইড করে মেসেজ শো করবে
                     <span className="text-xs text-slate-400 italic font-medium pr-2">
                       Action Processed
                     </span>

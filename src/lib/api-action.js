@@ -257,7 +257,7 @@ export const fetchTotalTicketsSold = async () => {
             throw new Error("Failed to fetch total tickets sold");
         }
         const result = await response.json();
-        return result.totalTicketsSold;
+        return result;
     } catch (error) {
         console.error("Error fetching total tickets sold:", error);
         throw error;

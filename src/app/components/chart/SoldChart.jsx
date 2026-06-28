@@ -15,12 +15,12 @@ import {
 
 const SoldChart = ({ data }) => {
   return (
-    <Card className="rounded-2xl border-slate-100 shadow-sm bg-white p-5 space-y-4">
+    <Card className="rounded-2xl border-slate-100 dark:border-slate-600 shadow-sm bg-white dark:bg-slate-800 p-5 space-y-4">
       <div>
-        <CardTitle className="text-base font-bold text-slate-800">
+        <CardTitle className="text-base font-bold text-slate-800 dark:text-slate-300">
           Inventory Allocation vs Conversion
         </CardTitle>
-        <CardDescription className="text-xs text-slate-400">
+        <CardDescription className="text-xs text-slate-400 dark:text-slate-300">
           Comparing added transport routes against actual ticket sales
         </CardDescription>
       </div>

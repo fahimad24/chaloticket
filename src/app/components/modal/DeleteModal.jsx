@@ -9,9 +9,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Field, FieldGroup } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Trash2 } from "lucide-react";
 
 export function DeleteModal({ ticket, isRejected, handleDelete }) {
@@ -21,7 +18,7 @@ export function DeleteModal({ ticket, isRejected, handleDelete }) {
         <Button
           disabled={isRejected} // 👈 Rejected হলে ডিজেবলড থাকবে
           variant="destructive"
-          className="bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-semibold text-xs flex items-center justify-center gap-1.5 h-9 transition-all disabled:opacity-40 disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed"
+          className="bg-rose-500  hover:bg-rose-600 text-white rounded-xl font-semibold text-xs flex items-center justify-center gap-1.5 h-9 transition-all disabled:opacity-40 disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed"
         >
           <Trash2 className="w-3.5 h-3.5" /> Delete
         </Button>

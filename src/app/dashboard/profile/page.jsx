@@ -16,7 +16,13 @@ import {
   TicketX,
 } from "lucide-react";
 import { useUserInfo } from "@/lib/user-action";
-import { fetchBookedTicketsByUserId } from "@/lib/api-action";
+import {
+  fetchBookedTicketsByUserId,
+  fetchMonthlyReport,
+  fetchTotalRevenue,
+  fetchTotalTicketsQuantity,
+  fetchTotalTicketsSold,
+} from "@/lib/api-action";
 import HistoryTable from "@/app/components/table/HistoryTable";
 import ProfileSkeleton from "@/app/components/skeleton/ProfileSkeleton";
 import { EditProfileDialog } from "@/app/components/ui/EditProfileModal";
@@ -28,6 +34,10 @@ export default function UnifiedProfilePage() {
 
   const [isPending, setIsPending] = useState(true);
   const [bookedTickets, setBookedTickets] = useState([]);
+  const [totalTicketsAdded, setTotalTicketsAdded] = useState(0);
+  const [totalTicketsSold, setTotalTicketsSold] = useState(0);
+  const [totalRevenue, setTotalRevenue] = useState(0);
+  const [monthlyReport, setMonthlyReport] = useState([]);
 
   const profileData = {
     name: session?.name || "User",
@@ -54,6 +64,14 @@ export default function UnifiedProfilePage() {
           const data = await fetchBookedTicketsByUserId(session.id);
           if (data) setBookedTickets(data);
         } else if (currentRole === "vendor") {
+          const totalTicketsAdded = await fetchTotalTicketsQuantity();
+          const totalTicketsSold = await fetchTotalTicketsSold();
+          const totalRevenue = await fetchTotalRevenue();
+          const monthlyReport = await fetchMonthlyReport();
+          if (totalTicketsAdded) setTotalTicketsAdded(totalTicketsAdded);
+          if (totalTicketsSold) setTotalTicketsSold(totalTicketsSold);
+          if (totalRevenue) setTotalRevenue(totalRevenue);
+          if (monthlyReport) setMonthlyReport(monthlyReport);
         } else if (currentRole === "admin") {
         }
       } catch (error) {
@@ -99,17 +117,17 @@ export default function UnifiedProfilePage() {
   const vendorStats = [
     {
       label: "Total Earnings",
-      value: "৳45,200",
+      value: `৳${totalRevenue.toLocaleString()}`,
       icon: <DollarSign className="w-5 h-5 text-emerald-500" />,
     },
     {
-      label: "Active Routes",
-      value: "8 Bus/Train",
+      label: "Total Transport Routes",
+      value: `${totalTicketsAdded} Routes`,
       icon: <Bus className="w-5 h-5 text-[#6367FF]" />,
     },
     {
       label: "Seats Sold",
-      value: "184 Seats",
+      value: `${totalTicketsSold.totalTicketsSold} Seats`,
       icon: <Users className="w-5 h-5 text-[#8494FF]" />,
     },
   ];
@@ -132,14 +150,12 @@ export default function UnifiedProfilePage() {
     },
   ];
 
-  // লোডিং স্টেট হ্যান্ডলার
   if (isPending || (!session && currentRole === "traveler")) {
     return <ProfileSkeleton />;
   }
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 antialiased pb-24">
-      {/* প্রোফাইল হেডার কার্ড */}
       <div className="max-w-5xl mx-auto px-4 pt-8">
         <div className="bg-white border border-slate-100 dark:bg-slate-900 dark:border-slate-800 rounded-3xl p-6 md:p-8 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
@@ -186,7 +202,6 @@ export default function UnifiedProfilePage() {
         </div>
       </div>
 
-      {/* স্ট্যাটস গ্রিড সেকশন */}
       <div className="max-w-5xl mx-auto px-4 mt-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {currentRole === "traveler" &&
@@ -251,7 +266,6 @@ export default function UnifiedProfilePage() {
         </div>
       </div>
 
-      {/* মেইন কন্টেন্ট / টেবিল সেকশন */}
       <div className="max-w-5xl mx-auto px-4 mt-8">
         <div className="bg-white border border-slate-100 dark:bg-slate-900 dark:border-slate-800 rounded-3xl p-6 md:p-8 shadow-sm">
           {currentRole === "traveler" && (
@@ -275,20 +289,7 @@ export default function UnifiedProfilePage() {
                 </h3>
               </div>
               <div className="space-y-4">
-                {[
-                  {
-                    title: "Dhaka to Cox's Bazar Sleeper",
-                    sales: "৳18,500",
-                    type: "Bus",
-                    seats: "4 Left",
-                  },
-                  {
-                    title: "Chattogram to Dhaka Night Coach",
-                    sales: "৳12,400",
-                    type: "Bus",
-                    seats: "12 Left",
-                  },
-                ].map((ticket, idx) => (
+                {totalTicketsSold?.tickets.map((ticket, idx) => (
                   <div
                     key={idx}
                     className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40"
@@ -310,8 +311,8 @@ export default function UnifiedProfilePage() {
                           {ticket.sales}
                         </p>
                       </div>
-                      <span className="px-2.5 py-1 text-[10px] font-black rounded-lg bg-[#ffdbfd]/40 text-[#6367FF] border border-[#C9BEFF]/40">
-                        {ticket.seats}
+                      <span className="px-2.5 py-1 text-[10px] font-black rounded-lg bg-[#ffdbfd]/40 text-[#6367FF] dark:text-green-300 dark:bg-[#ffdbfd]/40 border border-[#C9BEFF]/40">
+                        {ticket.seats} Seats Sold
                       </span>
                     </div>
                   </div>
