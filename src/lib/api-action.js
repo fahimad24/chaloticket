@@ -198,20 +198,18 @@ export const updateUserRole = async (userId, updatedData) => {
 }
 
 // fetch only user booked tickets
-export const fetchUserBookedTickets = async (bookedData, ticketId) => {
+export const fetchUserBookedTickets = async (bookedData) => {
     const token = await getApiToken();
     try {
-        const response = await fetch(`${API_BASE_URL}/api/tickets/booked/${ticketId}`, {
-            method: "PUT",
+        const response = await fetch(`${API_BASE_URL}/api/tickets/booked`, {
+            method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`,
             },
             body: JSON.stringify({ bookedData }),
         });
-        if (!response.ok) {
-            throw new Error("Failed to fetch user booked tickets");
-        }
+        response.ok || console.error("Failed to fetch user booked tickets:", response.statusText);
         const result = await response.json();
         return result;
     } catch (error) {

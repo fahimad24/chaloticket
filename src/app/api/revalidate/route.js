@@ -3,12 +3,11 @@ import { NextResponse } from "next/server";
 
 export async function POST(request) {
     try {
-        const { action, ticketUpdated, deleteTicket, isAdvertised, verificationStatus } = await request.json().catch((error) => {
+        const { action, ticketUpdated, deleteTicket, isAdvertised, verificationStatus, ticketBooked } = await request.json().catch((error) => {
             console.error("Error parsing JSON:", error);
             throw new Error("Invalid JSON");
         });
 
-        console.log("Revalidation request received:", { action, });
 
         if (action === "added-ticket") {
             revalidatePath("/dashboard/admin/manage-tickets");
@@ -24,6 +23,15 @@ export async function POST(request) {
             revalidatePath("/dashboard/admin/manage-tickets");
             revalidatePath("/dashboard/vendor/my-added-tickets");
             revalidatePath("/dashboard/admin/advertise-tickets");
+            return NextResponse.json({ message: "Revalidation successful." });
+        }
+
+        if (ticketBooked === "ticket-Booked") {
+            revalidatePath("/");
+            revalidatePath("/dashboard/profile");
+            revalidatePath("/tickets");
+            revalidatePath("/dashboard/admin/manage-tickets");
+            revalidatePath("/dashboard/vendor/my-added-tickets");
             return NextResponse.json({ message: "Revalidation successful." });
         }
 
@@ -49,6 +57,7 @@ export async function POST(request) {
             deleteTicket: deleteTicket,
             isAdvertised: isAdvertised,
             verificationStatus: verificationStatus,
+            ticketBooked: ticketBooked,
         });
     } catch (error) {
         console.error("Error during revalidation:", error);

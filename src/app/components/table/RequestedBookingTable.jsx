@@ -44,8 +44,11 @@ const RequestedBookingTable = ({ bookingRequests: initialRequests }) => {
 
   const handleReject = async (id, quantity, ticketId) => {
     const result = await fetchBookedTicketsStatus(id, "rejected");
-    const data = await updateTicket(ticketId, { quantity: quantity });
-    console.log("Reject result:", result);
+    const data = await updateTicket(ticketId, {
+      state: "rejected",
+      quantity: quantity,
+    });
+    console.log("Reject result:", result, "Update ticket result:", data);
     if (result) {
       setBookingRequests((prev) =>
         prev.map((request) =>
@@ -58,7 +61,6 @@ const RequestedBookingTable = ({ bookingRequests: initialRequests }) => {
     }
   };
 
-  // 🏷️ স্ট্যাটাস ওয়াইজ ব্যাজ জেনারেটর
   const getStatusBadge = (status) => {
     const badges = {
       pending: (

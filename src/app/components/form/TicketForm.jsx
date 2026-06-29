@@ -27,14 +27,8 @@ import {
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
-import {
-  createTicket,
-  updateTicket,
-  uploadImage,
-  uploadImageToImgbb,
-} from "@/lib/api-action";
-import { cn } from "@/lib/utils";
-import { redirect } from "next/navigation";
+import { updateTicket, uploadImage } from "@/lib/api-action";
+import { useRouter } from "next/navigation";
 
 const AVAILABLE_PERKS = [
   { id: "ac", label: "Air Conditioned (AC)" },
@@ -47,6 +41,7 @@ const AVAILABLE_PERKS = [
 const TicketForm = ({ ticketData }) => {
   const [imageFile, setImageFile] = useState(null);
   const [selectedPerks, setSelectedPerks] = useState(ticketData?.perks || []);
+  const router = useRouter();
 
   const [isPending, setIsPending] = useState(ticketData ? false : true);
 
@@ -80,8 +75,7 @@ const TicketForm = ({ ticketData }) => {
     let imageUrl = null;
 
     try {
-      console.log("Image file to upload:", image.size);
-      if (image.size) {
+      if (image?.size) {
         const imagedata = await uploadImage(image);
         if (imagedata) {
           imageUrl = imagedata;
@@ -112,7 +106,7 @@ const TicketForm = ({ ticketData }) => {
         toast.success(
           "Ticket updated successfully! Redirecting to My Tickets page...",
         );
-        redirect("/dashboard/vendor/my-added-tickets");
+        router.push("/dashboard/vendor/my-added-tickets");
       } else {
         toast.error("Failed to update ticket. Please try again.");
       }

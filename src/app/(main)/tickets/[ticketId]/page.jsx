@@ -133,10 +133,12 @@ function TicketDetailsContent({ params }) {
     };
 
     setIsSubmitting(true);
+    const currentQuantity = ticket?.quantity - parseInt(quantity);
+    console.log("currentQuantity", currentQuantity);
     try {
-      const result = await fetchUserBookedTickets(bookedData, ticketId);
+      const result = await fetchUserBookedTickets(bookedData);
       const resultData = await updateTicket(ticketId, {
-        quantity: ticket.quantity - parseInt(quantity),
+        quantity: currentQuantity,
       });
 
       if (result && result.bookedTicketId && resultData) {
