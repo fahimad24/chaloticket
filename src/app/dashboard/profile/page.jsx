@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
@@ -91,23 +92,31 @@ export default function UnifiedProfilePage() {
   }, [session?.id, currentRole]);
 
   let completedTrips = 0;
-  if (bookedTickets.length !== 0 && currentRole === "traveler") {
+  if (
+    Array.isArray(bookedTickets) &&
+    bookedTickets.length > 0 &&
+    currentRole === "traveler"
+  ) {
     completedTrips = bookedTickets.filter(
-      (t) => t.status?.toLowerCase() === "paid",
+      (t) => t?.status?.toLowerCase() === "paid",
     ).length;
   }
 
   let rejectedTrips = 0;
-  if (bookedTickets.length !== 0 && currentRole === "traveler") {
+  if (
+    Array.isArray(bookedTickets) &&
+    bookedTickets.length > 0 &&
+    currentRole === "traveler"
+  ) {
     rejectedTrips = bookedTickets.filter(
-      (t) => t.status?.toLowerCase() === "rejected",
+      (t) => t?.status?.toLowerCase() === "rejected",
     ).length;
   }
 
   const userStats = [
     {
       label: "Total Bookings",
-      value: `${bookedTickets.map((t) => t.quantity).reduce((a, b) => a + b, 0) || 0} Tickets`,
+      value: `${bookedTickets.map((t) => t?.quantity).reduce((a, b) => a + b, 0) || 0} Tickets`,
       icon: <Ticket className="w-5 h-5 text-[#6367FF]" />,
     },
     {
@@ -135,7 +144,7 @@ export default function UnifiedProfilePage() {
     },
     {
       label: "Seats Sold",
-      value: `${totalTicketsSold.totalTicketsSold || 0} Seats`,
+      value: `${totalTicketsSold?.totalTicketsSold || 0} Seats`,
       icon: <Users className="w-5 h-5 text-[#8494FF]" />,
     },
   ];

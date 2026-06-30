@@ -8,27 +8,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Check,
-  X,
-  Ticket,
-  User,
-  MapPin,
-  Clock,
-  CheckCircle2,
-  XCircle,
-  ShieldAlert,
-} from "lucide-react";
+import { Check, X, Ticket, User, MapPin, ShieldAlert } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { toast } from "sonner";
 import { updateTicket } from "@/lib/api-action";
 import { GetStatusBadges } from "../ui/GetStatusBadges";
 
 const TicketTable = ({ allTickets }) => {
-  const [tickets, setTickets] = useState(allTickets);
+  const [tickets, setTickets] = useState(
+    Array.isArray(allTickets) ? allTickets : [],
+  );
 
   const handleApprove = async (id, title) => {
     const result = await updateTicket(id, { verificationStatus: "approved" });
@@ -92,7 +83,7 @@ const TicketTable = ({ allTickets }) => {
       </TableHeader>
 
       <TableBody>
-        {tickets.length === 0 ? (
+        {!Array.isArray(tickets) || tickets.length === 0 ? (
           <TableRow>
             <TableCell
               colSpan={6}
@@ -126,7 +117,6 @@ const TicketTable = ({ allTickets }) => {
                   </div>
                 </TableCell>
 
-                {/* ২. VENDOR NAME & EMAIL */}
                 <TableCell className="py-4">
                   <div className="flex items-start gap-2 text-xs">
                     <User className="w-3.5 h-3.5 text-slate-400 dark:text-slate-300 shrink-0 mt-0.5" />
@@ -141,7 +131,6 @@ const TicketTable = ({ allTickets }) => {
                   </div>
                 </TableCell>
 
-                {/* ৩. FROM & TO GEOLOCATION */}
                 <TableCell className="py-4">
                   <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 px-2 py-1 rounded-lg">
                     <MapPin className="w-3 h-3 text-rose-500" />
@@ -153,48 +142,44 @@ const TicketTable = ({ allTickets }) => {
                   </div>
                 </TableCell>
 
-                {/* ৪. PRICING & SEATS QUANTITY */}
                 <TableCell className="py-4 text-right">
                   <div className="text-xs space-y-0.5">
                     <p className="font-extrabold text-slate-800 dark:text-slate-200">
-                      ৳ {ticket.price.toLocaleString()}
+                      ৳ {ticket?.price?.toLocaleString()}
                     </p>
                     <p className="text-[10px] text-slate-400 dark:text-slate-300 font-medium">
-                      {ticket.quantity} Tickets Left
+                      {ticket?.quantity} Tickets Left
                     </p>
                   </div>
                 </TableCell>
 
-                {/* ৫. VERIFICATION STATUS */}
                 <TableCell className="py-4 text-center">
-                  <GetStatusBadges status={ticket.verificationStatus} />
+                  <GetStatusBadges status={ticket?.verificationStatus} />
                 </TableCell>
 
-                {/* ৬. MODERATION BUTTONS (APPROVE / REJECT) */}
                 <TableCell className="py-4 text-right pr-6">
                   {isPending ? (
                     <div className="flex items-center justify-end gap-2">
-                      {/* APPROVE BUTTON */}
                       <Button
                         size="sm"
-                        onClick={() => handleApprove(ticket._id, ticket.title)}
+                        onClick={() =>
+                          handleApprove(ticket?._id, ticket?.title)
+                        }
                         className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm h-8 px-2.5 rounded-xl font-bold text-xs flex items-center gap-1"
                       >
                         <Check className="w-3.5 h-3.5" /> Approve
                       </Button>
 
-                      {/* REJECT BUTTON */}
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => handleReject(ticket._id)}
+                        onClick={() => handleReject(ticket?._id)}
                         className="border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700 h-8 px-2.5 rounded-xl font-bold text-xs flex items-center gap-1"
                       >
                         <X className="w-3.5 h-3.5" /> Reject
                       </Button>
                     </div>
                   ) : (
-                    // অলরেডি ডিসাইড হয়ে গেলে অ্যাকশন লক মেসেজ শো করবে
                     <div className="text-xs text-slate-400 dark:text-slate-300 font-semibold pr-2 flex items-center justify-end gap-1 select-none">
                       <ShieldAlert className="w-3.5 h-3.5 text-slate-300 dark:text-slate-400" />{" "}
                       Moderated

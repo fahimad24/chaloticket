@@ -14,12 +14,14 @@ import { fetchAllTicketsSearch } from "@/lib/api-action";
 import SearchBar from "@/app/components/SearchBar";
 import TicketsSkeleton from "@/app/components/skeleton/TicketsSkeleton";
 import TicketCard from "../components/card/TicketCard";
+import TicketCardSkeleton from "@/app/components/skeleton/TicketCardSkeleton";
 const ITEMS_PER_PAGE = 6;
 
 function TicketsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [tickets, setTickets] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const currentSort = searchParams.get("sort") || "default";
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
@@ -32,8 +34,10 @@ function TicketsContent() {
     const sort = searchParams.get("sort") || "";
 
     const loadTickets = async () => {
+      setIsLoading(true);
       const data = await fetchAllTicketsSearch(from, to, transportType, sort);
       setTickets(data);
+      setIsLoading(false);
     };
 
     loadTickets();
@@ -55,10 +59,11 @@ function TicketsContent() {
     params.set("page", "1");
 
     if (transportType === "all") {
-      params.set("transportType", transportType);
+      params.delete("transportType");
       params.delete("from");
       params.delete("to");
       params.delete("date");
+      params.delete("page");
       return router.push(`?${params.toString()}`);
     }
 
@@ -71,7 +76,7 @@ function TicketsContent() {
     if (date) params.set("date", date);
     else params.delete("date");
 
-    router.push(`?${params.toString()}`);
+    router.push(`?${params.toString()}`, { scroll: false });
   };
 
   const handleSortChange = (e) => {
@@ -83,7 +88,7 @@ function TicketsContent() {
     } else {
       params.delete("sort");
     }
-    router.push(`?${params.toString()}`);
+    router.push(`?${params.toString()}`, { scroll: false });
   };
 
   const totalPages = Math.ceil(tickets.length / ITEMS_PER_PAGE);
@@ -103,13 +108,6 @@ function TicketsContent() {
         return <Bus className="w-3.5 h-3.5" />;
     }
   };
-
-  console.log(
-    "TicketsContent rendered with tickets:",
-    tickets,
-    "displayedTickets:",
-    displayedTickets,
-  );
 
   return (
     <div className="min-h-screen bg-background text-foreground antialiased">
@@ -151,7 +149,11 @@ function TicketsContent() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {displayedTickets.length > 0 ? (
+          {isLoading ? (
+            Array.from({ length: ITEMS_PER_PAGE }).map((_, index) => (
+              <TicketCardSkeleton key={index} />
+            ))
+          ) : Array.isArray(displayedTickets) && displayedTickets.length > 0 ? (
             displayedTickets.map((ticket, index) => (
               <TicketCard
                 key={index}
@@ -161,7 +163,9 @@ function TicketsContent() {
               />
             ))
           ) : (
-            <TicketsSkeleton />
+            <p className="text-center py-12 text-slate-400 dark:text-slate-300 font-medium">
+              No tickets found.
+            </p>
           )}
         </div>
 

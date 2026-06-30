@@ -108,7 +108,7 @@ export const fetchBookedTicketsByUserId = async (userId) => {
     const token = await getApiToken();
     const res = await fetch(`${API_BASE_URL}/api/booked-tickets/${userId}`, { headers: { "Authorization": `Bearer ${token}` }, cache: 'no-store' });
     const bookedTickets = await res.json();
-    return bookedTickets;
+    return bookedTickets || [];
 };
 
 // Fetch booked tickets for a specific ticket vendor  ID
@@ -116,7 +116,7 @@ export const fetchBookedTicketsByVendorId = async (vendorId) => {
     const token = await getApiToken();
     const res = await fetch(`${API_BASE_URL}/api/booked-tickets/vendor/${vendorId}`, { headers: { "Authorization": `Bearer ${token}` }, cache: 'no-store' });
     const bookedTickets = await res.json();
-    return bookedTickets;
+    return bookedTickets || [];
 };
 
 // ========== POST API functions ==========
@@ -232,7 +232,7 @@ export const fetchTotalTicketsQuantity = async (userId) => {
             throw new Error("Failed to fetch total booked and tickets quantity");
         }
         const result = await response.json();
-        return result.ticketTotalQty;
+        return result.ticketTotalQty || 0;
     } catch (error) {
         console.error("Error fetching total booked and tickets quantity:", error);
         throw error;
@@ -252,7 +252,7 @@ export const fetchTotalTicketsSold = async (userId) => {
             throw new Error("Failed to fetch total tickets sold");
         }
         const result = await response.json();
-        return result;
+        return result || 0;
     } catch (error) {
         console.error("Error fetching total tickets sold:", error);
         throw error;
@@ -272,7 +272,7 @@ export const fetchTotalRevenue = async (userId) => {
             throw new Error("Failed to fetch total revenue");
         }
         const result = await response.json();
-        return result.totalRevenue;
+        return result.totalRevenue || 0;
     } catch (error) {
         console.error("Error fetching total revenue:", error);
         throw error;

@@ -1,6 +1,15 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { CheckCircle2, Mail, ArrowRight, Home } from "lucide-react";
+import {
+  CheckCircle2,
+  Mail,
+  ArrowRight,
+  Home,
+  Calendar,
+  Hash,
+  Tag,
+  Layers,
+} from "lucide-react";
 import { stripe } from "@/lib/stripe";
 import { fetchBookedTicketsStatus } from "@/lib/api-action";
 
@@ -10,12 +19,19 @@ export default async function Success({ searchParams }) {
   if (!session_id)
     throw new Error("Please provide a valid session_id (`cs_test_...`)");
 
-  const { status, customer_details } = await stripe.checkout.sessions.retrieve(
-    session_id,
-    {
-      expand: ["line_items", "payment_intent"],
-    },
-  );
+  // ১. সম্পূর্ণ সেশন অবজেক্টটি রিট্রিভ করা হলো
+  const session = await stripe.checkout.sessions.retrieve(session_id, {
+    expand: ["line_items", "payment_intent"],
+  });
+
+  const {
+    status,
+    customer_details,
+    line_items,
+    amount_total,
+    payment_intent,
+    created,
+  } = session;
 
   if (status === "complete") {
     const result = await fetchBookedTicketsStatus(ticketId, "paid");
@@ -35,6 +51,22 @@ export default async function Success({ searchParams }) {
     return redirect("/");
   }
 
+  // ২. ডাইনামিক ডেটাগুলো সেফলি এক্সট্রাক্ট করা হলো
+  const firstItem = line_items?.data?.[0];
+  const productName = firstItem?.description || "Ticket Route";
+  const quantity = firstItem?.quantity || 1;
+  const totalPrice = (amount_total || 0) / 100;
+  const transactionId =
+    typeof payment_intent === "object" ? payment_intent?.id : payment_intent;
+
+  // ডেট ও টাইম ফরম্যাট করা
+  const paymentDateTime = created
+    ? new Date(created * 1000).toLocaleString("en-US", {
+        dateStyle: "medium",
+        timeStyle: "short",
+      })
+    : "N/A";
+
   if (status === "complete") {
     return (
       <div className="min-h-[80vh] flex items-center justify-center bg-background p-4 md:p-6">
@@ -45,7 +77,6 @@ export default async function Success({ searchParams }) {
             </div>
           </div>
 
-          {/* Header Typography */}
           <div className="space-y-2">
             <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
               Payment Successful!
@@ -55,7 +86,58 @@ export default async function Success({ searchParams }) {
             </p>
           </div>
 
-          {/* Confirmation Box */}
+          {/* 🌟 নতুন যোগ করা ডাইনামিক পেমেন্ট রিসিট সেকশন */}
+          <div className="bg-slate-50/60 dark:bg-slate-700/40 border border-slate-100 dark:border-slate-700 rounded-2xl p-4 text-left text-xs space-y-3">
+            <p className="font-bold text-slate-400 uppercase tracking-wider text-[10px] border-b border-slate-100 dark:border-slate-700 pb-1.5">
+              Payment Summary
+            </p>
+
+            <div className="flex items-start justify-between gap-4">
+              <span className="text-slate-400 flex items-center gap-1 shrink-0">
+                <Tag className="w-3.5 h-3.5" /> Product:
+              </span>
+              <span className="font-bold text-slate-700 dark:text-slate-200 text-right line-clamp-1">
+                {productName}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-slate-400 flex items-center gap-1">
+                <Layers className="w-3.5 h-3.5" /> Quantity:
+              </span>
+              <span className="font-bold text-slate-700 dark:text-slate-200">
+                {quantity} {quantity > 1 ? "Tickets" : "Ticket"}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-slate-400 flex items-center gap-1">
+                ৳ Price Paid:
+              </span>
+              <span className="font-extrabold text-slate-900 dark:text-slate-100 text-sm">
+                ৳ {totalPrice.toLocaleString()}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between gap-4 border-t border-dashed border-slate-200 dark:border-slate-700 pt-2.5">
+              <span className="text-slate-400 flex items-center gap-1 shrink-0">
+                <Hash className="w-3.5 h-3.5" /> Txn ID:
+              </span>
+              <span className="font-mono font-bold text-slate-600 dark:text-slate-300 select-all break-all text-[11px]">
+                {transactionId || "N/A"}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-slate-400 flex items-center gap-1">
+                <Calendar className="w-3.5 h-3.5" /> Date & Time:
+              </span>
+              <span className="font-medium text-slate-600 dark:text-slate-300">
+                {paymentDateTime}
+              </span>
+            </div>
+          </div>
+
           <div className="bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl p-4 flex items-start gap-3 text-left">
             <Mail className="w-5 h-5 text-[#6367FF] shrink-0 mt-0.5" />
             <div className="space-y-1">
@@ -68,7 +150,6 @@ export default async function Success({ searchParams }) {
             </div>
           </div>
 
-          {/* Support Information */}
           <p className="text-xs text-slate-400 dark:text-slate-500 font-medium">
             If you have any questions, please email{" "}
             <a
@@ -81,11 +162,10 @@ export default async function Success({ searchParams }) {
 
           <hr className="border-slate-100 dark:border-slate-600" />
 
-          {/* Call to Actions (CTA) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
             <Link
               href="/dashboard/user/my-bookings"
-              className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#6367FF] hover:bg-[#5054e6] text-white  text-sm font-semibold rounded-xl transition-all shadow-md shadow-indigo-100 hover:shadow-lg active:scale-95"
+              className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#6367FF] hover:bg-[#5054e6] text-white text-sm font-semibold rounded-xl transition-all shadow-md shadow-indigo-100 hover:shadow-lg active:scale-95"
             >
               Go to Dashboard <ArrowRight className="w-4 h-4" />
             </Link>
