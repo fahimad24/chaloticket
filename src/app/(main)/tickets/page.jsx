@@ -143,19 +143,21 @@ function TicketsContent() {
           </div>
         </div>
 
-        {/* 🌟 tickets.map এর বদলে displayedTickets.map ব্যবহার করা হয়েছে */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {displayedTickets.map((ticket, index) => (
-            <TicketCard
-              key={index}
-              ticket={ticket}
-              isAdvertised={ticket?.isAdvertised}
-              getTransportIcon={getTransportIcon}
-            />
-          ))}
+          {displayedTickets.length > 0 ? (
+            displayedTickets.map((ticket, index) => (
+              <TicketCard
+                key={index}
+                ticket={ticket}
+                isAdvertised={ticket?.isAdvertised}
+                getTransportIcon={getTransportIcon}
+              />
+            ))
+          ) : (
+            <TicketsSkeleton />
+          )}
         </div>
 
-        {/* 🌟 নিচে চমৎকার একটি Pagination UI Controls যোগ করা হলো */}
         {totalPages > 1 && (
           <div className="flex items-center justify-center gap-2 mt-12">
             <button
