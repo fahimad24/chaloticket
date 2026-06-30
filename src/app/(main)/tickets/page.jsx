@@ -104,6 +104,13 @@ function TicketsContent() {
     }
   };
 
+  console.log(
+    "TicketsContent rendered with tickets:",
+    tickets,
+    "displayedTickets:",
+    displayedTickets,
+  );
+
   return (
     <div className="min-h-screen bg-background text-foreground antialiased">
       <div className="max-w-7xl mx-auto px-4 pt-28 pb-8 text-center space-y-8">
