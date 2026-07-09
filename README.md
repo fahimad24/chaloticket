@@ -1,5 +1,7 @@
 # Chaloticket
 
+A modern ticket booking platform with role-based dashboards, event discovery, and secure Stripe checkout.
+
 ## Project Overview
 
 Chaloticket is a modern event ticketing and management application built with **Next.js**, **React**, and **Tailwind CSS**. It supports authentication, role-based dashboards for admins, vendors, and users, ticket browsing, secure Stripe checkout, and data-driven analytics.
