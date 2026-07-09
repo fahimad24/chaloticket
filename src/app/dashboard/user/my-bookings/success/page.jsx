@@ -24,6 +24,18 @@ export default async function Success({ searchParams }) {
     expand: ["line_items", "payment_intent"],
   });
 
+  const session2 = await stripe.checkout.sessions.retrieve(session_id, {
+    expand: ["line_items", "payment_intent.charges.data.balance_transaction"],
+  });
+
+  // Then access:
+  const balanceTransactionId =
+    session?.payment_intent?.charges?.data[0]?.balance_transaction?.id;
+
+  console.log("Balance Transaction ID:", balanceTransactionId);
+  console.log("Session Details:", session);
+  console.log("Session2 Details:", session2);
+
   const {
     status,
     customer_details,
@@ -31,6 +43,7 @@ export default async function Success({ searchParams }) {
     amount_total,
     payment_intent,
     created,
+    invoice,
   } = session;
 
   if (status === "complete") {
@@ -56,8 +69,7 @@ export default async function Success({ searchParams }) {
   const productName = firstItem?.description || "Ticket Route";
   const quantity = firstItem?.quantity || 1;
   const totalPrice = (amount_total || 0) / 100;
-  const transactionId =
-    typeof payment_intent === "object" ? payment_intent?.id : payment_intent;
+  const transactionId = invoice || payment_intent?.id || "N/A";
 
   // ডেট ও টাইম ফরম্যাট করা
   const paymentDateTime = created
