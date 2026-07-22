@@ -2,8 +2,15 @@
 
 import React from "react";
 import { Bus, Train, Plane, MapPin, Calendar, Search } from "lucide-react";
+import { OctagonX } from "lucide-react";
+import { X } from "lucide-react";
 
-export default function SearchBar({ searchParams, handleSearch }) {
+export default function SearchBar({
+  searchParams,
+  handleSearch,
+  handleOnChange,
+  handleClearFilters,
+}) {
   const defaultType = searchParams.get("transportType") || "all";
   const defaultFrom = searchParams.get("from") || "";
   const defaultTo = searchParams.get("to") || "";
@@ -12,42 +19,55 @@ export default function SearchBar({ searchParams, handleSearch }) {
   return (
     <div className="w-full rounded-3xl shadow-[0_20px_50px_rgba(99,103,255,0.08)] border border-[#C9BEFF]/30 p-6 text-left backdrop-blur-xl bg-accent  dark:border-slate-700">
       <form action={handleSearch} className="space-y-6">
-        <div className="flex gap-2 border-b border-slate-100 pb-4 overflow-x-auto scrollbar-none">
-          {[
-            {
-              value: "all",
-              label: "All Transport",
-              icon: <Search className="w-4 h-4" />,
-            },
-            { value: "bus", label: "Bus", icon: <Bus className="w-4 h-4" /> },
-            {
-              value: "train",
-              label: "Train",
-              icon: <Train className="w-4 h-4" />,
-            },
-            {
-              value: "plane",
-              label: "Plane",
-              icon: <Plane className="w-4 h-4" />,
-            },
-          ].map((item) => (
-            <label
-              key={item.value}
-              className="relative flex items-center gap-2 cursor-pointer select-none"
+        <div className="flex gap-2 justify-between border-b border-slate-100 pb-4 overflow-x-auto scrollbar-none">
+          <div className="flex gap-2 overflow-x-auto scrollbar-none">
+            {[
+              {
+                value: "all",
+                label: "All Transport",
+                icon: <Search className="w-4 h-4" />,
+              },
+              { value: "bus", label: "Bus", icon: <Bus className="w-4 h-4" /> },
+              {
+                value: "train",
+                label: "Train",
+                icon: <Train className="w-4 h-4" />,
+              },
+              {
+                value: "plane",
+                label: "Plane",
+                icon: <Plane className="w-4 h-4" />,
+              },
+            ].map((item) => (
+              <label
+                key={item.value}
+                className="relative flex items-center gap-2 cursor-pointer select-none"
+              >
+                <input
+                  type="radio"
+                  name="transportType"
+                  value={item.value}
+                  defaultChecked={defaultType === item.value}
+                  onChange={handleOnChange}
+                  className="sr-only peer"
+                />
+                <div className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold text-slate-600 border border-transparent peer-checked:border-[#C9BEFF] peer-checked:bg-[#ffdbfd]/40 peer-checked:text-[#6367FF] hover:bg-slate-50 transition-all duration-200">
+                  {item.icon}
+                  <span>{item.label}</span>
+                </div>
+              </label>
+            ))}
+          </div>
+          <div>
+            <button
+              type="button"
+              onClick={handleClearFilters}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold text-slate-100 border border-transparent bg-primary hover:bg-secondary transition-all duration-200"
             >
-              <input
-                type="radio"
-                name="transportType"
-                value={item.value}
-                defaultChecked={defaultType === item.value}
-                className="sr-only peer"
-              />
-              <div className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold text-slate-600 border border-transparent peer-checked:border-[#C9BEFF] peer-checked:bg-[#ffdbfd]/40 peer-checked:text-[#6367FF] hover:bg-slate-50 transition-all duration-200">
-                {item.icon}
-                <span>{item.label}</span>
-              </div>
-            </label>
-          ))}
+              <X className="w-4 h-4" />
+              <span>Clear Filters</span>
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">

@@ -58,14 +58,13 @@ function TicketsContent() {
     const params = new URLSearchParams(searchParams.toString());
     params.set("page", "1");
 
-    if (transportType === "all") {
-      params.delete("transportType");
-      params.delete("from");
-      params.delete("to");
-      params.delete("date");
-      params.delete("page");
-      return router.push(`?${params.toString()}`);
-    }
+    // if (transportType === "all") {
+    //   formData.delete("transportType");
+    //   formData.delete("from");
+    //   formData.delete("to");
+    //   formData.delete("date");
+    //   return router.push(`/tickets`, { scroll: false });
+    // }
 
     if (transportType) params.set("transportType", transportType);
     else params.delete("transportType");
@@ -77,6 +76,37 @@ function TicketsContent() {
     else params.delete("date");
 
     router.push(`?${params.toString()}`, { scroll: false });
+  };
+
+  const handleOnChange = (e) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", "1");
+    console.log(
+      "handleOnChange called with event:",
+      e.target.name,
+      e.target.value,
+    );
+    const transportType = e.target.value;
+    if (transportType === "all") {
+      return router.push(`/tickets`, { scroll: false });
+    }
+
+    if (e.target.value) {
+      params.set(e.target.name, e.target.value);
+    } else {
+      params.delete(e.target.name);
+    }
+    router.push(`?${params.toString()}`, { scroll: false }); // Remove focus from the input after change
+  };
+
+  const handleClearFilters = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("transportType");
+    params.delete("from");
+    params.delete("to");
+    params.delete("date");
+    params.set("page", "1");
+    router.push(`/tickets`, { scroll: false });
   };
 
   const handleSortChange = (e) => {
@@ -122,7 +152,12 @@ function TicketsContent() {
           </p>
         </div>
 
-        <SearchBar searchParams={searchParams} handleSearch={handleSearch} />
+        <SearchBar
+          searchParams={searchParams}
+          handleSearch={handleSearch}
+          handleOnChange={handleOnChange}
+          handleClearFilters={handleClearFilters}
+        />
       </div>
 
       <main className="max-w-7xl mx-auto px-4 pb-24">
